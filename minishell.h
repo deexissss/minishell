@@ -30,5 +30,5 @@
 #include "libft/libft.h"
 
 //typedef struct 
-
+//GG
 #endif
