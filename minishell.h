@@ -29,6 +29,7 @@
 #include <termios.h>
 #include "libft/libft.h"
 
+void    printnb(int nb);
 //typedef struct 
 //GG
 #endif

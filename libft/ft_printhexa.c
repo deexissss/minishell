@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_strlen(char *str)
+int	ft_strlenn(char *str)
 {
 	int	i;
 
@@ -35,7 +35,7 @@ int	ft_print_hexa(unsigned long nb, char type)
 		base = "0123456789ABCDEF";
 	i = 0;
 	num = (unsigned int)nb;
-	base_len = ft_strlen(base);
+	base_len = ft_strlenn(base);
 	if (num > (base_len - 1))
 		i += ft_print_hexa(num / base_len, type);
 	i += ft_printchar(*(base + (num % base_len)));

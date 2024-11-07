@@ -6,7 +6,7 @@ FLAG		=	-Wall -Wextra -Werror -lreadline
 LIBFT_FILE	=	libft/libft.a
 LIBFT		=	$(LIBFT_FILE)
 
-C_FILE		=	minishell.c \
+C_FILE		=	$(wildcard *.c)
 
 SRC			=	$(C_FILE)
 OBJ			=	$(SRC:.c=.o)
@@ -29,12 +29,12 @@ $(NAME): lib $(OBJ)
 
 clean:
 	@cd libft && make clean
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 	@echo "$(BLUE2)CLEAN ALL THE MINISHELL OBJ"
 	
 fclean: clean
 	@cd libft && make fclean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 	@echo "$(PINK)CLEAN EVERYTHING IN MINISHELL"
 
 re: fclean all
