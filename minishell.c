@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 
-int	handle_quit(int keycode)
+/*int	handle_quit(int keycode)
 {	
 	if (keycode ==)
 }
@@ -21,4 +21,11 @@ int	main()
 {
 	while (1)
 
+}*/
+
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\n");
+    return 0;
 }
