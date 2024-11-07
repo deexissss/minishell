@@ -24,7 +24,7 @@ lib:
 	@cd libft && make
 
 $(NAME): lib $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+	$(CC) $(OBJ) $(LIBFT) -o $(NAME)
 	@echo "$(BLUE) MINISHELL COMPILATION DONE"
 
 clean:
@@ -32,7 +32,7 @@ clean:
 	rm -f $(OBJ)
 	@echo "$(BLUE2)CLEAN ALL THE MINISHELL OBJ"
 	
-fclean:
+fclean: clean
 	@cd libft && make fclean
 	rm -f $(NAME)
 	@echo "$(PINK)CLEAN EVERYTHING IN MINISHELL"

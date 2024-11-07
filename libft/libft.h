@@ -17,6 +17,9 @@
 # include <stdlib.h>
 # include <string.h>
 # include <limits.h>
+# include <stdarg.h>
+# include <string.h>
+# include <stdint.h>
 
 int			ft_isalnum(int c);
 int			ft_isalpha(int c);
@@ -56,5 +59,16 @@ void		ft_putstr_fd(char *s, int fd);
 void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
 int			gnl(int fd, char **str);
+
+
+int		ft_printf(const char *str, ...);
+int		ft_printchar(char c);
+int		ft_printstr(char const *str);
+int		ft_printdecimal(int nb);
+int		ft_print_hexa(unsigned long nb, char type);
+int		ft_printptr(unsigned long long ptr);
+int		ft_printint(int nb);
+int		ft_printunsigned(unsigned int nb);
+int		count_digit(int nb);
 
 #endif
