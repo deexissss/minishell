@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:54:11 by tjehaes           #+#    #+#             */
-/*   Updated: 2024/11/04 13:00:58 by tjehaes          ###   ########.fr       */
+/*   Updated: 2024/11/12 11:47:55 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <sys/ioctl.h>
 #include <dirent.h>
 #include <termios.h>
+#include <sys/wait.h>
 #include "libft/libft.h"
 
 void    printnb(int nb);

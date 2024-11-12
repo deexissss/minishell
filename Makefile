@@ -1,8 +1,8 @@
 NAME		=	minishell
 
 CC			=	gcc 
-FLAG		=	-Wall -Wextra -Werror -lreadline
-
+FLAG		=	-Wall -Wextra -Werror
+R_FLAG		=	-lreadline
 LIBFT_FILE	=	libft/libft.a
 LIBFT		=	$(LIBFT_FILE)
 
@@ -24,7 +24,7 @@ lib:
 	@cd libft && make
 
 $(NAME): lib $(OBJ)
-	$(CC) $(OBJ) $(LIBFT) -o $(NAME)
+	$(CC) $(OBJ) $(LIBFT) $(R_FLAG) -o $(NAME)
 	@echo "$(BLUE) MINISHELL COMPILATION DONE"
 
 clean:
