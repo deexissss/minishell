@@ -30,7 +30,35 @@
 #include <sys/wait.h>
 #include "libft/libft.h"
 
+/*To hold key-value data, like environment var in a linked list
+//exmp. t_list *node1 = malloc(sizeof(t_list));
+node1->key = strdup("PATH");
+node1->value = strdup("/usr/bin:/bin");
+node1->next = NULL;*/
+
+typedef struct s_list
+{
+	char			*key;
+	char			*value;
+	struct s_list	*next;
+}	t_list;
+
+/*holds command-related data, file descriptors, and environment variables*/
+
+
+typedef struct s_data
+{
+	char	**command;
+	int		is_pipe;
+	int		*pipe_locale; //for the locaation
+	int		in_out_fd[6];
+	int		command_num; //for the number of commands
+	int		initial_commands;
+	t_list	**table;
+	// struct sigaction for sigint;
+	// struct sigaction for sigquit;
+}	t_data;
+
 void    printnb(int nb);
-//typedef struct 
-//GG
+
 #endif
