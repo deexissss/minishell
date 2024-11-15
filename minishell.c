@@ -198,3 +198,37 @@ int main()
     }
     return 0;
 }
+/*
+void	ft_initialize(t_data *data)
+{
+	data->is_pipe = 0;
+	data->pipe_locale = NULL;
+	data->command_num = 0;
+	data->command = NULL;
+	data->in_out_fd[0] = -1;
+	data->in_out_fd[1] = -1;
+	data->in_out_fd[2] = -1;
+	data->in_out_fd[3] = -1;
+	data->in_out_fd[4] = -1;
+	data->in_out_fd[5] = -1;
+	data->table = malloc(sizeof(t_list *) * (128));//A hash table with 128 buckets can handle a moderate number of entries efficiently
+	//still needs the memory allocation fail check including freeing all the data
+	for (int i = 0; i < 128; i++)
+		data->table[i] = NULL;
+}
+
+int	main(int result, char **av, char **env)
+{
+	t_data	data;
+
+	av[0] = NULL;
+	while (1)
+	{
+		ft_init(&data); //this could also be handled with libft (bzero? not sure which function)
+		//parsing/reading (which at the same time handles the history?)
+		//free/exit
+		
+	}
+	//free/exit everything
+	return (0);
+}*/
