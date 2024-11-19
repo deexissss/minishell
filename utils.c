@@ -315,7 +315,7 @@ void execute_exit(char *inpt)
         i++;
     if ((inpt[i] == '-' && inpt[i+1] == '-') || (inpt[i] == '+' && inpt[i+1] == '+'))
     {
-        write(1, "minishell: exit: numeric argument required\n", 41);
+        write(1, "error: numeric argument required\n", 34);
         return;
     }
     if (inpt[i] == '-' && inpt[i+1] != '-')
@@ -335,7 +335,7 @@ void execute_exit(char *inpt)
             }
             else
             {
-                write(1, "minishell: exit: numeric argument required\n", 42);
+                write(1, "error: numeric argument required\n", 34);
                 return;
             }
         }
@@ -343,3 +343,11 @@ void execute_exit(char *inpt)
     write(1, "exit\n", 5);
     exit(status * sign);
 }
+
+//void  execute_cd(char *inpt)
+
+//void  execute_unset(char *inpt)
+
+//void  execute_env(char *inpt)
+
+//void  execute_export(char *inpt)
