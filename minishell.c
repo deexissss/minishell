@@ -66,6 +66,8 @@ void ft_checker(char *inpt)
         execute_rm(inpt);
     if (memcmp(inpt, "touch", 5) == 0)
         execute_touch(inpt);
+    if (memcmp(inpt, "exit", 4) == 0)
+        execute_exit(inpt);
 }
 
 int main()

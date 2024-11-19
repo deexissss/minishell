@@ -69,6 +69,6 @@ void    execute_sleep(char *inpt);
 void	execute_cat(char *inpt);
 void	execute_rm(char *inpt);
 void	execute_touch(char *inpt);
-
+void	execute_exit(char *inpt);
 
 #endif

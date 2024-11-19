@@ -281,7 +281,6 @@ void execute_touch(char *inpt)
         write(1, "error: touch needs a filename\n", 30);
         return;
     }
-
     pid = fork();
     if (pid == -1)
     {
@@ -304,4 +303,43 @@ void execute_touch(char *inpt)
     }
     else
         waitpid(pid, NULL, 0);
+}
+
+void execute_exit(char *inpt)
+{
+    int i = 4;
+    int sign = 1;
+    int status = 0;
+
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+    if ((inpt[i] == '-' && inpt[i+1] == '-') || (inpt[i] == '+' && inpt[i+1] == '+'))
+    {
+        write(1, "minishell: exit: numeric argument required\n", 41);
+        return;
+    }
+    if (inpt[i] == '-' && inpt[i+1] != '-')
+    {
+        sign *= -1;
+        i++;
+    }
+    if (inpt[i] != '\0')
+    {
+        status = 0;
+        while (inpt[i])
+        {
+            if (inpt[i] >= '0' && inpt[i] <= '9')
+            {
+                status = status * 10 + (inpt[i] - '0');
+                i++;
+            }
+            else
+            {
+                write(1, "minishell: exit: numeric argument required\n", 42);
+                return;
+            }
+        }
+    }
+    write(1, "exit\n", 5);
+    exit(status * sign);
 }
