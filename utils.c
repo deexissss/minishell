@@ -127,15 +127,33 @@ void execute_pwd()
 void    execute_echo(char *inpt)
 {
     int     i;
+    int     n;//flag to control newline printing
 
     i = 4;
+    n = 1; //newline character will be printed by default
+    //skip whitespace
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
+    //check for -n flag
+    //(inpt[i + 2] == ' ' || ...) ensures that the -n flag is a standalone flag and not part of the text to be echoed
+    if (inpt[i] == '-' && inpt[i + 1] == 'n' && (inpt[i + 2] == ' ' || 
+        inpt[i + 2] == '\t' || inpt[i + 2] == '\0'))
+    {
+        n = 0;//if detected n set to 0 to disable newline printing
+        i += 2;// move index past -n
+        //skip any additional whitespace after -n flag
+        while(inpt[i] == ' ' || inpt[i] == '\t')
+            i++;
+    }
+
     while (inpt[i])
     {
         write(1, &inpt[i], 1);
         i++;
     }
+    //conditional newline, if n = 1 print newline, if -n flag was set no newline
+    if(n)
+        write(1, "\n", 1);
 }
 
 void    execute_sleep(char *inpt)
@@ -222,4 +240,36 @@ void execute_cat(char *inpt)
     }
     else
         waitpid(pid, NULL, 0);
+}
+
+void    execute_cd(char *inpt)
+{
+    /*Relative Path: A path that is relative to the current directory. For example, cd folder changes to a subdirectory folder within the current directory.
+    Absolute Path: A path that starts from the root directory. For example, cd /home/user/folder changes to the specified directory starting from the root.*/
+
+    //init necessary var
+    int     i;//start index after c comm
+    char    path[1024];//buffer to hold direct path
+    int     j;//index in the path buffer
+
+    i = 2;
+    j = 0;
+    //skip whitespace
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+    //extract dir path
+    while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < 1023)
+        path[j++] = inpt[i++];
+    path[j] = '\0';
+    //Edge case handling, eg. no dir path provided
+    if (j == 0)
+    {
+        ft_printf("error: cd needs a directory path\n");
+        return;
+    }
+    /*// Change directory
+    if (chdir(path) != 0)
+    {
+        perror("cd");
+    }*/
 }
