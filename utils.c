@@ -273,3 +273,73 @@ void    execute_cd(char *inpt)
         perror("cd");
     }*/
 }
+
+void  execute_unset(char *inpt)
+{
+    /*function to remove an environment variable*/
+    // Initialization
+    int i; 
+    pid_t pid;
+    char varname[70000];
+    int j;
+    char **environ;//this needs to be changed as soon as we adapt to structs or global var
+    char **env;
+
+    i = 6; // Start after the "unset" command
+    j = 0;
+    // Skip leading spaces and tabs
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+
+    // Check if there is a variable name provided
+    if (inpt[i] == '\0')
+    {
+        ft_printf("error: unset needs a variable name\n");
+        return;
+    }
+
+    // Fork a new process
+    /*If fork returns -1, the creation of the child process failed
+    If fork returns 0, the code is running in the child process
+    If fork returns a positive value, the code is running in the parent process, and the value is the PID of the child process.*/
+    pid = fork(); // fork is used to create a new process/child process runs concurrently with the parent process
+    if (pid == -1)
+    {
+        perror("fork");
+        return;
+    }
+    else if (pid == 0)
+    {
+        // child process to extract the variable name + ...
+        while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < sizeof(varname) - 1)
+            varname[j++] = inpt[i++];
+        varname[j] = '\0';
+
+         // Remove the variable from the environment
+        env = environ;
+        while (*env != NULL)
+        {
+            if (ft_strncmp(*env, varname, ft_strlen(varname)) == 0 && (*env)[ft_strlen(varname)] == '=')
+            {
+                // Shift all subsequent environment variables one position to the left
+                while (env[1] != NULL)
+                {
+                    *env = *(env + 1);
+                    env++;
+                }
+                *env = NULL;
+                break;
+            }
+            env++;
+        }
+        exit(0);
+    }
+    else
+    {
+        // Wait for the child process to finish
+        if (waitpid(pid, NULL, 0) == -1)
+        {
+            perror("waitpid");
+        }
+    }
+}
