@@ -73,5 +73,6 @@ void	execute_exit(char *inpt);
 void 	execute_unset(char *inpt);
 void    execute_cd(char *inpt);
 void    execute_env(void);
+void    execute_export(char *inpt);
 
 #endif

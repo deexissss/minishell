@@ -179,7 +179,8 @@ void    execute_sleep(char *inpt)
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
     if (inpt[i] == '\0')
-        ft_printf("error : sleep need a time");
+        perror("sleep");
+        //ft_printf("error : sleep need a time");
     while (inpt[i] >= '0' && inpt[i] <= '9')
     {
         time = time * 10 + (inpt[i] - '0');
@@ -525,11 +526,35 @@ void    execute_env(void)
 
 void    execute_export(char *inpt)
 {
-    int i;
+    int                 i;
+    char                varname[256];
+    char                value[256];
+    long unsigned int   j;
+    /*char                *new_envvar;//to replace setenv func this will hold the newlz set environment var varname=value
+    int                 k;
+    char                *env;*/
 
+    i = 6;
+    j = 0;
+    //k = 0;
+    ///whitespace
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
+    //input after command
     if (inpt[i] == '\0')
         perror("export");
-    
+    //extracting the variable name UNTIL = found
+    while (inpt[i] && inpt[i] != '=' && inpt[i] != '\t' && j < sizeof(varname) - 1)
+        varname[j++] = inpt[i++];
+    varname[j] = '\0';
+    //ENSURES THAT '=' character is actually present after the variable name
+    if (inpt[i] != '=')
+        perror("error");
+    i++;
+    //now we extract the value name after =
+    j = 0;
+    while (inpt[i] && j < sizeof(value) - 1)
+        value[j++] = inpt[i++];
+    value[j] = '\0';
+    //from here we need to work on the setenv replacement
 }
