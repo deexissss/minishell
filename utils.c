@@ -121,7 +121,7 @@ void execute_pwd()
     else
         waitpid(pid, NULL, 0);
 }
-
+/*
 void    execute_echo(char *inpt)
 {
     int     i;
@@ -134,6 +134,38 @@ void    execute_echo(char *inpt)
         write(1, &inpt[i], 1);
         i++;
     }
+}*/
+
+void    execute_echo(char *inpt)
+{
+    int     i;
+    int     n;//flag to control newline printing
+
+    i = 4;
+    n = 1; //newline character will be printed by default
+    //skip whitespace
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+    //check for -n flag
+    //(inpt[i + 2] == ' ' || ...) ensures that the -n flag is a standalone flag and not part of the text to be echoed
+    if (inpt[i] == '-' && inpt[i + 1] == 'n' && (inpt[i + 2] == ' ' || 
+        inpt[i + 2] == '\t' || inpt[i + 2] == '\0'))
+    {
+        n = 0;//if detected n set to 0 to disable newline printing
+        i += 2;// move index past -n
+        //skip any additional whitespace after -n flag
+        while(inpt[i] == ' ' || inpt[i] == '\t')
+            i++;
+    }
+
+    while (inpt[i])
+    {
+        write(1, &inpt[i], 1);
+        i++;
+    }
+    //conditional newline, if n = 1 print newline, if -n flag was set no newline
+    if(n)
+        write(1, "\n", 1);
 }
 
 void    execute_sleep(char *inpt)
@@ -351,3 +383,153 @@ void execute_exit(char *inpt)
 //void  execute_env(char *inpt)
 
 //void  execute_export(char *inpt)
+
+void    execute_cd(char *inpt)
+{
+    /*Relative Path: A path that is relative to the current directory. For example, cd folder changes to a subdirectory folder within the current directory.
+    Absolute Path: A path that starts from the root directory. For example, cd /home/user/folder changes to the specified directory starting from the root.*/
+
+    //init necessary var
+    int     i;//start index after c comm
+    char    *path;//buffer to hold direct path
+    int     j;//index in the path buffer
+
+    i = 2;
+    j = 0;
+    //skip whitespace
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+    //extract dir path
+    path = malloc(sizeof(char *) * ft_strlen(inpt));
+    while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < 255)
+        path[j++] = inpt[i++];
+    path[j] = '\0';
+    //Edge case handling, eg. no dir path provided
+    if (j == 0)
+    {
+        ft_printf("error: cd needs a directory path\n");
+        return;
+    }
+    // Change directory
+    if (chdir(path) != 0)
+    {
+        perror("cd");
+    }
+}
+
+extern char **environ;
+
+void  execute_unset(char *inpt)
+{
+    /*function to remove an environment variable*/
+    // Initialization
+    int i; 
+    pid_t pid;
+    char varname[70000];
+    long unsigned int j;
+    //this needs to be changed as soon as we adapt to structs or global var
+    char **env;
+
+    i = 6; // Start after the "unset" command
+    j = 0;
+    // Skip leading spaces and tabs
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+
+    // Check if there is a variable name provided
+    if (inpt[i] == '\0')
+    {
+        ft_printf("error: unset needs a variable name\n");
+        return;
+    }
+
+    // Fork a new process
+    /*If fork returns -1, the creation of the child process failed
+    If fork returns 0, the code is running in the child process
+    If fork returns a positive value, the code is running in the parent process, and the value is the PID of the child process.*/
+    pid = fork(); // fork is used to create a new process/child process runs concurrently with the parent process
+    if (pid == -1)
+    {
+        perror("fork");
+        return;
+    }
+    else if (pid == 0)
+    {
+        // child process to extract the variable name + ...
+        while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < sizeof(varname) - 1)
+            varname[j++] = inpt[i++];
+        varname[j] = '\0';
+
+         // Remove the variable from the environment
+        env = environ;
+        while (*env != NULL)
+        {
+            if (ft_strncmp(*env, varname, ft_strlen(varname)) == 0 && (*env)[ft_strlen(varname)] == '=')
+            {
+                // Shift all subsequent environment variables one position to the left
+                while (env[1] != NULL)
+                {
+                    *env = *(env + 1);
+                    env++;
+                }
+                *env = NULL;
+                break;
+            }
+            env++;
+        }
+        exit(0);
+    }
+    else
+    {
+        // Wait for the child process to finish
+        if (waitpid(pid, NULL, 0) == -1)
+        {
+            perror("waitpid");
+        }
+    }
+}
+
+void    execute_env(void)
+{
+    /*function to print the environment variables*/
+    // Initialization
+    int i;
+    pid_t pid;
+    // Fork a new process
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("fork");
+        return;
+    }
+    else if (pid == 0)
+    {
+        // Child process to print the environment variables
+        i = 0;
+        while (environ[i] != NULL)
+        {
+            ft_printf("%s\n", environ[i]);
+            i++;
+        }
+        exit(0);
+    }
+    else
+    {
+        // Wait for the child process to finish
+        if (waitpid(pid, NULL, 0) == -1)
+        {
+            perror("waitpid");
+        }
+    }
+}
+
+void    execute_export(char *inpt)
+{
+    int i;
+
+    while (inpt[i] == ' ' || inpt[i] == '\t')
+        i++;
+    if (inpt[i] == '\0')
+        perror("export");
+    
+}
