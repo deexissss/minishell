@@ -49,7 +49,7 @@ int main()
 void ft_checker(char *inpt)
 {
     if (memcmp(inpt, "cd", 2) == 0)
-        printf("cd");
+        execute_cd(inpt);
     if (memcmp(inpt, "ls -l", 5) == 0)
         execute_lsl();
     if (memcmp(inpt, "ls", 2) == 0)
@@ -68,6 +68,10 @@ void ft_checker(char *inpt)
         execute_touch(inpt);
     if (memcmp(inpt, "exit", 4) == 0)
         execute_exit(inpt);
+    if (memcmp(inpt, "unset", 5) == 0)
+        execute_unset(inpt);
+    if (memcmp(inpt, "env", 3) == 0)
+        execute_env();
 }
 
 int main()

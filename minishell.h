@@ -70,5 +70,8 @@ void	execute_cat(char *inpt);
 void	execute_rm(char *inpt);
 void	execute_touch(char *inpt);
 void	execute_exit(char *inpt);
+void 	execute_unset(char *inpt);
+void    execute_cd(char *inpt);
+void    execute_env(void);
 
 #endif
