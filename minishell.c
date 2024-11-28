@@ -72,6 +72,8 @@ void ft_checker(char *inpt)
         execute_unset(inpt);
     if (memcmp(inpt, "env", 3) == 0)
         execute_env();
+    if (memcmp(inpt, "export", 6) == 0)
+        execute_export(inpt);
 }
 
 int main()
