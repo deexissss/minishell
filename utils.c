@@ -418,21 +418,14 @@ void    execute_cd(char *inpt)
     }
 }
 
-extern char **environ;
+extern char **environ;;
 
-void  execute_unset(char *inpt)
+void execute_unset(char *inpt)
 {
-    /*function to remove an environment variable*/
-    // Initialization
-    int i; 
-    pid_t pid;
-    char varname[70000];
-    long unsigned int j;
-    //this needs to be changed as soon as we adapt to structs or global var
-    char **env;
+    int i = 6; // Start after the "unset" command
+    char varname[256];
+    long unsigned int j = 0;
 
-    i = 6; // Start after the "unset" command
-    j = 0;
     // Skip leading spaces and tabs
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
@@ -444,49 +437,27 @@ void  execute_unset(char *inpt)
         return;
     }
 
-    // Fork a new process
-    /*If fork returns -1, the creation of the child process failed
-    If fork returns 0, the code is running in the child process
-    If fork returns a positive value, the code is running in the parent process, and the value is the PID of the child process.*/
-    pid = fork(); // fork is used to create a new process/child process runs concurrently with the parent process
-    if (pid == -1)
-    {
-        perror("fork");
-        return;
-    }
-    else if (pid == 0)
-    {
-        // child process to extract the variable name + ...
-        while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < sizeof(varname) - 1)
-            varname[j++] = inpt[i++];
-        varname[j] = '\0';
+    // Extract the variable name
+    while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < sizeof(varname) - 1)
+        varname[j++] = inpt[i++];
+    varname[j] = '\0';
 
-         // Remove the variable from the environment
-        env = environ;
-        while (*env != NULL)
-        {
-            if (ft_strncmp(*env, varname, ft_strlen(varname)) == 0 && (*env)[ft_strlen(varname)] == '=')
-            {
-                // Shift all subsequent environment variables one position to the left
-                while (env[1] != NULL)
-                {
-                    *env = *(env + 1);
-                    env++;
-                }
-                *env = NULL;
-                break;
-            }
-            env++;
-        }
-        exit(0);
-    }
-    else
+    // Remove the variable from the environment
+    j = 0;
+    while (environ[j] != NULL)
     {
-        // Wait for the child process to finish
-        if (waitpid(pid, NULL, 0) == -1)
+        if (strncmp(environ[j], varname, strlen(varname)) == 0 && environ[j][strlen(varname)] == '=')
         {
-            perror("waitpid");
+            // Shift all subsequent environment variables one position to the left
+            while (environ[j + 1] != NULL)
+            {
+                environ[j] = environ[j + 1];
+                j++;
+            }
+            environ[j] = NULL;
+            break;
         }
+        j++;
     }
 }
 
