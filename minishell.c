@@ -49,27 +49,68 @@ void execute_commands(char *inpt)
     char *command;
     int i;
     int j;
+    int k;
     int len;
     int end;
+    int flag;
 
     i = 0;
     j = 0;
+    k = 0;
     len = ft_strlen(inpt);
+    flag = 0;
     while (i < len)
     {
         while (i < len && (inpt[i] == ' ' || inpt[i] == '\t'))
             i++;
         j = i;
-        while (j < len && !(inpt[j] == '&' && inpt[j + 1] == '&'))
+        while ((j < len && !(inpt[j] == '&' && inpt[j + 1] == '&')) || (j < len && !(inpt[j] == ';')))
             j++;
         command = ft_strndup(inpt + i, j - i);
         end = ft_strlen(command) - 1;
         while (end >= 0 && (command[end] == ' ' || command[end] == '\t'))
             command[end--] = '\0';
-        ft_checker(command);
-        free(command);
+        while (command[k] != '\0')
+        {
+            if (command[k] == ';' || command[k] == '\\')
+            {
+                ft_printf("minishell: syntax error near unexpected char\n");
+                flag = 1;
+                break;
+            }
+            k++;
+        }
+        if (flag == 0)
+            ft_checker(command);
+        //free(command);
         i = j + 2;
     }
+}
+
+
+int    handle_quote(char *inpt)
+{
+    int i;
+    int countsimple;
+    int countdouble;
+
+    i = 0;
+    countsimple = 0;
+    countdouble = 0;
+    while (inpt[i] != '\0')
+    {
+        if (inpt[i] == '\'')
+            countsimple++;
+        else if (inpt[i] == '\"')
+            countdouble++;
+        i++;
+    }
+    if (countsimple % 2 != 0 || countdouble % 2 != 0)
+    {
+        ft_printf("minishell: syntax error near unexpected char\n");
+        return 1;
+    }
+    return 0;
 }
 
 char *execute_pwdmain()
@@ -93,6 +134,7 @@ void handle_sigint(int sig)
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
+
 }
 
 int main()
@@ -102,11 +144,17 @@ int main()
     signal(SIGINT, handle_sigint);
     while (1)
     {
-        printf(BLUE "-> Minishell$ %s " RESET, execute_pwdmain());
-        inpt = readline("");
+        //printf(BLUE "-> Minishell$ %s " RESET, execute_pwdmain());
+        inpt = readline(BLUE "-> Minishell$ " RESET);
         if (!inpt)
             break;
-        execute_commands(inpt);
+        if (ft_strlen(inpt) == 0)
+        {
+            printf("\n");
+            free(inpt);
+        }
+        if (handle_quote(inpt) == 0)
+            execute_commands(inpt);
         syntax_error(inpt);
         add_history(inpt);
         free(inpt);
