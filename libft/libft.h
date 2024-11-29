@@ -70,5 +70,5 @@ int		ft_printptr(unsigned long long ptr);
 int		ft_printint(int nb);
 int		ft_printunsigned(unsigned int nb);
 int		count_digit(int nb);
-
+char	    *ft_strndup(const char *s, int n);
 #endif

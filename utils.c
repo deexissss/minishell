@@ -64,37 +64,40 @@ void    execute_lsl()
         waitpid(pid, NULL, 0);
 }*/
 
-void execute_ls() {
+void execute_ls()
+{
     DIR *dir;
     struct dirent *entry;
     pid_t pid;
 
     pid = fork();
-    if (pid == -1) {
+    if (pid == -1)
+    {
         perror("fork");
         return;
     }
-    else if (pid == 0) {
+    else if (pid == 0)
+    {
         dir = opendir(".");
-        if (dir == NULL) {
+        if (dir == NULL)
+        {
             perror("opendir");
             exit(1);
         }
-
-        while ((entry = readdir(dir)) != NULL) {
-            if (entry->d_name[0] != '.') {
+        while ((entry = readdir(dir)) != NULL)
+        {
+            if (entry->d_name[0] != '.')
+            {
                 write(1, entry->d_name, ft_strlen(entry->d_name));
                 write(1, "  ", 3);
             }
         }
-        write(1, "\n", 1);
-        
         closedir(dir);
         exit(0);
     }
-    else {
+    else
         waitpid(pid, NULL, 0);
-    }
+    printf("\n");
 }
 
 void execute_pwd()
@@ -121,20 +124,6 @@ void execute_pwd()
     else
         waitpid(pid, NULL, 0);
 }
-/*
-void    execute_echo(char *inpt)
-{
-    int     i;
-
-    i = 4;
-    while (inpt[i] == ' ' || inpt[i] == '\t')
-        i++;
-    while (inpt[i])
-    {
-        write(1, &inpt[i], 1);
-        i++;
-    }
-}*/
 
 void    execute_echo(char *inpt)
 {
@@ -172,15 +161,15 @@ void    execute_sleep(char *inpt)
 {
     int     i;
     int     time;
-    pid_t pid = fork();
+    pid_t pid;
 
     i = 5;
     time = 0;
+    pid = fork();
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
     if (inpt[i] == '\0')
         perror("sleep");
-        //ft_printf("error : sleep need a time");
     while (inpt[i] >= '0' && inpt[i] <= '9')
     {
         time = time * 10 + (inpt[i] - '0');
@@ -253,6 +242,7 @@ void execute_cat(char *inpt)
     }
     else
         waitpid(pid, NULL, 0);
+    printf("\n");
 }
 
 void execute_rm(char *inpt)
