@@ -7,7 +7,7 @@ SOURCES = ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
 	  ft_toupper.c ft_split.c ft_itoa.c ft_strmapi.c ft_striteri.c \
 	  ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
 	  ft_printchar.c ft_printdecimalint.c ft_printf.c ft_printptr.c \
-	  ft_printhexa.c ft_printstr.c ft_printunsigned.c \
+	  ft_printhexa.c ft_printstr.c ft_printunsigned.c ft_strndup.c\
 	  gnl.c
 
 OBJECTS = $(SOURCES:.c=.o)
