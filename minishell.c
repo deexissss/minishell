@@ -14,6 +14,30 @@
 #define BLUE "\033[1;34m"
 #define RESET "\033[0m"
 
+char *cleanup_string(char *str)
+{
+    int i;
+    int j;
+    char *clean_str;
+
+    i = 0;
+    j = 0;
+    clean_str = malloc(strlen(str) + 1);
+    if (!clean_str)
+        return NULL;
+    while (str[i] != '\0')
+    {
+        if (str[i] != '\'' && str[i] != '\"')
+        {
+            clean_str[j] = str[i];
+            j++;
+        }
+        i++;
+    }
+    clean_str[j] = '\0';
+    return clean_str;
+}
+
 void ft_checker(char *command)
 {
     if (memcmp(command, "cd", 2) == 0)
@@ -46,13 +70,14 @@ void ft_checker(char *command)
 
 void execute_commands(char *inpt)
 {
-    char *command;
-    int i;
-    int j;
-    int k;
-    int len;
-    int end;
-    int flag;
+    char    *command;
+    char    *clean_command;
+    int     i;
+    int     j;
+    int     k;
+    int     len;
+    int     end;
+    int     flag;
 
     i = 0;
     j = 0;
@@ -81,8 +106,15 @@ void execute_commands(char *inpt)
             k++;
         }
         if (flag == 0)
-            ft_checker(command);
-        //free(command);
+        {
+            clean_command = cleanup_string(command);
+            free(command);
+            if (clean_command)
+            {
+                ft_checker(clean_command);
+                free(clean_command);
+            }
+        }
         i = j + 2;
     }
 }
