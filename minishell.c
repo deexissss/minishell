@@ -162,7 +162,7 @@ void handle_sigint(int sig)
 {
     (void)sig;
     printf("\n");
-    printf(BLUE "-> Minishell$ %s " RESET, execute_pwdmain());
+    printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
@@ -176,15 +176,12 @@ int main()
     signal(SIGINT, handle_sigint);
     while (1)
     {
-        //printf(BLUE "-> Minishell$ %s " RESET, execute_pwdmain());
-        inpt = readline(BLUE "-> Minishell$ " RESET);
+        printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
+        inpt = readline(BLUE "$ " RESET);
         if (!inpt)
             break;
         if (ft_strlen(inpt) == 0)
-        {
-            printf("\n");
             free(inpt);
-        }
         if (handle_quote(inpt) == 0)
             execute_commands(inpt);
         syntax_error(inpt);
