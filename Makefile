@@ -6,7 +6,8 @@ R_FLAG		=	-lreadline
 LIBFT_FILE	=	libft/libft.a
 LIBFT		=	$(LIBFT_FILE)
 
-C_FILE		=	$(wildcard *.c)
+C_FILE		=	$(wildcard *.c) \
+				$(wildcard functions/*.c) \
 
 SRC			=	$(C_FILE)
 OBJ			=	$(SRC:.c=.o)

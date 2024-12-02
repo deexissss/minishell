@@ -145,19 +145,6 @@ int    handle_quote(char *inpt)
     return 0;
 }
 
-char *execute_pwdmain()
-{
-    static char cwd[50000];
-
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-        return cwd;
-    else
-    {
-        perror("getcwd");
-        return NULL;
-    }
-}
-
 void handle_sigint(int sig)
 {
     (void)sig;
