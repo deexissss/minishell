@@ -25,7 +25,7 @@ void    syntax_error(char *inpt)
     if (memcmp(inpt, "<>", 2) == 0)
         ft_printf("syntax error");
 }
-
+/*
 void    execute_lsl()
 {
     char *args[] = {"/bin/ls", "-l", NULL};
@@ -45,7 +45,7 @@ void    execute_lsl()
         waitpid(pid, NULL, 0);
 }
 
-/*void    execute_ls()
+void    execute_ls()
 {
     char *args[] = {"/bin/ls", NULL};
     pid_t pid = fork();
@@ -63,7 +63,7 @@ void    execute_lsl()
     else
         waitpid(pid, NULL, 0);
 }*/
-
+/*
 void execute_ls()
 {
     DIR *dir;
@@ -243,8 +243,8 @@ void execute_cat(char *inpt)
     else
         waitpid(pid, NULL, 0);
     printf("\n");
-}
-
+}*/
+/*
 void execute_rm(char *inpt)
 {
     int i = 2;
@@ -377,8 +377,8 @@ void execute_exit(char *inpt)
 
 void    execute_cd(char *inpt)
 {
-    /*Relative Path: A path that is relative to the current directory. For example, cd folder changes to a subdirectory folder within the current directory.
-    Absolute Path: A path that starts from the root directory. For example, cd /home/user/folder changes to the specified directory starting from the root.*/
+    //Relative Path: A path that is relative to the current directory. For example, cd folder changes to a subdirectory folder within the current directory.
+    //Absolute Path: A path that starts from the root directory. For example, cd /home/user/folder changes to the specified directory starting from the root.
 
     //init necessary var
     int     i;//start index after c comm
@@ -453,7 +453,7 @@ void execute_unset(char *inpt)
 
 void    execute_env(void)
 {
-    /*function to print the environment variables*/
+    //function to print the environment variables
     // Initialization
     int i;
     pid_t pid;
@@ -568,4 +568,4 @@ void    execute_export(char *inpt)
     // Update the environment variables
     environ = new_environ;
     //do we need to free the old environ?
-}
+}*/
