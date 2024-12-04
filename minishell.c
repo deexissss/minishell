@@ -14,6 +14,58 @@
 #define BLUE "\033[1;34m"
 #define RESET "\033[0m"
 
+char *get_env_value(const char *var)
+{
+    char *value = getenv(var);
+    if (value)
+        return strdup(value);
+    else
+        return NULL;
+}
+
+char *handle_dollar(char *command)
+{
+    char    *result;
+    char    *var_start;
+    char    *var_end;
+    char    *var_value;
+    int     i;
+    int     j;
+
+    result = malloc(ft_strlen(command) + 1);
+    i = 0;
+    j = 0;
+
+    while(command[i] != '\0')
+    {
+        //check for $ and if it is not escaped
+        if (command[i] == '$' && (i == 0 || command[i - 1] != '\\'))
+        {
+            var_start = &command[i +1];//points to the character after the $
+            var_end = var_start;//takes the same position as var_start
+            //traverses the variable name using the position of var_end
+            while (*var_end && (ft_isalnum((int)*var_end) || *var_end == '_'))
+                var_end++;
+            char var_name[var_end - var_start + 1];
+            ft_strlcpy(var_name, var_start, var_end - var_start); //copy temporarily the variable name
+            var_name[var_end - var_start] = '\0';
+            var_value = get_env_value(var_name);
+            if (var_value)
+            {
+                ft_strcpy(&result[j], var_value);
+                j += ft_strlen(var_value);
+                free(var_value);
+            }
+            i = var_end - command;
+        }
+        // if the character is not a $ or the $ is escaped simply copy the character
+        else
+        result[j++] = command[i++];
+    }
+    result[j] = '\0';
+    return (result);
+}
+
 char *cleanup_string(char *str)
 {
     int i;
@@ -72,6 +124,7 @@ void execute_commands(char *inpt)
 {
     char    *command;
     char    *clean_command;
+    char    *expanded_command;
     int     i;
     int     j;
     int     k;
@@ -93,7 +146,10 @@ void execute_commands(char *inpt)
         //while ((j < len && !(inpt[j] == '&' && inpt[j + 1] == '&')) || (j < len && !(inpt[j] == ';')))
             j++;
         command = ft_strndup(inpt + i, j - i);
+        expanded_command = handle_dollar(command);
+        free (command);
         end = ft_strlen(command) - 1;
+        command = expanded_command;
         while (end >= 0 && (command[end] == ' ' || command[end] == '\t'))
             command[end--] = '\0';
         while (command[k] != '\0')
