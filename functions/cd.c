@@ -1,10 +1,11 @@
 #include "../minishell.h"
 
-void    execute_cd(char *inpt)
-{
-    /*Relative Path: A path that is relative to the current directory. For example, cd folder changes to a subdirectory folder within the current directory.
+/*Relative Path: A path that is relative to the current directory. For example, cd folder changes to a subdirectory folder within the current directory.
     Absolute Path: A path that starts from the root directory. For example, cd /home/user/folder changes to the specified directory starting from the root.*/
 
+
+void    execute_cd(char *inpt)
+{
     //init necessary var
     int     i;//start index after c comm
     char    *path;//buffer to hold direct path
@@ -30,3 +31,4 @@ void    execute_cd(char *inpt)
     if (chdir(path) != 0)
         perror("cd");
 }
+
