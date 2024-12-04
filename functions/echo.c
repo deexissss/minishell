@@ -3,11 +3,10 @@
 void    execute_echo(char *inpt)
 {
     int     i;
-    int     n;//flag to control newline printing
+    int     n;
 
     i = 4;
-    n = 1; //newline character will be printed by default
-    //skip whitespace
+    n = 1;
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
     //check for -n flag
@@ -17,7 +16,6 @@ void    execute_echo(char *inpt)
     {
         n = 0;//if detected n set to 0 to disable newline printing
         i += 2;// move index past -n
-        //skip any additional whitespace after -n flag
         while(inpt[i] == ' ' || inpt[i] == '\t')
             i++;
     }

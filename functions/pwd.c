@@ -2,7 +2,7 @@
 
 void    execute_pwd()
 {
-    char cwd[50000];
+    char cwd[4096];
     pid_t pid;
 
     pid = fork();
@@ -27,7 +27,7 @@ void    execute_pwd()
 
 char    *execute_pwdmain(void)
 {
-    static char cwd[50000];
+    static char cwd[4096];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL)
         return cwd;

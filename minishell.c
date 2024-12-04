@@ -89,7 +89,8 @@ void execute_commands(char *inpt)
         while (i < len && (inpt[i] == ' ' || inpt[i] == '\t'))
             i++;
         j = i;
-        while ((j < len && !(inpt[j] == '&' && inpt[j + 1] == '&')) || (j < len && !(inpt[j] == ';')))
+        while (j < len && !(inpt[j] == '&' && inpt[j + 1] == '&'))
+        //while ((j < len && !(inpt[j] == '&' && inpt[j + 1] == '&')) || (j < len && !(inpt[j] == ';')))
             j++;
         command = ft_strndup(inpt + i, j - i);
         end = ft_strlen(command) - 1;
