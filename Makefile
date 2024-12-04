@@ -17,7 +17,7 @@ PINK := \033[1;35m
 BLUE2 := \033[0;36m
 
 .c.o:
-	$(CC) $(FLAG) -c $< -o $@
+	@$(CC) $(FLAG) -c $< -o $@
 
 all: $(NAME)
 
