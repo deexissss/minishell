@@ -8,7 +8,7 @@ static void check_var(char *input, int *i)
         (*i)++;
     if (input[*i] == '\0')
     {
-        ft_printf("error: unset needs a variable name\n");
+        printf("error: unset needs a variable name\n");
         return;
     }
 }

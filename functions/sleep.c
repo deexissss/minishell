@@ -27,7 +27,7 @@ static void	handle_child(int time)
 	time_str = ft_itoa(time);
 	if (!time_str)
 	{
-		write(2, "memory allocation error\n", 24);
+		printf("error: memory allocation error\n");
 		exit(1);
 	}
 	args[0] = "sleep";
@@ -35,7 +35,7 @@ static void	handle_child(int time)
 	args[2] = NULL;
 	if (execvp(args[0], args) == -1)
 	{
-		write(2, "execvp: error\n", 14);
+		printf("error: execvp failed\n");
 		free(time_str);
 		exit(1);
 	}
@@ -50,13 +50,13 @@ void	execute_sleep(char *input)
 	time = check_time(input);
 	if (time == -1)
 	{
-		write(2, "sleep: missing or invalid argument\n", 35);
+		printf("error: sleep needs a time in seconds\n");
 		return ;
 	}
 	pid = fork();
 	if (pid == -1)
 	{
-		write(2, "fork: error\n", 12);
+		printf("error: fork failed\n");
 		return ;
 	}
 	else if (pid == 0)

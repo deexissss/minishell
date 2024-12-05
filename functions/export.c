@@ -11,7 +11,7 @@ void    extract_varname_and_value(char *inpt, char *varname, char *value)
         i++;
     if (inpt[i] == '\0')
     {
-        ft_printf("error: export missing operand\n");
+        printf("error: export missing operand\n");
         return;
     }
     while (inpt[i] && inpt[i] != '=' && inpt[i] != '\t' && j < sizeof(varname) - 1)
@@ -19,7 +19,7 @@ void    extract_varname_and_value(char *inpt, char *varname, char *value)
     varname[j] = '\0';
     if (inpt[i] != '=')
     {
-        ft_printf("error: export missing '=' after variable name\n");
+        printf("error: export missing '=' after variable name\n");
         return;
     }
     i++;

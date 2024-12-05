@@ -11,84 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#define BLUE "\033[1;34m"
-#define RESET "\033[0m"
-
-char *get_env_value(const char *var)
-{
-    char *value = getenv(var);
-    if (value)
-        return strdup(value);
-    else
-        return NULL;
-}
-
-char *handle_dollar(char *command)
-{
-    char    *result;
-    char    *var_start;
-    char    *var_end;
-    char    *var_value;
-    int     i;
-    int     j;
-
-    result = malloc(ft_strlen(command) + 1);
-    i = 0;
-    j = 0;
-
-    while(command[i] != '\0')
-    {
-        //check for $ and if it is not escaped
-        if (command[i] == '$' && (i == 0 || command[i - 1] != '\\'))
-        {
-            var_start = &command[i +1];//points to the character after the $
-            var_end = var_start;//takes the same position as var_start
-            //traverses the variable name using the position of var_end
-            while (*var_end && (ft_isalnum((int)*var_end) || *var_end == '_'))
-                var_end++;
-            char var_name[var_end - var_start + 1];
-            ft_strlcpy(var_name, var_start, var_end - var_start); //copy temporarily the variable name
-            var_name[var_end - var_start] = '\0';
-            var_value = get_env_value(var_name);
-            if (var_value)
-            {
-                ft_strcpy(&result[j], var_value);
-                j += ft_strlen(var_value);
-                free(var_value);
-            }
-            i = var_end - command;
-        }
-        // if the character is not a $ or the $ is escaped simply copy the character
-        else
-        result[j++] = command[i++];
-    }
-    result[j] = '\0';
-    return (result);
-}
-
-char *cleanup_string(char *str)
-{
-    int i;
-    int j;
-    char *clean_str;
-
-    i = 0;
-    j = 0;
-    clean_str = malloc(strlen(str) + 1);
-    if (!clean_str)
-        return NULL;
-    while (str[i] != '\0')
-    {
-        if (str[i] != '\'' && str[i] != '\"')
-        {
-            clean_str[j] = str[i];
-            j++;
-        }
-        i++;
-    }
-    clean_str[j] = '\0';
-    return clean_str;
-}
 
 void ft_checker(char *command)
 {
@@ -120,6 +42,7 @@ void ft_checker(char *command)
         execute_export(command);
 }
 
+/*
 void execute_commands(char *inpt)
 {
     char    *command;
@@ -143,7 +66,6 @@ void execute_commands(char *inpt)
             i++;
         j = i;
         while (j < len && !(inpt[j] == '&' && inpt[j + 1] == '&'))
-        //while ((j < len && !(inpt[j] == '&' && inpt[j + 1] == '&')) || (j < len && !(inpt[j] == ';')))
             j++;
         command = ft_strndup(inpt + i, j - i);
         expanded_command = handle_dollar(command);
@@ -174,8 +96,75 @@ void execute_commands(char *inpt)
         }
         i = j + 2;
     }
+}*/
+char *handle_command(char *command)
+{
+    char *expanded_command;
+    int end;
+
+    expanded_command = handle_dollar(command);
+    free(command);
+    command = expanded_command;
+    end = ft_strlen(command) - 1;
+    while (end >= 0 && (command[end] == ' ' || command[end] == '\t'))
+        command[end--] = '\0';
+    return command;
 }
 
+static int check_command(char *command)
+{
+    int k = 0;
+
+    while (command[k] != '\0')
+    {
+        if (command[k] == ';' || command[k] == '\\')
+        {
+            printf("error: syntax error\n");
+            return 1;
+        }
+        k++;
+    }
+    return 0;
+}
+
+static void process_command(char *command)
+{
+    char *clean_command;
+
+    clean_command = cleanup_string(command);
+    free(command);
+    if (clean_command)
+    {
+        ft_checker(clean_command);
+        free(clean_command);
+    }
+}
+
+void execute_commands(char *inpt)
+{
+    int i;
+    int j;
+    int len;
+    char *command;
+
+    i = 0;
+    len = ft_strlen(inpt);
+    while (i < len)
+    {
+        while (i < len && (inpt[i] == ' ' || inpt[i] == '\t'))
+            i++;
+        j = i;
+        while (j < len && !(inpt[j] == '&' && inpt[j + 1] == '&'))
+            j++;
+        command = ft_strndup(inpt + i, j - i);
+        command = handle_command(command);
+        if (check_command(command) == 0)
+            process_command(command);
+        else
+            free(command);
+        i = j + 2;
+    }
+}
 
 int    handle_quote(char *inpt)
 {
@@ -202,16 +191,6 @@ int    handle_quote(char *inpt)
     return 0;
 }
 
-void handle_sigint(int sig)
-{
-    (void)sig;
-    printf("\n");
-    printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
-
-}
 
 int main()
 {

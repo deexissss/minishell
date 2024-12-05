@@ -34,7 +34,7 @@ void execute_ls()
             if (entry->d_name[0] != '.')
             {
                 write(1, entry->d_name, ft_strlen(entry->d_name));
-                write(1, "  ", 3);
+                write(1, "   ", 3);
             }
         }
         closedir(dir);
