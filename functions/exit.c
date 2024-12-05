@@ -22,7 +22,7 @@ int give_status(char *input, int *i)
             status = status * 10 + (input[(*i)++] - '0');
         else
         {
-            write(1, "error: numeric argument required\n", 34);
+            printf("error: numeric argument required\n");
             return (-1);
         }
     }
@@ -41,13 +41,13 @@ void    execute_exit(char *input)
     if ((input[i] == '-' && input[i + 1] == '-') ||
         (input[i] == '+' && input[i + 1] == '+'))
     {
-        write(1, "error: numeric argument required\n", 34);
+        printf("error: numeric argument required\n");
         return ;
     }
     status = give_status(input, &i);
     if (status >= 0)
     {
-        write(1, "exit\n", 5);
+        printf("exit\n");
         exit(status * sign);
     }
 }

@@ -30,6 +30,10 @@
 #include <sys/wait.h>
 #include "libft/libft.h"
 
+
+#define BLUE "\033[1;34m"
+#define RESET "\033[0m"
+
 /*To hold key-value data, like environment var in a linked list
 //exmp. t_list *node1 = malloc(sizeof(t_list));
 node1->key = strdup("PATH");
@@ -75,5 +79,9 @@ void    execute_cd(char *inpt);
 void    execute_env(void);
 void    execute_export(char *inpt);
 char	*execute_pwdmain(void);
+char	*get_env_value(const char *var);
+char	*cleanup_string(char *str);
+void	handle_sigint(int sig);
+char	*handle_dollar(char *command);
 
 #endif

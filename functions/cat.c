@@ -33,7 +33,6 @@ void handle_child_process(char *inpt, int i)
     while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < 70000)
         filename[j++] = inpt[i++];
     filename[j] = '\0';
-
     read_and_print_file(filename);
     exit(0);
 }
@@ -47,7 +46,7 @@ void execute_cat(char *inpt)
         i++;
     if (inpt[i] == '\0')
     {
-        printf("error : cat needs a file name\n");
+        printf("error: cat needs a file name\n");
         return;
     }
     pid = fork();

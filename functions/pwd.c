@@ -11,10 +11,8 @@ void    execute_pwd()
     else if (pid == 0)
     {
         if (getcwd(cwd, sizeof(cwd)) != NULL)
-        {
-            write(1, cwd, ft_strlen(cwd));
-            write(1, "\n", 1);
-        } else
+            printf("%s\n", cwd);
+        else
         {
             perror("getcwd");
             exit(1);

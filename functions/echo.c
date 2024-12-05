@@ -17,11 +17,12 @@ void    execute_echo(char *inpt)
         while(inpt[i] == ' ' || inpt[i] == '\t')
             i++;
     }
-    while (inpt[i])
+    /*while (inpt[i])
     {
         write(1, &inpt[i], 1);
         i++;
-    }
+    }*/
+    printf("%s", inpt + i);
     if(n)
-        write(1, "\n", 1);
+        printf("\n");
 }

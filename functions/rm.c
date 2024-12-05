@@ -53,7 +53,7 @@ void execute_rm(char *inpt)
     skip_space(inpt, &i);
     if (inpt[i] == '\0')
     {
-        write(1, "error: rm needs a filename\n", 27);
+        printf("error: rm needs a filename\n");
         return ;
     }
     pid = fork();
