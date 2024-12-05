@@ -97,6 +97,29 @@ void execute_commands(char *inpt)
         i = j + 2;
     }
 }*/
+
+bool is_quoted(const char *str, int pos)
+{
+    int i;
+    bool single_quote = false;
+    bool double_quote = false;
+
+    i = 0;
+    while(i < pos)
+    {
+        if (str[i] == '\'' && !double_quote)
+        {
+            single_quote = !single_quote;
+        }
+        else if (str[i] == '\"' && !single_quote)
+        {
+            double_quote = !double_quote;
+        }
+        i++;
+    }
+    return single_quote || double_quote;
+}
+
 char *handle_command(char *command)
 {
     char *expanded_command;
@@ -106,7 +129,7 @@ char *handle_command(char *command)
     free(command);
     command = expanded_command;
     end = ft_strlen(command) - 1;
-    while (end >= 0 && (command[end] == ' ' || command[end] == '\t'))
+    while (end >= 0 && (command[end] == ' ' || command[end] == '\t') && !is_quoted(command, end))
         command[end--] = '\0';
     return command;
 }
@@ -154,7 +177,7 @@ void execute_commands(char *inpt)
         while (i < len && (inpt[i] == ' ' || inpt[i] == '\t'))
             i++;
         j = i;
-        while (j < len && !(inpt[j] == '&' && inpt[j + 1] == '&'))
+        while (j < len && !(inpt[j] == '&' && inpt[j + 1] == '&' && !is_quoted(inpt, j)))
             j++;
         command = ft_strndup(inpt + i, j - i);
         command = handle_command(command);
