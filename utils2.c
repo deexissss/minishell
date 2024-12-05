@@ -4,7 +4,7 @@ char *get_env_value(const char *var)
 {
     char *value = getenv(var);
     if (value)
-        return strdup(value);
+        return ft_strdup(value);
     else
         return NULL;
 }
