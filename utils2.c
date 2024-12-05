@@ -11,26 +11,39 @@ char *get_env_value(const char *var)
 
 char *cleanup_string(char *str)
 {
-    int i;
-    int j;
-    char *clean_str;
+    int     i;
+    int     j;
+    char    *clean_str;
+    int     find_quote;
+    char    quote;
 
     i = 0;
     j = 0;
+    find_quote = 0;
     clean_str = malloc(strlen(str) + 1);
     if (!clean_str)
         return NULL;
-    while (str[i] != '\0')
+    while (str[i])
     {
-        if (str[i] != '\'' && str[i] != '\"')
+        if (find_quote == 0 && (str[i] == '\'' || str[i] == '"'))
+        {
+            find_quote = 1;
+            quote = str[i];
+        }
+        else if (find_quote == 1 && str[i] == quote)
+        {
+            find_quote = 0;
+            quote = '\0';
+        }
+        else
         {
             clean_str[j] = str[i];
             j++;
         }
         i++;
     }
-    clean_str[j] = '\0';
-    return clean_str;
+    clean_str[i] = '\0';
+    return (clean_str);
 }
 
 void handle_sigint(int sig)

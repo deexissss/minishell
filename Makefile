@@ -25,8 +25,8 @@ lib:
 	@cd libft && make
 
 $(NAME): lib $(OBJ)
-	$(CC) $(OBJ) $(LIBFT) $(R_FLAG) -o $(NAME)
-	@echo "$(BLUE) MINISHELL COMPILATION DONE"
+	@$(CC) $(OBJ) $(LIBFT) $(R_FLAG) -o $(NAME)
+	@echo "$(BLUE)MINISHELL COMPILATION DONE"
 
 clean:
 	@cd libft && make clean

@@ -5,8 +5,13 @@ void    execute_echo(char *inpt)
     int     i;
     int     n;
 
-    i = 4;
+    i = 5;
     n = 1;
+    if (inpt[i] != ' ' || inpt[i] != '\t')
+    {
+        printf("error: need a space between command and argument");
+        return;
+    }
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
     if (inpt[i] == '-' && inpt[i + 1] == 'n' && (inpt[i + 2] == ' ' || 
