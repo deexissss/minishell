@@ -83,5 +83,6 @@ char	*get_env_value(const char *var);
 char	*cleanup_string(char *str);
 void	handle_sigint(int sig);
 char	*handle_dollar(char *command);
+void	ft_checker(char *command);
 
 #endif
