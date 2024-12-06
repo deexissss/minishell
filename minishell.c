@@ -34,63 +34,6 @@ void ft_checker(char *command)
     }
 }*/
 
-/*void ft_checker(char *command)
-{
-    if (memcmp(command, "cd", 2) == 0)
-        execute_cd(command);
-    else if (memcmp(command, "env", 3) == 0)
-        execute_env();
-    else if (memcmp(command, "exit", 4) == 0)
-        execute_exit(command);
-    else if (memcmp(command, "echo", 4) == 0)
-        execute_echo(command);
-    else if (memcmp(command, "pwd", 3) == 0)
-        execute_pwd();
-    else if (memcmp(command, "unset", 5) == 0)
-        execute_unset(command);
-    else if (memcmp(command, "export", 6) == 0)
-        execute_export(command);
-    else
-    {
-        char **args = NULL;
-        char *path = NULL;
-        pid_t pid;
-        int status;
-        args = ft_split(command, ' ');
-        if (!args || !args[0])
-        {
-            printf("error: command not found\n");
-            free(args);
-            return;
-        }
-        path = ft_strjoin("/bin/", args[0]);
-        if (!path)
-        {
-            perror("malloc");
-            free(args);
-            return;
-        }
-        pid = fork();
-        if (pid == 0)
-        {
-            if (execve(path, args, NULL) == -1)
-            {
-                perror("minishell");
-                exit(EXIT_FAILURE);
-            }
-        }
-        else if (pid < 0)
-        {
-            perror("fork");
-        }
-        else
-        {
-            waitpid(pid, &status, 0);
-        }
-        free(path);
-        free(args);
-    }
-}*/
 
 
 /*
