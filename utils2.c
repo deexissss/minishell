@@ -42,7 +42,7 @@ char *cleanup_string(char *str)
         }
         i++;
     }
-    clean_str[i] = '\0';
+    clean_str[j] = '\0';
     return (clean_str);
 }
 
