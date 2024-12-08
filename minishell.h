@@ -82,6 +82,8 @@ char	*execute_pwdmain(void);
 char	*get_env_value(const char *var);
 char	*cleanup_string(char *str);
 void	handle_sigint(int sig);
+char 	**pipe_tokenizer(char *command, int *num_commands);
+//char	*handle_pipe(char *command);
 char	*handle_dollar(char *command);
 void	ft_checker(char *command);
 

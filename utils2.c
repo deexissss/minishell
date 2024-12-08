@@ -57,6 +57,52 @@ void handle_sigint(int sig)
 
 }
 
+/*splits string command into segments based on the pipe (|) character, 
+storing each segment in an array of strings.*/
+char **pipe_tokenizer(char *command, int *num_commands)
+{
+    char **commands;
+    int i;
+    int start;
+    int end;
+    int length;
+    int segment_length;
+
+    i = 0;
+    start = 0;
+    end = 0;
+    length = ft_strlen(command);
+    commands = malloc(sizeof(char *) * (length + 1));
+    if (!commands)
+    {
+        perror("malloc");
+        return NULL;
+    }
+    while (end <= length)
+    {
+        if (command[end] == '|' || command[end] == '\0')
+        {
+            //calculates the length of the current segment and allocates memory
+            segment_length = end - start;
+            commands[i] = malloc(segment_length + 1);//allocates memory for the segment specifically
+            if (!commands[i])
+            {
+                perror("malloc");
+                exit(EXIT_FAILURE);
+            }
+            //copies the segment into the commands array
+            ft_strncpy(commands[i], &command[start], segment_length);//copied from command[start] to command[end]/segment_length
+            commands[i][segment_length] = '\0';//this is new, but basically it adds a null terminator to the end of the segment and not the end of the command
+            i++;
+            start = end + 1;//to point to the beginning of the next segment
+        }
+        end++;
+    }
+
+    *num_commands = i;//updates the number of commands
+    return commands;
+}
+
 char *handle_dollar(char *command)
 {
     char    *result;
