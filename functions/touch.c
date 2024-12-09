@@ -93,8 +93,9 @@ static void check_fd(int fd)
 
 static void get_filename(char *inpt, char *filename, int *i)
 {
-    int j = 0;
+    int j;
 
+    j = 0;
     while (inpt[*i] && inpt[*i] != ' ' && inpt[*i] != '\t' && j < 255)
         filename[j++] = inpt[(*i)++];
     filename[j] = '\0';

@@ -145,3 +145,4 @@ char *handle_dollar(char *command)
     result[j] = '\0';
     return (result);
 }
+
