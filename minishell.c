@@ -146,14 +146,36 @@ static int check_command(char *command)
 
 static void process_command(char *command)
 {
-    char *clean_command;
+    char    *clean_command;
+    char    **commands;
+    int     num_commands;
+    int     i;
 
+    i = 0;
     clean_command = cleanup_string(command);
     free(command);
     if (clean_command)
     {
+        //check for pipe
+        if (ftstrchr(clean_command, '|' && !is_quoted(clean_command, '|')))
+        {
+            commands = pipe_tokenizer(clean_command, &num_commands);
+            if (commands)
+            {
+                execute_pipeline(commands, num_commands);
+                while (i < num_commands)
+                {
+                    free(commands[i]);
+                    i++;
+                }
+                free(commands);
+            }
+        }
+        else
+        {
         ft_checker(clean_command);
         free(clean_command);
+        }
     }
 }
 
