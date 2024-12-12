@@ -152,14 +152,12 @@ static void process_command(char *command)
     int     i;
 
     i = 0;
-    clean_command = cleanup_string(command);
-    free(command);
-    if (clean_command)
+    if (command)
     {
         //check for pipe
-        if (ftstrchr(clean_command, '|' && !is_quoted(clean_command, '|')))
+        if (ftstrchr(command, '|') && !is_pipe_inside_quotes(command))
         {
-            commands = pipe_tokenizer(clean_command, &num_commands);
+            commands = pipe_tokenizer(command, &num_commands);
             if (commands)
             {
                 execute_pipeline(commands, num_commands);
@@ -173,8 +171,13 @@ static void process_command(char *command)
         }
         else
         {
-        ft_checker(clean_command);
-        free(clean_command);
+            clean_command = cleanup_string(command);
+            free(command);
+            if (clean_command)
+                {
+                    ft_checker(clean_command);
+                    free(clean_command);
+                }
         }
     }
 }
@@ -238,8 +241,7 @@ int main()
     signal(SIGINT, handle_sigint);
     while (1)
     {
-        printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
-        inpt = readline(BLUE "$ " RESET);
+        inpt = readline(BLUE "Minishell $ " RESET);
         if (!inpt)
             break;
         if (ft_strlen(inpt) == 0)

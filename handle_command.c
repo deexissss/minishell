@@ -91,7 +91,7 @@ void ft_checker(char *command)
 {
     if (memcmp(command, "cd", 2) == 0)
         execute_cd(command);
-    if (memcmp(command, "clear", 5) == 0)
+    else if (memcmp(command, "clear", 5) == 0)
         clear_terminal(command);
     else if (memcmp(command, "env", 3) == 0)
         execute_env();

@@ -86,5 +86,7 @@ char 	**pipe_tokenizer(char *command, int *num_commands);
 void 	execute_pipeline(char **commands, int num_commands);
 char	*handle_dollar(char *command);
 void	ft_checker(char *command);
+int    	handle_quote(char *inpt);
+bool 	is_pipe_inside_quotes(const char *str);
 
 #endif

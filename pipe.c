@@ -1,5 +1,24 @@
 #include "minishell.h"
 
+// Helper function to check if a pipe is inside quotes
+bool is_pipe_inside_quotes(const char *str)
+{
+    bool in_single_quote = false;
+    bool in_double_quote = false;
+
+    while (*str)
+    {
+        if (*str == '\'' && !in_double_quote)
+            in_single_quote = !in_single_quote;
+        else if (*str == '"' && !in_single_quote)
+            in_double_quote = !in_double_quote;
+        else if (*str == '|' && !in_single_quote && !in_double_quote)
+            return false;
+        str++;
+    }
+    return true;
+}
+
 /*splits string command into segments based on the pipe (|) character, 
 storing each segment in an array of strings.*/
 char **pipe_tokenizer(char *command, int *num_commands)
