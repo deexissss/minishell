@@ -1,0 +1,10 @@
+echo "hello              "   ddsdsd
+=hello               ddsdsd
+echo "hello              "                                         ddsdsd
+=hello               ddsdsd
+
+echo "hello' ff"
+=hello' ff
+
+echo '"rerere'"
+=error

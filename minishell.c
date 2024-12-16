@@ -127,8 +127,37 @@ char *handle_command(char *command)
         command[end--] = '\0';
     return command;
 }
-
 static int check_command(char *command)
+{
+    int k = 0;
+    char quote = 0;
+
+    while (command[k] != '\0')
+    {
+        if (command[k] == '"' || command[k] == '\'')
+        {
+            if (quote == 0)
+                quote = command[k];
+            else if (quote == command[k])
+                quote = 0;
+        }
+        else if ((command[k] == ';' || command[k] == '\\') && quote == 0)
+        {
+            printf("error: syntax error\n");
+            return 1;
+        }
+        k++;
+    }
+
+    if (quote != 0)
+    {
+        printf("error: unmatched quotes\n");
+        return 1;
+    }
+
+    return 0;
+}
+/*static int check_command(char *command)
 {
     int k = 0;
 
@@ -142,7 +171,7 @@ static int check_command(char *command)
         k++;
     }
     return 0;
-}
+}*/
 
 static void process_command(char *command)
 {
@@ -227,7 +256,7 @@ int    handle_quote(char *inpt)
     }
     if (countsimple % 2 != 0 || countdouble % 2 != 0)
     {
-        ft_printf("minishell: syntax error near unexpected char\n");
+        ft_printf("minishell: syntax error quotes not closed\n");
         return 1;
     }
     return 0;
