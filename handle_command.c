@@ -47,7 +47,13 @@ void handle_external_command(char *command)
         free(args);
         return;
     }
-    if (access(path, X_OK) != 0)
+    if (path == NULL)
+    {
+        printf("\n");
+        free(args);
+        return;
+    }
+    else if (access(path, X_OK) != 0)
     {
         printf("error: command '%s' not found\n", args[0]);
         free(path);
@@ -97,8 +103,8 @@ void ft_checker(char *command)
         execute_env();
     else if (memcmp(command, "exit", 4) == 0)
         execute_exit(command);
-    else if (memcmp(command, "echo", 4) == 0)
-        execute_echo(command);
+    /*else if (memcmp(command, "echo", 4) == 0)
+        execute_echo(command);*/
     else if (memcmp(command, "pwd", 3) == 0)
         execute_pwd();
     else if (memcmp(command, "unset", 5) == 0)

@@ -23,6 +23,11 @@ char *cleanup_string(char *str)
     clean_str = malloc(strlen(str) + 1);
     if (!clean_str)
         return NULL;
+    if (memcmp(str, "echo", 4) == 0)
+    {
+        execute_echo(str);
+        return NULL;
+    }
     while (str[i])
     {
         if (find_quote == 0 && (str[i] == '\'' || str[i] == '"'))
