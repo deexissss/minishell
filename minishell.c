@@ -154,8 +154,32 @@ static void process_command(char *command)
     i = 0;
     if (command)
     {
+        printf("Processing command: %s\n", command); // Debug print
+        // Check for redirection operators
+        if ((ftstrchr(command, '<') || ftstrchr(command, '>')) && !is_redirection_operator_inside_quotes(command))
+        {
+            printf("Redirection operator found in command\n"); // Debug print
+            commands = redirection_tokenizer(command, &num_commands);
+            if (commands)
+            {
+                // Execute the command after handling redirections
+                while (i < num_commands)
+                {
+                    clean_command = cleanup_string(commands[i]);
+                    if (clean_command)
+                    {
+                        //printf("Executing command: %s\n", clean_command); // Debug print
+                        ft_checker(clean_command);
+                        free(clean_command);
+                    }
+                    free(commands[i]);
+                    i++;
+                }
+                free(commands);
+            }
+        }
         //check for pipe
-        if (ftstrchr(command, '|') && !is_pipe_inside_quotes(command))
+        else if (ftstrchr(command, '|') && !is_pipe_inside_quotes(command))
         {
             commands = pipe_tokenizer(command, &num_commands);
             if (commands)
@@ -175,6 +199,7 @@ static void process_command(char *command)
             free(command);
             if (clean_command)
                 {
+                    printf("Executing command: %s\n", clean_command); // Debug print
                     ft_checker(clean_command);
                     free(clean_command);
                 }

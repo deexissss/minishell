@@ -88,5 +88,12 @@ char	*handle_dollar(char *command);
 void	ft_checker(char *command);
 int    	handle_quote(char *inpt);
 bool 	is_pipe_inside_quotes(const char *str);
+bool 	is_redirection_operator_inside_quotes(const char *str);
+bool 	is_redirection_operator(char c);
+void 	handle_input_redirection(char *filename);
+void 	handle_output_redirection(char *filename, bool append);
+void 	handle_heredoc_redirection(char *delimiter);
+char 	**redirection_tokenizer(char *command, int *num_tokens);
+void 	execute_redirection(char *command, int start, int end);
 
 #endif
