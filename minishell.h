@@ -67,7 +67,7 @@ void    printnb(int nb);
 void    syntax_error(char *inpt);
 void    execute_lsl();
 void	execute_ls();
-void	execute_pwd();
+void	execute_pwd(char *command);
 void    execute_echo(char *inpt);
 void    execute_sleep(char *inpt);
 void	execute_cat(char *inpt);
@@ -76,7 +76,7 @@ void	execute_touch(char *inpt);
 void	execute_exit(char *inpt);
 void 	execute_unset(char *inpt);
 void    execute_cd(char *inpt);
-void    execute_env(void);
+void    execute_env(char *command);
 void    execute_export(char *inpt);
 char	*execute_pwdmain(void);
 char	*get_env_value(const char *var);
@@ -88,5 +88,8 @@ char	*handle_dollar(char *command);
 void	ft_checker(char *command);
 int    	handle_quote(char *inpt);
 bool 	is_pipe_inside_quotes(const char *str);
+bool    is_redi_inside_quotes(const char *str);
+char	**redirect_tokenizer(char *command, int *num_commands);
+void	execute_redirections(char **commands, int num_commands);
 
 #endif

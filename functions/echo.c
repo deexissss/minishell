@@ -119,13 +119,13 @@ static bool check_n_option(char *input, int *i)
             temp++;
         if (input[temp] == ' ' || input[temp] == '\t' || input[temp] == '\0')
         {
-            has_n_option = true;
+            n_flag = true;
             *i = skip_spaces(input, temp);
         }
         else
             break;
     }
-    return has_n_option;
+    return n_flag;
 }
 
 static void print_words(char *input, int i)
@@ -181,3 +181,4 @@ void execute_echo(char *input)
     if (!n_option)
         putchar('\n');
 }
+

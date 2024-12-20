@@ -1,10 +1,24 @@
 #include "../minishell.h"
 
-void    execute_pwd()
+void    execute_pwd(char *command)
 {
     char cwd[4096];
     pid_t pid;
+    int     i;
 
+    i = 0;
+    while (command[i] >= 'a' && command[i] <= 'z' && i < 3)
+        i++;
+    if (command[i] >= 'a' && command[i] <= 'z')
+    {
+        printf("error: command does not exit\ndid you mean pwd ?\n");
+        return;
+    }
+    else if (command[i] != '\0')
+    {
+        printf("error: pwd does not take any argument\n");
+        return;
+    }
     pid = fork();
     if (pid == -1)
         perror("fork");

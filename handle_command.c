@@ -100,13 +100,13 @@ void ft_checker(char *command)
     else if (memcmp(command, "clear", 5) == 0)
         clear_terminal(command);
     else if (memcmp(command, "env", 3) == 0)
-        execute_env();
+        execute_env(command);
     else if (memcmp(command, "exit", 4) == 0)
         execute_exit(command);
     /*else if (memcmp(command, "echo", 4) == 0)
         execute_echo(command);*/
     else if (memcmp(command, "pwd", 3) == 0)
-        execute_pwd();
+        execute_pwd(command);
     else if (memcmp(command, "unset", 5) == 0)
         execute_unset(command);
     else if (memcmp(command, "export", 6) == 0)
