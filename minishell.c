@@ -120,6 +120,7 @@ char *handle_command(char *command)
     int end;
 
     expanded_command = handle_dollar(command);
+    //printf("expanded_command: %s\n", expanded_command);
     free(command);
     command = expanded_command;
     end = ft_strlen(command) - 1;
@@ -263,6 +264,21 @@ int    handle_quote(char *inpt)
 }
 
 
+int check_empty_functions(char *inpt)
+{
+    int i;
+
+    i = 0;
+    while (inpt[i] != '\0')
+    {
+        if (inpt[i] == ' ' || inpt[i] == '\t' || inpt[i] == '\0')
+            i++;
+        else
+            return 1;
+    }
+    return 0;
+}
+
 int main()
 {
     char *inpt;
@@ -273,13 +289,15 @@ int main()
         inpt = readline(BLUE "Minishell $ " RESET);
         if (!inpt)
             break;
-        if (ft_strlen(inpt) == 0)
+        /*if (ft_strlen(inpt) == 0)
+            free(inpt);*/
+        else if (check_empty_functions(inpt) == 0)
             free(inpt);
-        if (handle_quote(inpt) == 0)
+        else if (handle_quote(inpt) == 0)
             execute_commands(inpt);
         syntax_error(inpt);
         add_history(inpt);
-        free(inpt);
+        //free(inpt);
     }
     return 0;
 }
@@ -303,8 +321,8 @@ int main()
     return 0;
 }*/
 
-/*
-void	ft_initialize(t_data *data)
+
+/*void	ft_initialize(t_data *data)
 {
 	data->is_pipe = 0;
 	data->pipe_locale = NULL;

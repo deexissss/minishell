@@ -60,13 +60,36 @@ void    add_variable_to_environ(char **new_environ, int env_size, char *varname,
     new_environ[env_size][j] = '\0';
 }
 
+void    remove_existing_var(char *varname)
+{
+    int i;
+    int len;
+
+    i = 0;
+    len = ft_strlen(varname);
+    while (environ[i] != NULL)
+    {
+        if (strncmp(environ[i], varname, len) == 0 && environ[i][len] == '=')
+        {
+            free(environ[i]);
+            while (environ[i] != NULL)
+            {
+                environ[i] = environ[i + 1];
+                i++;
+            }
+            return;
+        }
+        i++;
+    }
+}
+
 void    execute_export(char *inpt)
 {
     char varname[256];
     char value[256];
 
     extract_varname_and_value(inpt, varname, value);
-
+    remove_existing_var(varname);
     int env_size = get_env_size();
     char **new_environ = malloc(sizeof(char *) * (env_size + 2));
     if (!new_environ)

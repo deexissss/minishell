@@ -15,13 +15,10 @@ void read_and_print_file(const char *filename)
     fd = open(filename, O_RDONLY);
     if (fd == -1)
         print_error_and_exit("open");
-
     while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
         write(1, buffer, bytes_read);
-
     if (bytes_read == -1)
         print_error_and_exit("read");
-
     close(fd);
 }
 

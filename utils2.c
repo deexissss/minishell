@@ -55,7 +55,7 @@ void handle_sigint(int sig)
 {
     (void)sig;
     printf("\n");
-    printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
+    //printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
@@ -70,38 +70,46 @@ char *handle_dollar(char *command)
     char    *var_value;
     int     i;
     int     j;
+    int     in_single_quote = 0;
 
-    result = malloc(ft_strlen(command) + 1);
+    result = malloc((sizeof(char) * (strlen(command) + 1) * 2));
+    if (!result)
+    {
+        perror("malloc");
+        return NULL;
+    }
+
     i = 0;
     j = 0;
 
-    while(command[i] != '\0')
+    while (command[i] != '\0')
     {
-        //check for $ and if it is not escaped
-        if (command[i] == '$' && (i == 0 || command[i - 1] != '\\'))
+        if (command[i] == '\'')
         {
-            var_start = &command[i +1];//points to the character after the $
-            var_end = var_start;//takes the same position as var_start
-            //traverses the variable name using the position of var_end
-            while (*var_end && (ft_isalnum((int)*var_end) || *var_end == '_'))
+            in_single_quote = !in_single_quote;
+            result[j++] = command[i++];
+        }
+        else if (command[i] == '$' && (i == 0 || command[i - 1] != '\\') && !in_single_quote)
+        {
+            var_start = &command[i + 1];
+            var_end = var_start;
+            while (*var_end && (isalnum((int)*var_end) || *var_end == '_'))
                 var_end++;
             char var_name[var_end - var_start + 1];
-            ft_strlcpy(var_name, var_start, var_end - var_start); //copy temporarily the variable name
+            strncpy(var_name, var_start, var_end - var_start);
             var_name[var_end - var_start] = '\0';
             var_value = get_env_value(var_name);
             if (var_value)
             {
-                ft_strcpy(&result[j], var_value);
-                j += ft_strlen(var_value);
+                strcpy(&result[j], var_value);
+                j += strlen(var_value);
                 free(var_value);
             }
             i = var_end - command;
         }
-        // if the character is not a $ or the $ is escaped simply copy the character
         else
-        result[j++] = command[i++];
+            result[j++] = command[i++];
     }
     result[j] = '\0';
-    return (result);
+    return result;
 }
-
