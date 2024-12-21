@@ -184,6 +184,11 @@ static void process_command(char *command)
     i = 0;
     if (command)
     {
+        //check for redirection
+        if (ftstrchr(command, '>') || ftstrchr(command, '<'))
+        {
+            execute_redirection(command);
+        }
         //check for pipe
         if (ftstrchr(command, '|') && !is_pipe_inside_quotes(command))
         {
@@ -204,10 +209,10 @@ static void process_command(char *command)
             clean_command = cleanup_string(command);
             free(command);
             if (clean_command)
-                {
-                    ft_checker(clean_command);
-                    free(clean_command);
-                }
+            {
+                ft_checker(clean_command);
+                free(clean_command);
+            }
         }
     }
 }
@@ -282,11 +287,13 @@ int check_empty_functions(char *inpt)
 int main()
 {
     char *inpt;
+    int saved_stdin = dup(STDIN_FILENO);
+    int saved_stdout = dup(STDOUT_FILENO);
 
     signal(SIGINT, handle_sigint);
     while (1)
     {
-        inpt = readline(BLUE "Minishell $ " RESET);
+        inpt = readline(BLUE "Minishell$ " RESET);
         if (!inpt)
             break;
         /*if (ft_strlen(inpt) == 0)
@@ -298,7 +305,12 @@ int main()
         syntax_error(inpt);
         add_history(inpt);
         //free(inpt);
+        // Restore original file descriptors
+        dup2(saved_stdin, STDIN_FILENO);
+        dup2(saved_stdout, STDOUT_FILENO);
     }
+    close(saved_stdin);
+    close(saved_stdout);
     return 0;
 }
 
