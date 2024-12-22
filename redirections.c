@@ -88,98 +88,28 @@ void handle_heredoc_redirection(char *delimiter)
     dup2(pipefd[0], STDIN_FILENO);//duplicate the read end of the pipe to STDIN_FILENO, effectively redirecting stdin to read from the pipe
     close(pipefd[0]);
 }
-
-/*void execute_redirection(char *command)
+// Function to handle the command or arguments + concatenation of arguments with space
+void handle_command_or_args(char *token, char **cmd, char **args)
 {
-    char *token;
-
-    token = ft_strtok(command, " ");
-    while (token != NULL)
+    if (*cmd == NULL)
     {
-        if (ft_strcmp(token, ">") == 0)
-        {
-            token = ft_strtok(NULL, " ");
-            if (token != NULL)
-                handle_output_redirection(token, false);
-        }
-        else if (ft_strcmp(token, ">>") == 0)
-        {
-            token = ft_strtok(NULL, " ");
-            if (token != NULL)
-                handle_output_redirection(token, true);
-        }
-        else if (ft_strcmp(token, "<") == 0)
-        {
-            token = ft_strtok(NULL, " ");
-            if (token != NULL)
-                handle_input_redirection(token);
-        }
-        token = ft_strtok(NULL, " ");
+        *cmd = ft_strdup(token);
     }
-    return;
-}*/
-
-/*void execute_redirection(char *command)
-{
-    char *token;
-
-    printf("Executing redirection for command: %s\n", command);
-    token = ft_strtok(command, " ");
-    while (token != NULL)
-    {
-        printf("Token: %s\n", token);
-        if (ft_strcmp(token, ">") == 0)
-        {
-            token = ft_strtok(NULL, " ");
-            if (token != NULL)
-            {
-                printf("Output redirection to: %s (overwrite)\n", token);
-                handle_output_redirection(token, false);
-            }
-        }
-        else if (ft_strcmp(token, ">>") == 0)
-        {
-            token = ft_strtok(NULL, " ");
-            if (token != NULL)
-            {
-                printf("Output redirection to: %s (append)\n", token);
-                handle_output_redirection(token, true);
-            }
-        }
-        else if (ft_strcmp(token, "<") == 0)
-        {
-            token = ft_strtok(NULL, " ");
-            if (token != NULL)
-            {
-                printf("Input redirection from: %s\n", token);
-                handle_input_redirection(token);
-            }
-        }
-        token = ft_strtok(NULL, " ");
-    }
-}*/
-
-char *concatenate_arguments(char *cmd, char *args, const char *token)
-{
-    if (cmd == NULL)
-        cmd = strdup(token);
     else
     {
-        if (args == NULL)
-            args = strdup(token);
+        if (*args == NULL)
+            *args = ft_strdup(token);
         else
         {
-            char *temp = malloc(strlen(args) + strlen(token) + 2);
-            strcpy(temp, args);
-            strcat(temp, " ");
-            strcat(temp, token);
-            free(args);
-            args = temp;
+            char *temp = ft_strjoin(*args, " ");
+            char *new_args = ft_strjoin(temp, token);
+            free(temp);
+            free(*args);
+            *args = new_args;
         }
     }
-    return args;
 }
-
+// Function to handle the token
 void handle_token(char *token, char **cmd, char **args)
 {
     if (ft_strcmp(token, ">") == 0)
@@ -200,34 +130,21 @@ void handle_token(char *token, char **cmd, char **args)
         if (token != NULL)
             handle_input_redirection(token);
     }
-    else if (ft_strcmp(token, "<<") == 0)
-    {
-        token = ft_strtok(NULL, " ");
-        if (token != NULL)
-            handle_heredoc_redirection(token);
-    }
     else
-    {
-        *args = concatenate_arguments(*cmd, *args, token);
-        if (*cmd == NULL)
-        {
-            *cmd = *args;
-            *args = NULL;
-        }
-    }
+         handle_command_or_args(token, cmd, args);
 }
-
+// Function to execute the command with redirection
 void execute_command_with_redirection(char *cmd, char *args)
 {
     if (cmd != NULL)
     {
-        size_t full_command_length = strlen(cmd) + (args ? strlen(args) : 0) + 2;
+        size_t full_command_length = ft_strlen(cmd) + (args ? ft_strlen(args) : 0) + 2;//checks if args is not null(if so return 0), then adds the length of args to the length of cmd
         char *full_command = malloc(full_command_length);
-        strcpy(full_command, cmd);
+        ft_strcpy(full_command, cmd);
         if (args)
         {
-            strcat(full_command, " ");
-            strcat(full_command, args);
+            ft_strlcat(full_command, " ", full_command_length);
+            ft_strlcat(full_command, args, full_command_length);
         }
         ft_checker(full_command); // Use ft_checker to execute the command
         free(full_command);
@@ -236,13 +153,12 @@ void execute_command_with_redirection(char *cmd, char *args)
             free(args);
     }
 }
-
+// Function to execute redirection
 void execute_redirection(char *command)
 {
     char *token;
     char *cmd = NULL;
     char *args = NULL;
-    char *original_command = strdup(command); // Save the original command
 
     token = ft_strtok(command, " ");
     while (token != NULL)
@@ -250,9 +166,9 @@ void execute_redirection(char *command)
         handle_token(token, &cmd, &args);
         token = ft_strtok(NULL, " ");
     }
-
     // Execute the command after handling redirections
-    execute_command_with_redirection(cmd, args);
-
-    free(original_command);
+    if (cmd != NULL)
+        execute_command_with_redirection(cmd, args);
+    else
+        printf("Error: No valid command found to execute.\n");
 }

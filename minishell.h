@@ -92,10 +92,11 @@ bool 	is_pipe_inside_quotes(const char *str);
 // redirections.c
 void 	handle_output_redirection(char *filename, bool append);
 void 	handle_heredoc_redirection(char *delimiter);
-char 	*concatenate_arguments(char *cmd, char *args, const char *token);
+void 	handle_input_redirection(char *filename);
 void 	execute_command_with_redirection(char *cmd, char *args);
 void 	handle_token(char *token, char **cmd, char **args);
 void 	execute_redirection(char *command);
+const char *identify_redirection_operator(const char *str);
 
 // tokenizer.c
 char	*ft_strtok(char *str, const char *delimiters);

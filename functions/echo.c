@@ -169,13 +169,12 @@ void execute_echo(char *input)
         printf("error: command need to start with 'echo'\n");
         return;
     }
-
+    i = skip_spaces(input, i);
     if (input[i] != ' ' && input[i] != '\t')
     {
-        printf("error: need a space between echo and the arguments\n");
+        //printf("error: need a space between echo and the arguments\n");
         return;
     }
-    i = skip_spaces(input, i);
     n_option = check_n_option(input, &i);
     print_words(input, i);
     if (!n_option)

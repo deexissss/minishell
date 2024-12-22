@@ -1,1 +1,0 @@
-error: need a space between echo and the arguments
