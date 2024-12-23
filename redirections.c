@@ -1,5 +1,25 @@
 #include "minishell.h"
 
+bool is_redirection_inside_quotes(const char *str)
+{
+    bool in_single_quote = false;
+    bool in_double_quote = false;
+
+    while (*str)
+    {
+        if (*str == '\'' && !in_double_quote)
+            in_single_quote = !in_single_quote;
+        else if (*str == '"' && !in_single_quote)
+            in_double_quote = !in_double_quote;
+        else if (*str == '<' && !in_single_quote && !in_double_quote)
+            return false;
+        else if (*str == '>' && !in_single_quote && !in_double_quote)
+            return false;
+        str++;
+    }
+    return true;
+}
+
 // Function to handle input redirection (<)
 void handle_input_redirection(char *filename)
 {
@@ -59,13 +79,11 @@ void handle_output_redirection(char *filename, bool append)
 // Function to handle heredoc redirection (<<)
 /*This operator allows the user to specify a delimiter 
 and then provide input until a line containing the delimiter is encountered.*/
-void handle_heredoc_redirection(char *delimiter)
+void handle_heredoc_redirection(const char *delimiter)
 {
-    char *line;// hold each line of input
-    int pipefd[2];// hold the file descriptors for a pipe
+    char *line = NULL;
+    int pipefd[2];
 
-    while (*line == ' ' || *line == '\t')
-        line++;
     if (pipe(pipefd) == -1)
     {
         perror("pipe");
@@ -73,20 +91,26 @@ void handle_heredoc_redirection(char *delimiter)
     }
     while (1)
     {
-        line = readline("> ");// prints a > prompt and reads a line of input from the user
+        line = readline("> ");
+        if (line == NULL)
+        {
+            perror("readline");
+            break;
+        }
         if (strcmp(line, delimiter) == 0)
         {
             free(line);
             break;
         }
-        //the function writes the line to the write end of the pipe
+
         write(pipefd[1], line, strlen(line));
         write(pipefd[1], "\n", 1);
         free(line);
     }
-    close(pipefd[1]);//close the write end of the pipe
-    dup2(pipefd[0], STDIN_FILENO);//duplicate the read end of the pipe to STDIN_FILENO, effectively redirecting stdin to read from the pipe
-    close(pipefd[0]);
+    close(pipefd[1]); // Close the write end of the pipe
+    // Redirect the read end of the pipe to standard input
+    dup2(pipefd[0], STDIN_FILENO);
+    close(pipefd[0]); // Close the read end of the pipe
 }
 // Function to handle the command or arguments + concatenation of arguments with space
 void handle_command_or_args(char *token, char **cmd, char **args)
@@ -129,6 +153,12 @@ void handle_token(char *token, char **cmd, char **args)
         token = ft_strtok(NULL, " ");
         if (token != NULL)
             handle_input_redirection(token);
+    }
+    else if (ft_strcmp(token, "<<") == 0)
+    {
+    token = ft_strtok(NULL, " ");
+        if (token != NULL)
+            handle_heredoc_redirection(token);
     }
     else
          handle_command_or_args(token, cmd, args);

@@ -185,7 +185,7 @@ static void process_command(char *command)
     if (command)
     {
         //check for redirection
-        if (ftstrchr(command, '>') || ftstrchr(command, '<'))
+        if ((ftstrchr(command, '>') || ftstrchr(command, '<')) && !is_redirection_inside_quotes(command))
         {
             execute_redirection(command);
         }
