@@ -16,7 +16,10 @@ char *command_path(char *command_name)
 {
     char *path;
 
-    path = ft_strjoin("/bin/", command_name);
+    if(ft_strncmp(command_name, "/bin/", 5) == 0)
+        path =ft_strdup(command_name);
+    else
+        path = ft_strjoin("/bin/", command_name);
     if (!path)
         perror("malloc");
     return path;

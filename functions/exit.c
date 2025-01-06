@@ -20,11 +20,10 @@ int give_status(char *input, int *i)
     {
         if (input[*i] >= '0' && input[*i] <= '9')
             status = status * 10 + (input[(*i)++] - '0');
-        else
-        {
-            printf("error: numeric argument required\n");
-            return (-1);
-        }
+        else if (input[*i] >= 'a' && input[*i] <= 'z')
+            status = status * 10 + (input[(*i)++] - 'a');
+        else if (input[*i] >= 'A' && input[*i] <= 'Z')
+            status = status * 10 + (input[(*i)++] - 'A');
     }
     return (status);
 }
@@ -38,12 +37,12 @@ void    execute_exit(char *input)
     i = 4;
     sign = 1;
     skip_space_and_sign(input, &i, &sign);
-    if ((input[i] == '-' && input[i + 1] == '-') ||
+    /*if ((input[i] == '-' && input[i + 1] == '-') ||
         (input[i] == '+' && input[i + 1] == '+'))
     {
         printf("error: numeric argument required\n");
         return ;
-    }
+    }*/
     status = give_status(input, &i);
     if (status >= 0)
     {

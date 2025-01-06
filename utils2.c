@@ -9,7 +9,7 @@ char *get_env_value(const char *var)
         return NULL;
 }
 
-char *cleanup_string(char *str)
+char *cleanup_string(char *str, int flag)
 {
     int     i;
     int     j;
@@ -25,7 +25,7 @@ char *cleanup_string(char *str)
         return NULL;
     if (memcmp(str, "echo", 4) == 0)
     {
-        execute_echo(str);
+        execute_echo(str, flag);
         return NULL;
     }
     while (str[i])
