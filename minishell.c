@@ -206,7 +206,7 @@ static void process_command(char *command)
         }
         else
         {
-            clean_command = cleanup_string(command, 0);
+            clean_command = cleanup_string(command);
             free(command);
             if (clean_command)
             {
