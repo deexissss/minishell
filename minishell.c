@@ -206,7 +206,7 @@ static void process_command(char *command)
         }
         else
         {
-            clean_command = cleanup_string(command);
+            clean_command = cleanup_string(command, 0);
             free(command);
             if (clean_command)
             {
@@ -283,7 +283,26 @@ int check_empty_functions(char *inpt)
     }
     return 0;
 }
+int handle_tab(int count, int key)
+{
+    (void)count;
+    (void)key;
+    rl_insert_text("\t");
+    rl_redisplay();
+    return 0;
+}
 
+int handle_backspace(int count, int key)
+{
+    (void)count;
+    (void)key;
+    if(rl_point > 0)
+    {
+        rl_delete_text(rl_point - 1, rl_point);
+        rl_redisplay();
+    }
+    return 0;
+}
 int main()
 {
     char *inpt;
@@ -291,6 +310,8 @@ int main()
     int saved_stdout = dup(STDOUT_FILENO);
 
     signal(SIGINT, handle_sigint);
+    rl_bind_key('\t', handle_tab);
+    rl_bind_key(127, handle_backspace);
     while (1)
     {
         inpt = readline(BLUE "Minishell$ " RESET);

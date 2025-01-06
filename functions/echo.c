@@ -159,7 +159,7 @@ static void print_words(char *input, int i)
 }
 
 
-void execute_echo(char *input)
+void execute_echo(char *input, int flag)
 {
     int i;
     bool n_option;
@@ -170,7 +170,7 @@ void execute_echo(char *input)
         printf("error: command need to start with 'echo'\n");
         return;
     }
-    if (input[i] != ' ' && input[i] != '\t')
+    if (input[i] != ' ' && input[i] != '\t' && flag == 1)
     {
         printf("error: need a space between echo and the arguments\n");
         return;
