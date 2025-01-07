@@ -163,14 +163,14 @@ void execute_echo(char *input)
 {
     int i;
     bool n_option;
-    
+
     i = 4;
     if (ft_strncmp(input, "echo", 4) != 0)
     {
         printf("error: command need to start with 'echo'\n");
         return;
     }
-    if (input[i] != ' ' && input[i] != '\t')
+    if (input[i] != ' ' && input[i] != '\t' && input[i] != '\0')
     {
         printf("error: need a space between echo and the arguments\n");
         return;

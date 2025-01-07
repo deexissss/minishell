@@ -98,7 +98,7 @@ void clear_terminal(char *command)
 //check if the command is one of our builtin -> if not execute function to handle all the other functions
 void ft_checker(char *command)
 {
-    printf("executed command: %s\n", command);
+    //printf("executed command: %s\n", command);
     if (memcmp(command, "cd", 2) == 0)
         execute_cd(command);
     else if (memcmp(command, "clear", 5) == 0)
@@ -107,8 +107,8 @@ void ft_checker(char *command)
         execute_env(command);
     else if (memcmp(command, "exit", 4) == 0)
         execute_exit(command);
-    /*else if (memcmp(command, "echo", 4) == 0)
-        execute_echo(command);*/
+    else if (memcmp(command, "echo", 4) == 0)
+        cleanup_string(command);
     else if (memcmp(command, "pwd", 3) == 0)
         execute_pwd(command);
     else if (memcmp(command, "unset", 5) == 0)
