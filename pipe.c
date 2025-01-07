@@ -23,54 +23,46 @@ bool is_pipe_inside_quotes(const char *str)
 storing each segment in an array of strings.*/
 char **pipe_tokenizer(char *command, int *num_commands)
 {
+    int i = 0;
+    char *token;
+    char *command_copy;
     char **commands;
-    int i;
-    int start;
-    int end;
-    int length;
-    int segment_length;
-    int command_count;
 
-    i = 0;
-    start = 0;
-    end = 0;
-    length = ft_strlen(command);
-    commands = malloc(sizeof(char *) * (length + 1));
-    command_count = 1;
-    while (command[i])
+    // Duplicate the command string to avoid modifying the original
+    command_copy = strdup(command);
+    if (!command_copy)
     {
-        if (command[i] == '|')
-            command_count++;
-        i++;
+        perror("strdup");
+        return NULL;
     }
+    // Allocate memory for the commands array
+    commands = malloc((strlen(command) / 2 + 1) * sizeof(char *));
     if (!commands)
     {
         perror("malloc");
+        free(command_copy);
         return NULL;
     }
-    i = 0;
-    while (end <= length)
+    // Tokenize the command string
+    token = ft_strtok(command_copy, "|");
+    while (token != NULL)
     {
-        if (command[end] == '|' || command[end] == '\0')
+        commands[i] = strdup(token); // Duplicate the token and store it in the commands array
+        if (!commands[i])
         {
-            //calculates the length of the current segment and allocates memory
-            segment_length = end - start;
-            commands[i] = malloc(segment_length + 1);//allocates memory for the segment specifically
-            if (!commands[i])
-            {
-                perror("malloc");
-                exit(EXIT_FAILURE);
-            }
-            //copies the segment into the commands array
-            ft_strncpy(commands[i], &command[start], segment_length);//copied from command[start] to command[end]/segment_length
-            commands[i][segment_length] = '\0';//this is new, but basically it adds a null terminator to the end of the segment and not the end of the command
-            i++;
-            start = end + 1;//to point to the beginning of the next segment
+            perror("strdup");
+            while (i > 0)
+                free(commands[--i]);
+            free(commands);
+            free(command_copy);
+            return NULL;
         }
-        end++;
+        i++;
+        token = ft_strtok(NULL, "|");
     }
     commands[i] = NULL;
-    *num_commands = i;//updates the number of commands
+    *num_commands = i; // Update the number of commands
+    free(command_copy);
     return commands;
 }
 

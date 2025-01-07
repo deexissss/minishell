@@ -1,57 +1,5 @@
 #include "minishell.h"
 
-static int skip_spaces(char *input, int i)
-{
-    while (input[i] == ' ' || input[i] == '\t')
-        i++;
-    return i;
-}
-
-static void print_words(char *input, int i)
-{
-    bool first_word;
-    char quote;
-
-    first_word = true;
-    while (input[i])
-    {
-        if (input[i] == '"' || input[i] == '\'')
-        {
-            quote = input[i];
-            i++;
-            while (input[i] && input[i] != quote)
-                putchar(input[i++]);
-            if (input[i] == quote)
-                i++;
-        }
-        else if (input[i] != ' ' && input[i] != '\t')
-        {
-            if (!first_word)
-                putchar(' ');
-            first_word = false;
-            while (input[i] && input[i] != ' ' && input[i] != '\t' && input[i] != '"' && input[i] != '\'')
-                putchar(input[i++]);
-        }
-        else
-            i = skip_spaces(input, i);
-    }
-}
-
-
-void ft_echo(char *input)
-{
-    int i;
-    
-    i = 4;
-    if (ft_strncmp(input, "echo", 4) != 0)
-    {
-        printf("error: command need to start with 'echo'\n");
-        return;
-    }
-    i = skip_spaces(input, i);
-    print_words(input, i);
-}
-
 bool is_redirection_inside_quotes(const char *str)
 {
     bool in_single_quote = false;
@@ -188,6 +136,11 @@ void handle_command_or_args(char *token, char **cmd, char **args)
 // Function to handle the token
 void handle_token(char *token, char **cmd, char **args)
 {
+    char **commands;
+    int num_commands;
+    int i;
+
+    i = 0;
     if (ft_strcmp(token, ">") == 0)
     {
         token = ft_strtok(NULL, " ");
@@ -212,6 +165,19 @@ void handle_token(char *token, char **cmd, char **args)
         if (token != NULL)
             handle_heredoc_redirection(token);
     }
+    else if (ft_strcmp(token, "|") == 0)
+    {
+        printf("Debug: Pipe token detected\n"); // Add this line for debugging
+        commands = pipe_tokenizer(NULL, &num_commands);
+        if (num_commands > 1)
+            execute_pipeline(commands, num_commands);
+        while (i < num_commands)
+        {
+            free(commands[i]);
+            i++;
+        }
+        free(commands);
+    }
     else
          handle_command_or_args(token, cmd, args);
 }
@@ -228,13 +194,12 @@ void execute_command_with_redirection(char *cmd, char *args)
             ft_strlcat(full_command, " ", full_command_length);
             ft_strlcat(full_command, args, full_command_length);
         }
-        if (ft_strcmp(cmd, "echo") == 0)
+        /*if (ft_strcmp(cmd, "echo") == 0)
         {
-            ft_echo(full_command);
-            return;
+            execute_echo(full_command);
         }
-        else
-            ft_checker(full_command); // Use ft_checker to execute the command
+        else*/
+        ft_checker(full_command); // Use ft_checker to execute the command
         free(full_command);
         free(cmd);
         if (args)
