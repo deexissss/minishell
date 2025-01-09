@@ -128,6 +128,7 @@ char *handle_command(char *command)
         command[end--] = '\0';
     return command;
 }
+
 static int check_command(char *command)
 {
     int k = 0;
@@ -184,35 +185,37 @@ static void process_command(char *command)
     i = 0;
     if (command)
     {
-        //check for redirection
-        if ((ftstrchr(command, '>') || ftstrchr(command, '<')) && !is_redirection_inside_quotes(command))
+        // Tokenize the command by pipes first
+        commands = pipe_tokenizer(command, &num_commands);
+        if (commands)
         {
-            execute_redirection(command);
-        }
-        //check for pipe
-        if (ftstrchr(command, '|') && !is_pipe_inside_quotes(command))
-        {
-            commands = pipe_tokenizer(command, &num_commands);
-            if (commands)
+            if (num_commands > 1)
             {
+                // If there are multiple commands, execute them in a pipeline
                 execute_pipeline(commands, num_commands);
-                while (i < num_commands)
-                {
-                    free(commands[i]);
-                    i++;
-                }
-                free(commands);
             }
-        }
-        else
-        {
-            clean_command = cleanup_string(command);
-            free(command);
-            if (clean_command)
+            else
             {
-                ft_checker(clean_command);
-                free(clean_command);
+                // Check for redirections in the single command segment
+                if ((ftstrchr(commands[i], '>') || ftstrchr(commands[i], '<')) && !is_redirection_inside_quotes(commands[i]))
+                    execute_redirection(commands[i]);
+                else
+                {
+                    clean_command = cleanup_string(commands[i]);
+                    if (clean_command)
+                    {
+                        ft_checker(clean_command);
+                        free(clean_command);
+                    }
+                }
             }
+            i = 0;
+            while (i < num_commands)
+            {
+                free(commands[i]);
+                i++;
+            }
+            free(commands);
         }
     }
 }

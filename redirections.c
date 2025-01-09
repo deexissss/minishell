@@ -136,11 +136,6 @@ void handle_command_or_args(char *token, char **cmd, char **args)
 // Function to handle the token
 void handle_token(char *token, char **cmd, char **args)
 {
-    char **commands;
-    int num_commands;
-    int i;
-
-    i = 0;
     if (ft_strcmp(token, ">") == 0)
     {
         token = ft_strtok(NULL, " ");
@@ -165,19 +160,6 @@ void handle_token(char *token, char **cmd, char **args)
         if (token != NULL)
             handle_heredoc_redirection(token);
     }
-    else if (ft_strcmp(token, "|") == 0)
-    {
-        printf("Debug: Pipe token detected\n"); // Add this line for debugging
-        commands = pipe_tokenizer(NULL, &num_commands);
-        if (num_commands > 1)
-            execute_pipeline(commands, num_commands);
-        while (i < num_commands)
-        {
-            free(commands[i]);
-            i++;
-        }
-        free(commands);
-    }
     else
          handle_command_or_args(token, cmd, args);
 }
@@ -194,11 +176,6 @@ void execute_command_with_redirection(char *cmd, char *args)
             ft_strlcat(full_command, " ", full_command_length);
             ft_strlcat(full_command, args, full_command_length);
         }
-        /*if (ft_strcmp(cmd, "echo") == 0)
-        {
-            execute_echo(full_command);
-        }
-        else*/
         ft_checker(full_command); // Use ft_checker to execute the command
         free(full_command);
         free(cmd);
@@ -221,7 +198,20 @@ void execute_redirection(char *command)
     }
     // Execute the command after handling redirections
     if (cmd != NULL)
-        execute_command_with_redirection(cmd, args);
+        if (ftstrchr(cmd, '|') && !is_pipe_inside_quotes(cmd))
+        {
+            int num_commands;
+            char **commands = pipe_tokenizer(cmd, &num_commands);
+            if (commands)
+            {
+                execute_pipeline(commands, num_commands);
+                for (int i = 0; i < num_commands; i++)
+                    free(commands[i]);
+                free(commands);
+            }
+        }
+        else
+            execute_command_with_redirection(cmd, args);
     else
         printf("Error: No valid command found to execute.\n");
 }
