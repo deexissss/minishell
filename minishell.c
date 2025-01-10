@@ -128,6 +128,7 @@ char *handle_command(char *command)
         command[end--] = '\0';
     return command;
 }
+
 static int check_command(char *command)
 {
     int k = 0;
@@ -145,6 +146,7 @@ static int check_command(char *command)
         else if ((command[k] == ';' || command[k] == '\\') && quote == 0)
         {
             printf("error: syntax error\n");
+            exit_status = 1;
             return 1;
         }
         k++;
@@ -153,6 +155,7 @@ static int check_command(char *command)
     if (quote != 0)
     {
         printf("error: unmatched quotes\n");
+        exit_status = 130;
         return 1;
     }
 
@@ -184,35 +187,37 @@ static void process_command(char *command)
     i = 0;
     if (command)
     {
-        //check for redirection
-        if ((ftstrchr(command, '>') || ftstrchr(command, '<')) && !is_redirection_inside_quotes(command))
+        // Tokenize the command by pipes first
+        commands = pipe_tokenizer(command, &num_commands);
+        if (commands)
         {
-            execute_redirection(command);
-        }
-        //check for pipe
-        if (ftstrchr(command, '|') && !is_pipe_inside_quotes(command))
-        {
-            commands = pipe_tokenizer(command, &num_commands);
-            if (commands)
+            if (num_commands > 1)
             {
+                // If there are multiple commands, execute them in a pipeline
                 execute_pipeline(commands, num_commands);
-                while (i < num_commands)
-                {
-                    free(commands[i]);
-                    i++;
-                }
-                free(commands);
             }
-        }
-        else
-        {
-            clean_command = cleanup_string(command);
-            free(command);
-            if (clean_command)
+            else
             {
-                ft_checker(clean_command);
-                free(clean_command);
+                // Check for redirections in the single command segment
+                if ((ftstrchr(commands[i], '>') || ftstrchr(commands[i], '<')) && !is_redirection_inside_quotes(commands[i]))
+                    execute_redirection(commands[i]);
+                else
+                {
+                    clean_command = cleanup_string(commands[i]);
+                    if (clean_command)
+                    {
+                        ft_checker(clean_command);
+                        free(clean_command);
+                    }
+                }
             }
+            i = 0;
+            while (i < num_commands)
+            {
+                free(commands[i]);
+                i++;
+            }
+            free(commands);
         }
     }
 }
@@ -263,6 +268,7 @@ int    handle_quote(char *inpt)
     if (countsimple % 2 != 0 || countdouble % 2 != 0)
     {
         ft_printf("minishell: syntax error quotes not closed\n");
+        exit_status = 130;
         return 1;
     }
     return 0;
@@ -303,6 +309,7 @@ int handle_backspace(int count, int key)
     }
     return 0;
 }
+
 int main()
 {
     char *inpt;
@@ -317,9 +324,7 @@ int main()
         inpt = readline(BLUE "Minishell$ " RESET);
         if (!inpt)
             break;
-        /*if (ft_strlen(inpt) == 0)
-            free(inpt);*/
-        else if (check_empty_functions(inpt) == 0)
+        if (check_empty_functions(inpt) == 0)
             free(inpt);
         else if (handle_quote(inpt) == 0)
             execute_commands(inpt);

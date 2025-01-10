@@ -100,7 +100,10 @@ void execute_pipeline(char **commands, int num_commands)
                 dup2(pipefd[1], 1); //changes the output to the end of the pipe only if it's not the last command
             close(pipefd[0]);
             close(pipefd[1]);
-            ft_checker(commands[i]);//use ft_checker to handle the command
+            if ((ftstrchr(commands[i], '>') || ftstrchr(commands[i], '<')) && !is_redirection_inside_quotes(commands[i]))
+                execute_redirection(commands[i]);
+            else
+                ft_checker(commands[i]); //use ft_checker to handle the command
             exit(EXIT_SUCCESS); //ensure the child process exits after executing the command
         }
         //parent process

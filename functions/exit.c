@@ -28,14 +28,37 @@ int give_status(char *input, int *i)
     return (status);
 }
 
+int     count_arg(char *inpt)
+{
+    int count;
+    int i;
+
+    i = 0;
+    count = 0;
+    while (inpt[i])
+    {
+        if (inpt[i] != ' ' && inpt[i] != '\t')
+        {
+            count++;
+            while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t')
+                i++;
+        }
+        else
+            i++;
+    }
+    return (count);
+}
+
 void    execute_exit(char *input)
 {
     int i;
     int sign;
     int status;
+    int count;
 
     i = 4;
     sign = 1;
+    count = count_arg(input);
     skip_space_and_sign(input, &i, &sign);
     /*if ((input[i] == '-' && input[i + 1] == '-') ||
         (input[i] == '+' && input[i + 1] == '+'))
@@ -43,6 +66,12 @@ void    execute_exit(char *input)
         printf("error: numeric argument required\n");
         return ;
     }*/
+    if (count > 2)
+    {
+        printf("error: too many arguments\n");
+        exit_status = 1;
+        return ;
+    }
     status = give_status(input, &i);
     if (status >= 0)
     {

@@ -2,34 +2,38 @@
 
 extern char **environ;;
 
-void    extract_varname_and_value(char *inpt, char *varname, char *value)
+void extract_varname_and_value(char *input, char *varname, char *value, int *index)
 {
-    int i = 6;
-    long unsigned int j = 0;
-    
-    while (inpt[i] == ' ' || inpt[i] == '\t')
+    int i = *index;
+    unsigned long j = 0;
+
+    while (input[i] == ' ' || input[i] == '\t')
         i++;
-    if (inpt[i] == '\0')
+    if (input[i] == '\0')
     {
         printf("error: export missing operand\n");
+        exit_status = 1;
+        *index = i;
         return;
     }
-    while (inpt[i] && inpt[i] != '=' && inpt[i] != '\t' && j < sizeof(varname) - 1)
-        varname[j++] = inpt[i++];
+    while (input[i] && input[i] != '=' && input[i] != ' ' && input[i] != '\t' && j < sizeof(varname) - 1)
+        varname[j++] = input[i++];
     varname[j] = '\0';
-    if (inpt[i] != '=')
+    if (input[i] != '=')
     {
         printf("error: export missing '=' after variable name\n");
+        *index = i;
         return;
     }
     i++;
     j = 0;
-    while (inpt[i] && j < sizeof(value) - 1)
-        value[j++] = inpt[i++];
+    while (input[i] && input[i] != ' ' && input[i] != '\t' && j < sizeof(value) - 1)
+        value[j++] = input[i++];
     value[j] = '\0';
+    *index = i;
 }
 
-int     get_env_size(void)
+int get_env_size(void)
 {
     int env_size = 0;
     while (environ[env_size] != NULL)
@@ -37,11 +41,11 @@ int     get_env_size(void)
     return env_size;
 }
 
-void    add_variable_to_environ(char **new_environ, int env_size, char *varname, char *value)
+void add_variable_to_environ(char **new_environ, int env_size, char *varname, char *value)
 {
     int j = 0;
 
-    new_environ[env_size] = malloc(ft_strlen(varname) + ft_strlen(value) + 2);
+    new_environ[env_size] = malloc(strlen(varname) + strlen(value) + 2);
     if (!new_environ[env_size])
     {
         perror("malloc");
@@ -60,22 +64,23 @@ void    add_variable_to_environ(char **new_environ, int env_size, char *varname,
     new_environ[env_size][j] = '\0';
 }
 
-void    remove_existing_var(char *varname)
+void remove_existing_var(char *varname)
 {
     int i;
+    int j;
     int len;
 
     i = 0;
-    len = ft_strlen(varname);
+    len = strlen(varname);
     while (environ[i] != NULL)
     {
         if (strncmp(environ[i], varname, len) == 0 && environ[i][len] == '=')
         {
-            free(environ[i]);
-            while (environ[i] != NULL)
+            j = i;
+            while (environ[j] != NULL)
             {
-                environ[i] = environ[i + 1];
-                i++;
+                environ[j] = environ[j + 1];
+                j++;
             }
             return;
         }
@@ -83,28 +88,39 @@ void    remove_existing_var(char *varname)
     }
 }
 
-void    execute_export(char *inpt)
+void execute_export(char *input)
 {
     char varname[256];
     char value[256];
+    int index = 6; // Skip "export "
 
-    extract_varname_and_value(inpt, varname, value);
-    remove_existing_var(varname);
-    int env_size = get_env_size();
-    char **new_environ = malloc(sizeof(char *) * (env_size + 2));
-    if (!new_environ)
+    exit_status = 0;
+    while (input[index] != '\0')
     {
-        perror("malloc");
-        return;
-    }
+        extract_varname_and_value(input, varname, value, &index);
+        if (exit_status != 0)
+            return;
+        remove_existing_var(varname);
+        int env_size = get_env_size();
+        char **new_environ = malloc(sizeof(char *) * (env_size + 2));
+        if (!new_environ)
+        {
+            perror("malloc");
+            return;
+        }
 
-    int k = 0;
-    while (k < env_size)
-    {
-        new_environ[k] = environ[k];
-        k++;
+        int k = 0;
+        while (k < env_size)
+        {
+            new_environ[k] = environ[k];
+            k++;
+        }
+        add_variable_to_environ(new_environ, env_size, varname, value);
+        new_environ[env_size + 1] = NULL;
+        environ = new_environ;
+
+        // Skip spaces or tabs between variables
+        while (input[index] == ' ' || input[index] == '\t')
+            index++;
     }
-    add_variable_to_environ(new_environ, env_size, varname, value);
-    new_environ[env_size + 1] = NULL;
-    environ = new_environ;
 }
