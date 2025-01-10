@@ -1,10 +1,12 @@
 #include "minishell.h"
+
 //check if the command exist
 int correct_command(char **args)
 {
     if (!args || !args[0])
     {
         printf("error: command not found\n");
+        exit_status = 127;
         if (args)
             free(args);
         return 0;
@@ -17,7 +19,7 @@ char *command_path(char *command_name)
     char *path;
 
     if(ft_strncmp(command_name, "/bin/", 5) == 0)
-        path =ft_strdup(command_name);
+        path = ft_strdup(command_name);
     else
         path = ft_strjoin("/bin/", command_name);
     if (!path)
@@ -33,7 +35,7 @@ void execute_command(char *path, char **args)
         exit(EXIT_FAILURE);
     }
 }
-//split the command to have the command + the flag + the args
+
 void handle_external_command(char *command)
 {
     char **args;
@@ -41,6 +43,7 @@ void handle_external_command(char *command)
     pid_t pid;
     int status;
 
+    exit_status = 0;
     args = ft_split(command, ' ');
     if (!correct_command(args))
         return;
@@ -59,6 +62,7 @@ void handle_external_command(char *command)
     else if (access(path, X_OK) != 0)
     {
         printf("error: command '%s' not found\n", args[0]);
+        exit_status = 127;
         free(path);
         free(args);
         return;
@@ -73,6 +77,7 @@ void handle_external_command(char *command)
     free(path);
     free(args);
 }
+
 
 void clear_terminal(char *command)
 {
@@ -95,10 +100,9 @@ void clear_terminal(char *command)
     return ;
 }
 
-//check if the command is one of our builtin -> if not execute function to handle all the other functions
+
 void ft_checker(char *command)
 {
-    //printf("executed command: %s\n", command);
     if (memcmp(command, "cd", 2) == 0)
         execute_cd(command);
     else if (memcmp(command, "clear", 5) == 0)

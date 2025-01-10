@@ -9,6 +9,7 @@ static void check_var(char *input, int *i)
     if (input[*i] == '\0')
     {
         printf("error: unset needs a variable name\n");
+        exit_status = 1;
         return;
     }
 }
@@ -20,6 +21,7 @@ void execute_unset(char *inpt)
 
     i = 6;
     j = 0;
+    exit_status = 0;
     check_var(inpt, &i);
     while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t' && j < sizeof(varname) - 1)
         varname[j++] = inpt[i++];

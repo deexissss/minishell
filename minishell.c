@@ -146,6 +146,7 @@ static int check_command(char *command)
         else if ((command[k] == ';' || command[k] == '\\') && quote == 0)
         {
             printf("error: syntax error\n");
+            exit_status = 1;
             return 1;
         }
         k++;
@@ -154,6 +155,7 @@ static int check_command(char *command)
     if (quote != 0)
     {
         printf("error: unmatched quotes\n");
+        exit_status = 130;
         return 1;
     }
 
@@ -266,6 +268,7 @@ int    handle_quote(char *inpt)
     if (countsimple % 2 != 0 || countdouble % 2 != 0)
     {
         ft_printf("minishell: syntax error quotes not closed\n");
+        exit_status = 130;
         return 1;
     }
     return 0;
@@ -306,6 +309,7 @@ int handle_backspace(int count, int key)
     }
     return 0;
 }
+
 int main()
 {
     char *inpt;
@@ -320,9 +324,7 @@ int main()
         inpt = readline(BLUE "Minishell$ " RESET);
         if (!inpt)
             break;
-        /*if (ft_strlen(inpt) == 0)
-            free(inpt);*/
-        else if (check_empty_functions(inpt) == 0)
+        if (check_empty_functions(inpt) == 0)
             free(inpt);
         else if (handle_quote(inpt) == 0)
             execute_commands(inpt);

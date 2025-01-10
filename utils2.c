@@ -89,6 +89,14 @@ char *handle_dollar(char *command)
             in_single_quote = !in_single_quote;
             result[j++] = command[i++];
         }
+        else if (command[i] == '$' && command[i + 1] == '?')
+        {
+            char exit_statusc[12]; // Assez grand pour contenir un entier
+            sprintf(exit_statusc, "%d", exit_status); // Remplacez exit_status_value par la variable contenant le statut de sortie
+            strcpy(&result[j], exit_statusc);
+            j += strlen(exit_statusc);
+            i += 2;
+        }
         else if (command[i] == '$' && (i == 0 || command[i - 1] != '\\') && !in_single_quote)
         {
             var_start = &command[i + 1];

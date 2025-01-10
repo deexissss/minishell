@@ -36,11 +36,13 @@ void    execute_cd(char *inpt)
 
     i = 2;
     j = 0;
+    exit_status = 0;
     while (inpt[i] == ' ' || inpt[i] == '\t')
         i++;
     if (i == 2 && inpt[i++] != '\0')
     {
         printf("error: need a space between function and argument\n");
+        exit_status = 1;
         return;
     }
     path = malloc(sizeof(char *) * ft_strlen(inpt));
@@ -50,8 +52,12 @@ void    execute_cd(char *inpt)
     if (j == 0 || path == NULL)
     {
         ft_printf("error: cd needs a directory path\n");
+        exit_status = 1;
         return;
     }
     if (chdir(path) != 0)
+    {
         perror("cd");
+        exit_status = 1;
+    }
 }
