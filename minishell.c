@@ -222,6 +222,8 @@ static void process_command(char *command)
                 free(commands);
             }
         }
+        else if ((ftstrchr(command, '>') || ftstrchr(command, '<')) && !is_redirection_inside_quotes(command))
+            execute_redirection(command);
         else
         {
             // If there is a pipe inside quotes, execute the command as is
