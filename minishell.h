@@ -66,11 +66,18 @@ void	extract_val(char *input, char *value, int *i);
 int		get_env_size(void);
 int		skip_spaces(char *input, int i);
 
+// process_commmand
+void    process_command(char *command);
+
+// execute_command
+void	execute_commands(char *inpt);
+
 // redirections.c
 void	handle_output_redirection(char *filename, bool append);
 void	handle_heredoc_redirection(const char *delimiter);
 void	handle_input_redirection(char *filename);
 void	execute_command_with_redirection(char *cmd, char *args);
+void	handle_command_or_args(char *token, char **cmd, char **args);
 void	handle_token(char *token, char **cmd, char **args);
 void	execute_redirection(char *command);
 bool	is_redirection_inside_quotes(const char *str);
@@ -80,5 +87,7 @@ char	*ft_strtok(char *str, const char *delimiters);
 
 // utils.c
 int		ft_strcmp(const char *str1, const char *str2);
+int     handle_backspace(int count, int key);
+int     handle_tab(int count, int key);
 
 #endif

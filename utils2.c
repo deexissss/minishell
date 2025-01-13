@@ -1,15 +1,5 @@
 #include "minishell.h"
 
-char	*get_env_value(const char *var)
-{
-	char	*value;
-
-	value = getenv(var);
-	if (value)
-		return (ft_strdup(value));
-	else
-		return (NULL);
-}
 
 char	*cleanup_string(char *str)
 {
@@ -53,15 +43,6 @@ char	*cleanup_string(char *str)
 	return (clean_str);
 }
 
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	printf("\n");
-	// printf(BLUE "-> Minishell %s " RESET, execute_pwdmain());
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
 
 char	*handle_dollar(char *command)
 {
@@ -92,12 +73,12 @@ char	*handle_dollar(char *command)
 		}
 		else if (command[i] == '$' && command[i + 1] == '?')
 		{
-			char exit_statusc[12];                   
+			char g_exit_statusc[12];                   
 				// Assez grand pour contenir un entier
-			sprintf(exit_statusc, "%d", exit_status);
-				// Remplacez exit_status_value par la variable contenant le statut de sortie
-			strcpy(&result[j], exit_statusc);
-			j += strlen(exit_statusc);
+			sprintf(g_exit_statusc, "%d", g_exit_status);
+				// Remplacez g_exit_status_value par la variable contenant le statut de sortie
+			strcpy(&result[j], g_exit_statusc);
+			j += strlen(g_exit_statusc);
 			i += 2;
 		}
 		else if (command[i] == '$' && (i == 0 || command[i - 1] != '\\')

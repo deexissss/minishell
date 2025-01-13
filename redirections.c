@@ -22,135 +22,34 @@ bool	is_redirection_inside_quotes(const char *str)
 	return (true);
 }
 
-// Function to handle input redirection (<)
-void	handle_input_redirection(char *filename)
-{
-	int	fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("open");
-		return ;
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-		// duplicate the fd to STDIN_FILENO: redirects stdin to read from the specified file
-	{
-		perror("dup2");
-		close(fd);
-		return ;
-	}
-	close(fd);
-}
-
-void	handle_output_redirection(char *filename, bool append)
-{
-	int	fd;
-
-	while (*filename == ' ' || *filename == '\t')
-		filename++;
-	if (append)
-		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else
-		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		perror("open");
-		return ;
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		perror("dup2");
-		close(fd);
-		return ;
-	}
-	close(fd);
-}
-
-void	handle_heredoc_redirection(const char *delimiter)
-{
-	char	*line;
-	int		pipefd[2];
-
-	line = NULL;
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return ;
-	}
-	while (1)
-	{
-		line = readline("> ");
-		if (line == NULL)
-		{
-			perror("readline");
-			break ;
-		}
-		if (strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write(pipefd[1], line, strlen(line));
-		write(pipefd[1], "\n", 1);
-		free(line);
-	}
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[0]);
-}
-void	handle_command_or_args(char *token, char **cmd, char **args)
-{
-	char	*temp;
-	char	*new_args;
-
-	if (*cmd == NULL)
-	{
-		*cmd = ft_strdup(token);
-	}
-	else
-	{
-		if (*args == NULL)
-			*args = ft_strdup(token);
-		else
-		{
-			temp = ft_strjoin(*args, " ");
-			new_args = ft_strjoin(temp, token);
-			free(temp);
-			free(*args);
-			*args = new_args;
-		}
-	}
-}
 void	handle_token(char *token, char **cmd, char **args)
 {
-	if (ft_strcmp(token, ">") == 0)
+	bool	append;
+	bool	is_heredoc;
+
+    if (ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0)
+    {
+        append = ft_strcmp(token, ">>") == 0; 
+        token = ft_strtok(NULL, " ");
+        if (token != NULL)
+            handle_output_redirection(token, append);
+    }
+	else if (ft_strcmp(token, "<") == 0 || ft_strcmp(token, "<<") == 0)
 	{
+		is_heredoc = ft_strcmp(token, "<<") == 0;
 		token = ft_strtok(NULL, " ");
 		if (token != NULL)
-			handle_output_redirection(token, false);
+		{
+			if (is_heredoc)
+				handle_heredoc_redirection(token);
+			else
+				handle_input_redirection(token);
+		}
 	}
-	else if (ft_strcmp(token, ">>") == 0)
-	{
-		token = ft_strtok(NULL, " ");
-		if (token != NULL)
-			handle_output_redirection(token, true);
-	}
-	else if (ft_strcmp(token, "<") == 0)
-	{
-		token = ft_strtok(NULL, " ");
-		if (token != NULL)
-			handle_input_redirection(token);
-	}
-	else if (ft_strcmp(token, "<<") == 0)
-	{
-		token = ft_strtok(NULL, " ");
-		if (token != NULL)
-			handle_heredoc_redirection(token);
-	}
-	else
-		handle_command_or_args(token, cmd, args);
+    else
+        handle_command_or_args(token, cmd, args);
 }
+
 void	execute_command_with_redirection(char *cmd, char *args)
 {
 	char	*full_command;
@@ -174,6 +73,31 @@ void	execute_command_with_redirection(char *cmd, char *args)
 			free(args);
 	}
 }
+
+void	execute_parsed_command(char *cmd, char *args)
+{
+    if (cmd != NULL)
+    {
+        if (ftstrchr(cmd, '|') && !is_pipe_inside_quotes(cmd))
+        {
+            int num_commands;
+            char **commands = pipe_tokenizer(cmd, &num_commands);
+            if (commands)
+            {
+                execute_pipeline(commands, num_commands);
+                for (int i = 0; i < num_commands; i++)
+                    free(commands[i]);
+                free(commands);
+            }
+        }
+        else
+            execute_command_with_redirection(cmd, args);
+    }
+    else
+    {
+        printf("Error: No valid command found to execute.\n");
+    }
+}
 void	execute_redirection(char *command)
 {
 	char *token;
@@ -186,21 +110,5 @@ void	execute_redirection(char *command)
 		handle_token(token, &cmd, &args);
 		token = ft_strtok(NULL, " ");
 	}
-	if (cmd != NULL)
-		if (ftstrchr(cmd, '|') && !is_pipe_inside_quotes(cmd))
-		{
-			int num_commands;
-			char **commands = pipe_tokenizer(cmd, &num_commands);
-			if (commands)
-			{
-				execute_pipeline(commands, num_commands);
-				for (int i = 0; i < num_commands; i++)
-					free(commands[i]);
-				free(commands);
-			}
-		}
-		else
-			execute_command_with_redirection(cmd, args);
-	else
-		printf("Error: No valid command found to execute.\n");
+	execute_parsed_command(cmd, args);
 }
