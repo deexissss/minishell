@@ -6,13 +6,13 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 10:55:49 by tjehaes           #+#    #+#             */
-/*   Updated: 2024/03/15 14:27:22 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/13 10:42:28 by mdaman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 char	*ft_strcpy(char *s1, char *s2)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s2[i])

@@ -89,6 +89,9 @@ void				ft_checker(char *command);
 int					handle_quote(char *inpt);
 bool				is_pipe_inside_quotes(const char *str);
 
+// process_command.c
+void				process_command(char *command);
+
 // redirections.c
 void				handle_output_redirection(char *filename, bool append);
 void				handle_heredoc_redirection(const char *delimiter);
