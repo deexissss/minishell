@@ -6,10 +6,10 @@ int	correct_command(char **args)
 	if (!args || !args[0])
 	{
 		printf("error: command not found\n");
-		exit_status = 127;
+		g_exit_status = 127;
 		if (args)
 		{
-			exit_status = 1;
+			g_exit_status = 1;
 			free(args);
 		}
 		return (0);
@@ -34,7 +34,7 @@ void	execute_command(char *path, char **args)
 {
 	if (execve(path, args, NULL) == -1)
 	{
-		exit_status = 1;
+		g_exit_status = 1;
 		perror("minishell");
 		exit(EXIT_FAILURE);
 	}
@@ -47,14 +47,14 @@ void	handle_external_command(char *command)
 	pid_t	pid;
 	int		status;
 
-	exit_status = 0;
+	g_exit_status = 0;
 	args = ft_split(command, ' ');
 	if (!correct_command(args))
 		return ;
 	path = command_path(args[0]);
 	if (!path)
 	{
-		exit_status = 1;
+		g_exit_status = 1;
 		free(args);
 		return ;
 	}
@@ -67,7 +67,7 @@ void	handle_external_command(char *command)
 	else if (access(path, X_OK) != 0)
 	{
 		printf("error: command '%s' not found\n", args[0]);
-		exit_status = 127;
+		g_exit_status = 127;
 		free(path);
 		free(args);
 		return ;
@@ -80,13 +80,13 @@ void	handle_external_command(char *command)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 		{
-			exit_status = 1;
+			g_exit_status = 1;
 		}
 	}
 	else
 	{
 		perror("fork");
-		exit_status = 1;
+		g_exit_status = 1;
 	}
 	free(path);
 	free(args);
