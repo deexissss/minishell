@@ -346,6 +346,7 @@ int     simple_dollar(char *inpt)
     return 0;
 }
 
+int exit_status = 0;
 
 int main()
 {
