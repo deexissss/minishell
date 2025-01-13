@@ -325,6 +325,28 @@ int handle_backspace(int count, int key)
     return 0;
 }
 
+int     simple_dollar(char *inpt)
+{
+    size_t  count;
+    size_t  i;
+
+    count = 0;
+    i = ft_strlen(inpt);
+    while(*inpt == '$')
+    {
+        count++;
+        inpt++;
+    }
+    if (count == i)
+    {
+        ft_printf("error: command not found\n");
+        exit_status = 127;
+        return 1;
+    }
+    return 0;
+}
+
+
 int main()
 {
     char *inpt;
@@ -340,6 +362,8 @@ int main()
         if (!inpt)
             break;
         if (check_empty_functions(inpt) == 0)
+            free(inpt);
+        else if (simple_dollar(inpt) == 1)
             free(inpt);
         else if (handle_quote(inpt) == 0)
             execute_commands(inpt);
