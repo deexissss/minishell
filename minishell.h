@@ -63,7 +63,7 @@ typedef struct s_data
 	// struct sigaction for sigquit;
 }	t_data;
 
-int		exit_status;
+extern int		exit_status;
 
 void    printnb(int nb);
 void    syntax_error(char *inpt);
