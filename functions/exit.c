@@ -60,12 +60,6 @@ void    execute_exit(char *input)
     sign = 1;
     count = count_arg(input);
     skip_space_and_sign(input, &i, &sign);
-    /*if ((input[i] == '-' && input[i + 1] == '-') ||
-        (input[i] == '+' && input[i + 1] == '+'))
-    {
-        printf("error: numeric argument required\n");
-        return ;
-    }*/
     if (count > 2)
     {
         printf("error: too many arguments\n");

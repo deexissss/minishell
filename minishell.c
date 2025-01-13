@@ -187,37 +187,52 @@ static void process_command(char *command)
     i = 0;
     if (command)
     {
-        // Tokenize the command by pipes first
-        commands = pipe_tokenizer(command, &num_commands);
-        if (commands)
+        if (!is_pipe_inside_quotes(command))
         {
-            if (num_commands > 1)
+            // Tokenize the command by pipes first
+            commands = pipe_tokenizer(command, &num_commands);
+            if (commands)
             {
-                // If there are multiple commands, execute them in a pipeline
-                execute_pipeline(commands, num_commands);
-            }
-            else
-            {
-                // Check for redirections in the single command segment
-                if ((ftstrchr(commands[i], '>') || ftstrchr(commands[i], '<')) && !is_redirection_inside_quotes(commands[i]))
-                    execute_redirection(commands[i]);
+                if (num_commands > 1 && !is_pipe_inside_quotes(command))
+                {
+                    // If there are multiple commands, execute them in a pipeline
+                    execute_pipeline(commands, num_commands);
+                }
                 else
                 {
-                    clean_command = cleanup_string(commands[i]);
-                    if (clean_command)
+                    // Check for redirections in the single command segment
+                    if ((ftstrchr(commands[i], '>') || ftstrchr(commands[i], '<')) && !is_redirection_inside_quotes(commands[i]))
+                        execute_redirection(commands[i]);
+                    else
                     {
-                        ft_checker(clean_command);
-                        free(clean_command);
+                        clean_command = cleanup_string(commands[i]);
+                        if (clean_command)
+                        {
+                            ft_checker(clean_command);
+                            free(clean_command);
+                        }
                     }
                 }
+                i = 0;
+                while (i < num_commands)
+                {
+                    free(commands[i]);
+                    i++;
+                }
+                free(commands);
             }
-            i = 0;
-            while (i < num_commands)
+        }
+        else if ((ftstrchr(command, '>') || ftstrchr(command, '<')) && !is_redirection_inside_quotes(command))
+            execute_redirection(command);
+        else
+        {
+            // If there is a pipe inside quotes, execute the command as is
+            clean_command = cleanup_string(command);
+            if (clean_command)
             {
-                free(commands[i]);
-                i++;
+                ft_checker(clean_command);
+                free(clean_command);
             }
-            free(commands);
         }
     }
 }
@@ -310,6 +325,28 @@ int handle_backspace(int count, int key)
     return 0;
 }
 
+int     simple_dollar(char *inpt)
+{
+    size_t  count;
+    size_t  i;
+
+    count = 0;
+    i = ft_strlen(inpt);
+    while(*inpt == '$')
+    {
+        count++;
+        inpt++;
+    }
+    if (count == i)
+    {
+        ft_printf("error: command not found\n");
+        exit_status = 127;
+        return 1;
+    }
+    return 0;
+}
+
+
 int main()
 {
     char *inpt;
@@ -325,6 +362,8 @@ int main()
         if (!inpt)
             break;
         if (check_empty_functions(inpt) == 0)
+            free(inpt);
+        else if (simple_dollar(inpt) == 1)
             free(inpt);
         else if (handle_quote(inpt) == 0)
             execute_commands(inpt);
