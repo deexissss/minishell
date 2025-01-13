@@ -2,7 +2,7 @@
 
 char *allocate_result_buffer(char *command)
 {
-    char *result = malloc((sizeof(char) * (strlen(command) + 1) * 2));
+    char *result = malloc((sizeof(char) * (ft_strlen(command) + 1) * 2));
     if (!result)
     {
         perror("malloc");
@@ -16,7 +16,7 @@ char *replace_exit_status(char *result, int *j, int *i)
     char g_exit_statusc[12];
     sprintf(g_exit_statusc, "%d", g_exit_status);
     strcpy(&result[*j], g_exit_statusc);
-    *j += strlen(g_exit_statusc);
+    *j += ft_strlen(g_exit_statusc);
     *i += 2;
     return result;
 }
@@ -26,15 +26,15 @@ char *replace_env_variable(char *command, char *result, int *j, int *i)
     char *var_start = &command[*i + 1];
     char *var_end = var_start;
     var_start = &command[*i + 1];
-    while (*var_end && (isalnum((int)*var_end) || *var_end == '_'))
+    while (*var_end && (ft_isalnum((int)*var_end) || *var_end == '_'))
         var_end++;
     char var_name[var_end - var_start + 1];
-    strncpy(var_name, var_start, var_end - var_start);
+    ft_strncpy(var_name, var_start, var_end - var_start);
     var_name[var_end - var_start] = '\0';
     char *var_value = get_env_value(var_name);
     if (var_value)
     {
-        strcpy(&result[*j], var_value);
+        ft_strcpy(&result[*j], var_value);
         *j += strlen(var_value);
         free(var_value);
     }
