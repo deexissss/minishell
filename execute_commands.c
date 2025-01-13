@@ -2,9 +2,13 @@
 
 bool	is_quoted(const char *str, int pos)
 {
-	bool	single_quote = false;
-	bool	double_quote = false;
-	int		i = 0;
+	bool	single_quote;
+	bool	double_quote;
+	int		i;
+
+	single_quote = false;
+	double_quote = false;
+	i = 0;
 	while (i < pos)
 	{
 		if (str[i] == '\'' && !double_quote)

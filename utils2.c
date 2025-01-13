@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 char	*cleanup_string(char *str)
 {
 	int		i;
@@ -43,7 +42,6 @@ char	*cleanup_string(char *str)
 	return (clean_str);
 }
 
-
 char	*handle_dollar(char *command)
 {
 	char *result;
@@ -73,10 +71,10 @@ char	*handle_dollar(char *command)
 		}
 		else if (command[i] == '$' && command[i + 1] == '?')
 		{
-			char g_exit_statusc[12];                   
-				// Assez grand pour contenir un entier
+			char g_exit_statusc[12];
+			// Assez grand pour contenir un entier
 			sprintf(g_exit_statusc, "%d", g_exit_status);
-				// Remplacez g_exit_status_value par la variable contenant le statut de sortie
+			// Remplacez g_exit_status_value par la variable contenant le statut de sortie
 			strcpy(&result[j], g_exit_statusc);
 			j += strlen(g_exit_statusc);
 			i += 2;

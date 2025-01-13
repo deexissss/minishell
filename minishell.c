@@ -74,15 +74,15 @@ int	handle_quote(char *inpt)
 	return (0);
 }
 
-void process_input(char *input)
+void	process_input(char *input)
 {
-    if (check_empty_functions(input) == 0 || simple_dollar(input) == 1)
-        free(input);
-    else if (handle_quote(input) == 0)
-        execute_commands(input);
-    add_history(input);
+	if (check_empty_functions(input) == 0 || simple_dollar(input) == 1)
+		free(input);
+	else if (handle_quote(input) == 0)
+		execute_commands(input);
+	add_history(input);
 }
-int			g_exit_status = 0;
+int		g_exit_status = 0;
 
 int	main(void)
 {

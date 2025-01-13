@@ -12,7 +12,7 @@ void	handle_input_redirection(char *filename)
 		return ;
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
-		// duplicate the fd to STDIN_FILENO: redirects stdin to read from the specified file
+	// duplicate the fd to STDIN_FILENO: redirects stdin to read from the specified file
 	{
 		perror("dup2");
 		close(fd);
@@ -44,32 +44,32 @@ void	handle_output_redirection(char *filename, bool append)
 	}
 	close(fd);
 }
-void read_and_write_heredoc(const char *delimiter, int pipefd[2])
+void	read_and_write_heredoc(const char *delimiter, int pipefd[2])
 {
-    char *line;
+	char	*line;
 
-    while (1)
-    {
-        line = readline("> ");
-        if (line == NULL)
-        {
-            perror("readline");
+	while (1)
+	{
+		line = readline("> ");
+		if (line == NULL)
+		{
+			perror("readline");
 			break ;
-        }
-        if (strcmp(line, delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        write(pipefd[1], line, strlen(line));
-        write(pipefd[1], "\n", 1);
-        free(line);
-    }
+		}
+		if (strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], "\n", 1);
+		free(line);
+	}
 }
 
 void	handle_heredoc_redirection(const char *delimiter)
 {
-	int		pipefd[2];
+	int	pipefd[2];
 
 	if (pipe(pipefd) == -1)
 	{
