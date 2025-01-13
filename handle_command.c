@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_command.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/01/13 14:48:59 by tjehaes          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-// check if the command exist
 int	correct_command(char **args)
 {
 	if (!args || !args[0])
@@ -16,7 +27,7 @@ int	correct_command(char **args)
 	}
 	return (1);
 }
-// give the path to the command by adding /bin/ before
+
 char	*command_path(char *command_name)
 {
 	char	*path;
@@ -29,7 +40,7 @@ char	*command_path(char *command_name)
 		perror("malloc");
 	return (path);
 }
-// execute the command with the path (/bin/ls/ for ex) + the argument
+
 void	execute_command(char *path, char **args)
 {
 	if (execve(path, args, NULL) == -1)

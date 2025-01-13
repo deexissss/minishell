@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection_handlers.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/13 14:50:06 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/01/13 14:50:32 by tjehaes          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // Function to handle input redirection (<)
@@ -12,7 +24,6 @@ void	handle_input_redirection(char *filename)
 		return ;
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
-	// duplicate the fd to STDIN_FILENO: redirects stdin to read from the specified file
 	{
 		perror("dup2");
 		close(fd);
@@ -44,6 +55,7 @@ void	handle_output_redirection(char *filename, bool append)
 	}
 	close(fd);
 }
+
 void	read_and_write_heredoc(const char *delimiter, int pipefd[2])
 {
 	char	*line;

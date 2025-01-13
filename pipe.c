@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/13 15:09:45 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/01/13 15:10:30 by tjehaes          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	is_pipe_inside_quotes(const char *str)
@@ -42,6 +54,7 @@ void	handle_parent_process(pid_t pid, int pipefd[2], int *fd_in)
 	close(pipefd[1]);
 	*fd_in = pipefd[0];
 }
+
 void	execute_pipeline(char **commands, int num_commands)
 {
 	int		pipefd[2];

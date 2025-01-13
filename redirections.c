@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/13 15:10:50 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/01/13 15:12:17 by tjehaes          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	is_redirection_inside_quotes(const char *str)
@@ -58,7 +70,6 @@ void	execute_command_with_redirection(char *cmd, char *args)
 	if (cmd != NULL)
 	{
 		full_command_length = ft_strlen(cmd) + (args ? ft_strlen(args) : 0) + 2;
-		// checks if args is not null(if so return 0),then adds the length of args to the length of cmd
 		full_command = malloc(full_command_length);
 		ft_strcpy(full_command, cmd);
 		if (args)
@@ -76,9 +87,11 @@ void	execute_command_with_redirection(char *cmd, char *args)
 
 void	execute_parsed_command(char *cmd, char *args)
 {
-			int num_commands;
+	int		num_commands;
+	int		i;
 	char	**commands;
 
+	i = 0;
 	if (cmd != NULL)
 	{
 		if (ftstrchr(cmd, '|') && !is_pipe_inside_quotes(cmd))
@@ -87,8 +100,8 @@ void	execute_parsed_command(char *cmd, char *args)
 			if (commands)
 			{
 				execute_pipeline(commands, num_commands);
-				for (int i = 0; i < num_commands; i++)
-					free(commands[i]);
+				while (i < num_commands)
+					free(commands[i++]);
 				free(commands);
 			}
 		}
@@ -100,6 +113,7 @@ void	execute_parsed_command(char *cmd, char *args)
 		printf("Error: No valid command found to execute.\n");
 	}
 }
+
 void	execute_redirection(char *command)
 {
 	char	*token;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_commands.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/13 14:50:52 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/01/13 14:51:18 by tjehaes          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	is_quoted(const char *str, int pos)
@@ -67,6 +79,7 @@ static int	check_command(char *command)
 	}
 	return (0);
 }
+
 void	execute_commands(char *inpt)
 {
 	int		i;

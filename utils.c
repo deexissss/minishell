@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg.l    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 09:12:55 by tjehaes           #+#    #+#             */
-/*   Updated: 2024/11/07 14:10:09 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/13 14:49:55 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	handle_backspace(int count, int key)
 	}
 	return (0);
 }
+
 char	*get_env_value(const char *var)
 {
 	char	*value;

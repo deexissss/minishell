@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/13 15:09:16 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/01/13 15:09:37 by tjehaes          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_strtok(char *str, const char *delimiters)
@@ -9,13 +21,11 @@ char	*ft_strtok(char *str, const char *delimiters)
 		stock = str;
 	if (stock == NULL)
 		return (NULL);
-	// Skip initial delimiters
 	while (*stock != '\0' && ftstrchr(delimiters, *stock) != NULL)
 		stock++;
 	if (*stock == '\0')
 		return (NULL);
 	ptr = stock;
-	// Find the end of the token
 	while (*stock != '\0' && ftstrchr(delimiters, *stock) == NULL)
 		stock++;
 	if (*stock != '\0')
