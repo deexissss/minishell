@@ -32,12 +32,6 @@ bool	is_pipe_inside_quotes(const char *str)
 	return (true);
 }
 
-void	exit_perror(const char *msg)
-{
-	perror(msg);
-	exit(EXIT_FAILURE);
-}
-
 void	execute_pipe_command(char *command)
 {
 	if ((ftstrchr(command, '>') || ftstrchr(command, '<'))
@@ -66,11 +60,9 @@ void	execute_pipeline(char **commands, int num_commands)
 	i = 0;
 	while (i < num_commands)
 	{
-		if (pipe(pipefd) == -1)
-			exit_perror("pipe/fork");
+		pipe_check(pipefd);
 		pid = fork();
-		if (pid == -1)
-			exit_perror("fork error");
+		pid_check(pid);
 		if (pid == 0)
 		{
 			dup2(fd_in, 0);

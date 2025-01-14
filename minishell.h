@@ -66,6 +66,10 @@ void		extract_val(char *input, char *value, int *i);
 int			get_env_size(void);
 int			skip_spaces(char *input, int i);
 
+// pipe_utils
+void        pid_check(pid_t pid);
+void	    pipe_check(int *pipefd);
+void	    exit_perror(const char *msg);
 // process_commmand
 void		process_command(char *command);
 

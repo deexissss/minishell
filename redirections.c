@@ -66,10 +66,14 @@ void	execute_command_with_redirection(char *cmd, char *args)
 {
 	char	*full_command;
 	size_t	full_command_length;
+	int		args_length;
 
+	args_length = 0;
 	if (cmd != NULL)
 	{
-		full_command_length = ft_strlen(cmd) + (args ? ft_strlen(args) : 0) + 2;
+		if (args)
+			args_length = ft_strlen(args);
+		full_command_length = ft_strlen(cmd) + args_length + 2;
 		full_command = malloc(full_command_length);
 		ft_strcpy(full_command, cmd);
 		if (args)
