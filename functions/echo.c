@@ -50,7 +50,7 @@ static void	print_word(char *input, int *i, bool *first_word)
 	*first_word = false;
 	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
 		&& input[*i] != '"' && input[*i] != '\'')
-		ft_printchar(input[(*i)++]);
+			ft_printchar(input[(*i)++]);
 }
 
 static void	print_words(char *input, int i)

@@ -54,6 +54,7 @@ void	remove_var(char *varname)
 	{
 		if (ft_strncmp(environ[i], varname, len) == 0 && environ[i][len] == '=')
 		{
+			free(environ[i]);
 			j = i;
 			while (environ[j] != NULL)
 			{
@@ -122,6 +123,8 @@ void	execute_export(char *input)
 			return ;
 		remove_var(varname);
 		handle_new_var(varname, value);
+		if (ft_strcmp(varname, "PATH") == 0)
+			verify_path_order(value);
 		skip_whitespace(input, &index);
 	}
 }
