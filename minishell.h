@@ -50,6 +50,7 @@ void		execute_unset(char *inpt);
 void		execute_cd(char *inpt);
 void		execute_env(char *command);
 void		execute_export(char *inpt);
+void        verify_path_order(char *path);
 char		*execute_pwdmain(void);
 char		*get_env_value(const char *var);
 char		*cleanup_string(char *str);

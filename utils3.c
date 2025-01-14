@@ -54,7 +54,7 @@ char	*replace_env_variable(char *command, char *result, int *j, int *i)
 	{
 		ft_strcpy(&result[*j], var_value);
 		*j += ft_strlen(var_value);
-		free(var_value);
+		//free(var_value);
 	}
 	*i = var_end - command;
 	return (result);
@@ -96,7 +96,7 @@ char	*handle_dollar(char *command)
 		}
 		else if (command[i] == '$' && command[i + 1] == '?')
 			result = replace_exit_status(result, &j, &i);
-		else if (command[i] == '$' && (i == 0 || command[i - 1] != '\\')
+		else if (command[i] == '$' && (i == 0 || (i > 0 && command[i - 1] != '\\'))
 			&& !in_single_quote)
 			result = replace_env_variable(command, result, &j, &i);
 		else

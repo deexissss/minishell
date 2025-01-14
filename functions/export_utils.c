@@ -57,3 +57,25 @@ int	get_env_size(void)
 		env_size++;
 	return (env_size);
 }
+void verify_path_order(char *path)
+{
+    char *token;
+    char *directories[256];
+    int i;
+	int j;
+
+    token = ft_strtok(path, ":");
+	i = 0;
+	j = 0;
+    while (token != NULL)
+    {
+        directories[i++] = token;
+        token = ft_strtok(NULL, ":");
+    }
+    printf("Directories in PATH:\n");
+    while(j < i)
+    {
+        printf("%s\n", directories[j]);
+		j++;
+    }
+}
