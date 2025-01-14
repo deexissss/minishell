@@ -83,6 +83,7 @@ void		handle_external_command(char *command);
 void		pid_check(pid_t pid);
 void		pipe_check(int *pipefd);
 void		exit_perror(const char *msg);
+int			check_multiple_pipe(char *inpt);
 // process_commmand
 void		process_command(char *command);
 
