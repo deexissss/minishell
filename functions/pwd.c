@@ -74,7 +74,7 @@ void	validate_pwd_command(char *command)
 		i++;
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
-		printf("error: command does not exit\ndid you mean pwd ?\n");
+		printf("error: command does not exit\n");
 		g_exit_status = 127;
 	}
 	else if (command[i] != '\0')

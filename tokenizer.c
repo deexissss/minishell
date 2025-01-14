@@ -40,11 +40,9 @@ char	*duplicate_command(char *command)
 {
 	char	*command_copy;
 
-	command_copy = strdup(command);
+	command_copy = ft_strdup(command);
 	if (!command_copy)
-	{
 		perror("strdup");
-	}
 	return (command_copy);
 }
 
@@ -52,11 +50,9 @@ char	**allocate_commands_array(char *command)
 {
 	char	**commands;
 
-	commands = malloc((strlen(command) / 2 + 1) * sizeof(char *));
+	commands = malloc((ft_strlen(command) / 2 + 1) * sizeof(char *));
 	if (!commands)
-	{
 		perror("malloc");
-	}
 	return (commands);
 }
 
@@ -69,7 +65,7 @@ int	tokenize_command(char *command_copy, char **commands)
 	token = ft_strtok(command_copy, "|");
 	while (token != NULL)
 	{
-		commands[i] = strdup(token);
+		commands[i] = ft_strdup(token);
 		if (!commands[i])
 		{
 			perror("strdup");

@@ -34,7 +34,7 @@ void	validate_env_command(char *command)
 		i++;
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
-		printf("error: command does not exist\ndid you mean env ?\n");
+		printf("error: command does not exist\n");
 		g_exit_status = 127;
 		return ;
 	}

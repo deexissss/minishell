@@ -67,13 +67,9 @@ static void	print_words(char *input, int i)
 			print_quote_word(input, &i, quote);
 		}
 		else if (input[i] != ' ' && input[i] != '\t')
-		{
 			print_word(input, &i, &first_word);
-		}
 		else
-		{
 			i = skip_spaces(input, i);
-		}
 	}
 }
 

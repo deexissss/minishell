@@ -68,12 +68,12 @@ void	read_and_write_heredoc(const char *delimiter, int pipefd[2])
 			perror("readline");
 			break ;
 		}
-		if (strcmp(line, delimiter) == 0)
+		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write(pipefd[1], line, strlen(line));
+		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}
