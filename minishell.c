@@ -76,11 +76,12 @@ int	handle_quote(char *inpt)
 
 void	process_input(char *input)
 {
-	if (check_empty_functions(input) == 0 || simple_dollar(input) == 1)
+	add_history(input);
+	if (check_empty_functions(input) == 0 || simple_dollar(input) == 1
+		|| check_multiple_pipe(input) == 1)
 		free(input);
 	else if (handle_quote(input) == 0)
 		execute_commands(input);
-	add_history(input);
 }
 int		g_exit_status = 0;
 
