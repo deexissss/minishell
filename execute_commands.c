@@ -46,7 +46,7 @@ char	*handle_command(char *command)
 		command[end--] = '\0';
 	return (command);
 }
-int		check_quote(char quote)
+int	check_quote(char quote)
 {
 	if (quote != 0)
 	{

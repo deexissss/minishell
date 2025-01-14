@@ -51,10 +51,10 @@ void	handle_parent_process(pid_t pid, int pipefd[2], int *fd_in)
 
 void	execute_pipeline(char **commands, int num_commands)
 {
-	int		pipefd[2];
-	pid_t	pid;
-	int		fd_in;
-	int		i;
+	int pipefd[2];
+	pid_t pid;
+	int fd_in;
+	int i;
 
 	fd_in = 0;
 	i = 0;
