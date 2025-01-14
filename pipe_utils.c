@@ -30,9 +30,9 @@ void	pid_check(pid_t pid)
 		exit_perror("fork");
 }
 
-int		check_multiple_pipe(char *inpt)
+int	check_multiple_pipe(char *inpt)
 {
-	int		i;
+	int	i;
 
 	i = ft_strlen(inpt);
 	if (inpt[i - 1] == '|')
@@ -44,7 +44,8 @@ int		check_multiple_pipe(char *inpt)
 	i = 0;
 	while (inpt[i])
 	{
-		if (inpt[i] == '|' && inpt[i+1] == '|')
+		if (inpt[i] == '|' && inpt[i + 1] == '|'
+			&& !is_pipe_inside_quotes(inpt))
 		{
 			g_exit_status = 1;
 			printf("error: too many pipe\n");
