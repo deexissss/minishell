@@ -108,8 +108,7 @@ void	execute_commands(char *inpt)
 		command = handle_command(command);
 		if (check_command(command) == 0)
 			process_command(command);
-		else
-			free(command);
+		free(command);
 		i = j + 2;
 	}
 }

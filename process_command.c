@@ -65,9 +65,7 @@ void	process_command(char *command)
 	if (!command)
 		return ;
 	if (!is_pipe_inside_quotes(command))
-	{
 		process_piped_commands(command);
-	}
 	else if ((ftstrchr(command, '>') || ftstrchr(command, '<'))
 		&& !is_redirection_inside_quotes(command))
 		execute_redirection(command);

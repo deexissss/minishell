@@ -55,6 +55,7 @@ char	*cleanup_string(char *str)
 	if (ft_memcmp(str, "echo", 4) == 0)
 	{
 		execute_echo(str);
+		free(clean_str);
 		return (NULL);
 	}
 	clean_str = clean_string(str, i, j, clean_str);
