@@ -69,6 +69,11 @@ char	*initialize_variables(char *command, int *i, int *j,
 	*j = 0;
 	*in_single_quote = 0;
 	result = allocate_result_buffer(command);
+	if (!result)
+	{
+		free(result);
+		return (NULL);
+	}
 	return (result);
 }
 

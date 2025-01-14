@@ -74,8 +74,7 @@ void		execute_command(char *path, char **args);
 
 // handle_command2
 void		handle_command_error(char **args);
-void		handle_access_error(char *path, char **args);
-void		wait_for_child(pid_t pid, int *status);
+void		handle_access_error(char **args);
 void		handle_fork_error(void);
 void		handle_external_command(char *command);
 

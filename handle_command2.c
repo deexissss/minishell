@@ -19,20 +19,11 @@ void	handle_command_error(char **args)
 	return ;
 }
 
-void	handle_access_error(char *path, char **args)
+void	handle_access_error(char **args)
 {
 	printf("error: command '%s' not found\n", args[0]);
 	g_exit_status = 127;
-	free(path);
-	free(args);
 	return ;
-}
-
-void	wait_for_child(pid_t pid, int *status)
-{
-	waitpid(pid, status, 0);
-	if (WIFEXITED(*status) && WEXITSTATUS(*status) != 0)
-		g_exit_status = 1;
 }
 
 void	handle_fork_error(void)
@@ -47,7 +38,9 @@ void	handle_external_command(char *command)
 	char	*path;
 	pid_t	pid;
 	int		status;
+	int		i;
 
+	i = 0;
 	g_exit_status = 0;
 	args = ft_split(command, ' ');
 	if (!correct_command(args))
@@ -56,14 +49,23 @@ void	handle_external_command(char *command)
 	if (!path)
 		handle_command_error(args);
 	if (access(path, X_OK) != 0)
-		handle_access_error(path, args);
+		handle_access_error(args);
 	pid = fork();
 	if (pid == 0)
 		execute_command(path, args);
 	else if (pid > 0)
-		wait_for_child(pid, &status);
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+			g_exit_status = 1;
+	}
 	else
 		handle_fork_error();
 	free(path);
+    while(args[i])
+	{
+        free(args[i]);
+		i++;
+    }
 	free(args);
 }

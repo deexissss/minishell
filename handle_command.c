@@ -46,7 +46,7 @@ void	execute_command(char *path, char **args)
 	if (execve(path, args, NULL) == -1)
 	{
 		g_exit_status = 1;
-		perror("minishell");
+		//perror("minishell");
 		exit(EXIT_FAILURE);
 	}
 }
