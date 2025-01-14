@@ -66,8 +66,11 @@ void	execute_pipeline(char **commands, int num_commands)
 	i = 0;
 	while (i < num_commands)
 	{
-		if (pipe(pipefd) == -1 || (pid = fork()) == -1)
+		if (pipe(pipefd) == -1)
 			exit_perror("pipe/fork");
+		pid = fork();
+		if (pid == -1)
+			exit_perror("fork error");
 		if (pid == 0)
 		{
 			dup2(fd_in, 0);
