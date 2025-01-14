@@ -12,7 +12,36 @@
 
 #include "minishell.h"
 
-/*void	handle_external_command(char *command)
+void	handle_command_error(char **args)
+{
+	g_exit_status = 1;
+	free(args);
+	return ;
+}
+
+void	handle_access_error(char *path, char **args)
+{
+	printf("error: command '%s' not found\n", args[0]);
+	g_exit_status = 127;
+	free(path);
+	free(args);
+	return ;
+}
+
+void	wait_for_child(pid_t pid, int *status)
+{
+	waitpid(pid, status, 0);
+	if (WIFEXITED(*status) && WEXITSTATUS(*status) != 0)
+		g_exit_status = 1;
+}
+
+void	handle_fork_error(void)
+{
+	perror("fork");
+	g_exit_status = 1;
+}
+
+void	handle_external_command(char *command)
 {
 	char	**args;
 	char	*path;
@@ -25,41 +54,16 @@
 		return ;
 	path = command_path(args[0]);
 	if (!path)
-	{
-		g_exit_status = 1;
-		free(args);
-		return ;
-	}
-	if (path == NULL)
-	{
-		printf("\n");
-		free(args);
-		return ;
-	}
-	else if (access(path, X_OK) != 0)
-	{
-		printf("error: command '%s' not found\n", args[0]);
-		g_exit_status = 127;
-		free(path);
-		free(args);
-		return ;
-	}
+		handle_command_error(args);
+	if (access(path, X_OK) != 0)
+		handle_access_error(path, args);
 	pid = fork();
 	if (pid == 0)
 		execute_command(path, args);
 	else if (pid > 0)
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		{
-			g_exit_status = 1;
-		}
-	}
+		wait_for_child(pid, &status);
 	else
-	{
-		perror("fork");
-		g_exit_status = 1;
-	}
+		handle_fork_error();
 	free(path);
 	free(args);
-}*/
+}

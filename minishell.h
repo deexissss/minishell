@@ -66,10 +66,23 @@ void		extract_val(char *input, char *value, int *i);
 int			get_env_size(void);
 int			skip_spaces(char *input, int i);
 
+// handle_command
+
+int			correct_command(char **args);
+char		*command_path(char *command_name);
+void		execute_command(char *path, char **args);
+
+// handle_command2
+void		handle_command_error(char **args);
+void		handle_access_error(char *path, char **args);
+void		wait_for_child(pid_t pid, int *status);
+void		handle_fork_error(void);
+void		handle_external_command(char *command);
+
 // pipe_utils
-void        pid_check(pid_t pid);
-void	    pipe_check(int *pipefd);
-void	    exit_perror(const char *msg);
+void		pid_check(pid_t pid);
+void		pipe_check(int *pipefd);
+void		exit_perror(const char *msg);
 // process_commmand
 void		process_command(char *command);
 
