@@ -126,21 +126,21 @@ void	clear_terminal(char *command)
 
 void	ft_checker(char *command)
 {
-	if (memcmp(command, "cd", 2) == 0)
+	if (ft_memcmp(command, "cd", 2) == 0)
 		execute_cd(command);
-	else if (memcmp(command, "clear", 5) == 0)
+	else if (ft_memcmp(command, "clear", 5) == 0)
 		clear_terminal(command);
-	else if (memcmp(command, "env", 3) == 0)
+	else if (ft_memcmp(command, "env", 3) == 0)
 		execute_env(command);
-	else if (memcmp(command, "exit", 4) == 0)
+	else if (ft_memcmp(command, "exit", 4) == 0)
 		execute_exit(command);
-	else if (memcmp(command, "echo", 4) == 0)
+	else if (ft_memcmp(command, "echo", 4) == 0)
 		cleanup_string(command);
-	else if (memcmp(command, "pwd", 3) == 0)
+	else if (ft_memcmp(command, "pwd", 3) == 0)
 		execute_pwd(command);
-	else if (memcmp(command, "unset", 5) == 0)
+	else if (ft_memcmp(command, "unset", 5) == 0)
 		execute_unset(command);
-	else if (memcmp(command, "export", 6) == 0)
+	else if (ft_memcmp(command, "export", 6) == 0)
 		execute_export(command);
 	else
 		handle_external_command(command);

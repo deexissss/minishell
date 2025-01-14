@@ -42,8 +42,8 @@ static void	remove_var_from_env(char *varname)
 	j = 0;
 	while (environ[j] != NULL)
 	{
-		if (ft_strncmp(environ[j], varname, strlen(varname)) == 0
-			&& environ[j][strlen(varname)] == '=')
+		if (ft_strncmp(environ[j], varname, ft_strlen(varname)) == 0
+			&& environ[j][ft_strlen(varname)] == '=')
 		{
 			while (environ[j + 1] != NULL)
 			{

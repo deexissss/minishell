@@ -51,7 +51,7 @@ void	handle_cd_error(int error_type)
 	if (error_type == 1)
 		printf("error: need a space between function and argument\n");
 	else if (error_type == 2)
-		ft_printf("error: cd needs a directory path\n");
+		printf("error: cd needs a directory path\n");
 	g_exit_status = 1;
 }
 

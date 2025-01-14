@@ -49,10 +49,10 @@ char	*cleanup_string(char *str)
 
 	i = 0;
 	j = 0;
-	clean_str = malloc(strlen(str) + 1);
+	clean_str = malloc(ft_strlen(str) + 1);
 	if (!clean_str)
 		return (NULL);
-	if (memcmp(str, "echo", 4) == 0)
+	if (ft_memcmp(str, "echo", 4) == 0)
 	{
 		execute_echo(str);
 		return (NULL);
