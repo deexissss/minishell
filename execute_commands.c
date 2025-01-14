@@ -46,6 +46,16 @@ char	*handle_command(char *command)
 		command[end--] = '\0';
 	return (command);
 }
+int		check_quote(char quote)
+{
+	if (quote != 0)
+	{
+		printf("error: unmatched quote");
+		g_exit_status = 130;
+		return (1);
+	}
+	return (0);
+}
 
 static int	check_command(char *command)
 {
@@ -71,12 +81,8 @@ static int	check_command(char *command)
 		}
 		k++;
 	}
-	if (quote != 0)
-	{
-		printf("error: unmatched quotes\n");
-		g_exit_status = 130;
+	if (check_quote(quote) == 1)
 		return (1);
-	}
 	return (0);
 }
 
