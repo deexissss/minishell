@@ -36,7 +36,7 @@ char	*command_path(char *command_name)
 	char	*env_path;
 
 	env_path = getenv("PATH");
-	if (env_path && ft_strstr(env_path, "/bin", 5))
+	if (env_path && ft_strstr(env_path, "/bin"))
 	{
 		if (ft_strncmp(command_name, "/bin/", 5) == 0)
 			path = ft_strdup(command_name);

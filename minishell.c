@@ -104,7 +104,6 @@ int	main(void)
 			break ;
 		add_history(inpt);
 		process_input(inpt);
-		free(inpt);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 	}
