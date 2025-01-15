@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:50:39 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 14:50:45 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/15 09:30:59 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,10 @@ char	*cleanup_string(char *str)
 	return (clean_str);
 }
 
-
 char	*int_to_str(int num, char *str)
 {
 	int		len;
 	int		temp;
-
 
 	len = 1;
 	temp = num;
@@ -91,7 +89,6 @@ void	exec_func(char *path, char **args)
 	if (execve(path, args, NULL) == -1)
 	{
 		g_exit_status = 1;
-		//perror("minishell");
 		exit(EXIT_FAILURE);
 	}
 }

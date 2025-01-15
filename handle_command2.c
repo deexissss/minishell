@@ -6,13 +6,13 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 14:48:59 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/15 09:25:50 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		check_path(char *path, char **args)
+int	check_path(char *path, char **args)
 {
 	path = command_path(args[0]);
 	if (!path)
@@ -30,7 +30,7 @@ int		check_path(char *path, char **args)
 	return (0);
 }
 
-int		check_true_command(char *path, char **args)
+int	check_true_command(char *path, char **args)
 {
 	if (check_path(path, args) == 1)
 		return (1);
@@ -57,29 +57,30 @@ void	exec_perror(char *str)
 	perror(str);
 	g_exit_status = 1;
 }
-void handle_external_command(char *command)
-{
-    char **args;
-    char *path;
-    pid_t pid;
-    int status;
 
-    args = ft_split(command, ' ');
-    if (!correct_command(args))
-        return;
-    path = command_path(args[0]);
+void	handle_external_command(char *command)
+{
+	char	**args;
+	char	*path;
+	pid_t	pid;
+	int		status;
+
+	args = ft_split(command, ' ');
+	if (!correct_command(args))
+		return ;
+	path = command_path(args[0]);
 	if (check_true_command(path, args) == 1)
 		return ;
-    pid = fork();
-    if (pid == 0)
-        execute_command(path, args);
-    else if (pid > 0)
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-            g_exit_status = 1;
-    }
-    else
+	pid = fork();
+	if (pid == 0)
+		execute_command(path, args);
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+			g_exit_status = 1;
+	}
+	else
 		exec_perror("fork");
 	free_arg(path, args);
 }

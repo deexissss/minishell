@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 14:48:59 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/15 09:29:01 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	correct_command(char **args)
 		{
 			g_exit_status = 1;
 			if (ft_strncmp(args[0], "ls", 2) == 0)
-				g_exit_status = 2; 
+				g_exit_status = 2;
 			free(args);
 		}
 		return (0);
@@ -43,33 +43,31 @@ char	*command_path(char *command_name)
 	return (path);
 }
 
-
 void	execute_command(char *path, char **args)
 {
-    struct stat buffer;
-    int exists;
-    int i;
+	struct stat	buffer;
+	int			exists;
+	int			i;
 
 	i = 1;
-    if (ft_strncmp(path, "ls", 2) == 0 || ft_strncmp(path, "/bin/ls", 7) == 0)
-    {
-        while (args[i] != NULL)
-        {
-            exists = stat(args[i], &buffer);
-            if (exists != 0)
-            {
-                g_exit_status = 2;
-                write(STDERR_FILENO, "minishell: ", 11);
-                write(STDERR_FILENO, args[i], ft_strlen(args[i]));
-                write(STDERR_FILENO, ": No such file or directory\n", 28);
-                return ;
-            }
+	if (ft_strncmp(path, "ls", 2) == 0 || ft_strncmp(path, "/bin/ls", 7) == 0)
+	{
+		while (args[i] != NULL)
+		{
+			exists = stat(args[i], &buffer);
+			if (exists != 0)
+			{
+				g_exit_status = 2;
+				write(STDERR_FILENO, "minishell: ", 11);
+				write(STDERR_FILENO, args[i], ft_strlen(args[i]));
+				write(STDERR_FILENO, ": No such file or directory\n", 28);
+				return ;
+			}
 			i++;
-        }
-    }
+		}
+	}
 	exec_func(path, args);
 }
-
 
 void	clear_terminal(char *command)
 {

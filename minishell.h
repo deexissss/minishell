@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:54:11 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 10:42:09 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/15 09:30:03 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void		execute_unset(char *inpt);
 void		execute_cd(char *inpt);
 void		execute_env(char *command);
 void		execute_export(char *inpt);
-void        verify_path_order(char *path);
+void		verify_path_order(char *path);
 char		*execute_pwdmain(void);
 char		*get_env_value(const char *var);
 char		*cleanup_string(char *str);
@@ -66,8 +66,8 @@ int			extract_varname(char *input, char *varname, int *i);
 void		extract_val(char *input, char *value, int *i);
 int			get_env_size(void);
 int			skip_spaces(char *input, int i);
-char        *int_to_str(int num, char *str);
-void        exec_func(char *path, char **args);
+char		*int_to_str(int num, char *str);
+void		exec_func(char *path, char **args);
 // handle_command
 
 int			correct_command(char **args);

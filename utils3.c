@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:27 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 16:07:01 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/15 09:31:33 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char	*replace_exit_status(char *result, int *j, int *i)
 	*i += 2;
 	return (result);
 }
-
 
 char	*replace_env_variable(char *command, char *result, int *j, int *i)
 {
