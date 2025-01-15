@@ -35,22 +35,33 @@ int	handle_backspace(int count, int key)
 
 char	*get_env_value(const char *var)
 {
-	char	*value;
+    int		i;
+    char	*env_var;
+    char	*value;
 
-	value = getenv(var);
-	if (value)
-		return (ft_strdup(value));
-	else
-		return (NULL);
+    i = 0;
+    while (environ[i])
+    {
+        env_var = ft_strndup(environ[i], ft_strlen(var));
+        if (ft_strncmp(env_var, var, ft_strlen(var)) == 0 && environ[i][ft_strlen(var)] == '=')
+        {
+            value = ft_strdup(&environ[i][ft_strlen(var) + 1]);
+            free(env_var); // Free the temporary allocation
+            return (value);
+        }
+        free(env_var); // Free the temporary allocation
+        i++;
+    }
+    return (NULL);
 }
 
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	printf("\n");
+	write(STDOUT_FILENO, "\n", 2);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
+	//rl_redisplay();
 }
 
 int	ft_strcmp(const char *str1, const char *str2)

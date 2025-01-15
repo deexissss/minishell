@@ -76,7 +76,7 @@ int	handle_quote(char *inpt)
 
 void	process_input(char *input)
 {
-	add_history(input);
+	// add_history(input);
 	if (check_empty_functions(input) == 0 || simple_dollar(input) == 1
 		|| check_multiple_pipe(input) == 1)
 		free(input);
@@ -94,6 +94,7 @@ int	main(void)
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
 	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigquit);
 	rl_bind_key('\t', handle_tab);
 	rl_bind_key(127, handle_backspace);
 	while (1)
@@ -101,7 +102,9 @@ int	main(void)
 		inpt = readline(BLUE "Minishell$ " RESET);
 		if (!inpt)
 			break ;
+		add_history(inpt);
 		process_input(inpt);
+		free(inpt);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 	}

@@ -36,41 +36,41 @@ static bool	check_n_option(char *input, int *i)
 
 static void	print_quote_word(char *input, int *i, char quote)
 {
-	(*i)++;
-	while (input[*i] && input[*i] != quote)
-		ft_printchar(input[(*i)++]);
-	if (input[*i] == quote)
-		(*i)++;
+    (*i)++;
+    while (input[*i] && input[*i] != quote)
+        ft_printchar(input[(*i)++]);
+    if (input[*i] == quote)
+        (*i)++;
 }
 
 static void	print_word(char *input, int *i, bool *first_word)
 {
-	if (!(*first_word))
-		write(1, " ", 1);
-	*first_word = false;
-	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-		&& input[*i] != '"' && input[*i] != '\'')
-			ft_printchar(input[(*i)++]);
+    if (!(*first_word))
+        write(1, " ", 1);
+    *first_word = false;
+    while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
+        && input[*i] != '"' && input[*i] != '\'')
+        ft_printchar(input[(*i)++]);
 }
 
 static void	print_words(char *input, int i)
 {
-	bool	first_word;
-	char	quote;
+    bool	first_word;
+    char	quote;
 
-	first_word = true;
-	while (input[i])
-	{
-		if (input[i] == '"' || input[i] == '\'')
-		{
-			quote = input[i];
-			print_quote_word(input, &i, quote);
-		}
-		else if (input[i] != ' ' && input[i] != '\t')
-			print_word(input, &i, &first_word);
-		else
-			i = skip_spaces(input, i);
-	}
+    first_word = true;
+    while (input[i])
+    {
+        if (input[i] == '"' || input[i] == '\'')
+        {
+            quote = input[i];
+            print_quote_word(input, &i, quote);
+        }
+        else if (input[i] != ' ' && input[i] != '\t')
+            print_word(input, &i, &first_word);
+        else
+            i = skip_spaces(input, i);
+    }
 }
 
 void	execute_echo(char *input)

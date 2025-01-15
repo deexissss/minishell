@@ -12,7 +12,6 @@
 
 #include "../minishell.h"
 
-extern char	**environ;;
 void	print_environment_variables(void)
 {
 	int	i;

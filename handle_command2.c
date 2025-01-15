@@ -27,6 +27,7 @@ int	check_path(char *path, char **args)
 		free(args);
 		return (1);
 	}
+	free(path);
 	return (0);
 }
 
@@ -48,8 +49,16 @@ int	check_true_command(char *path, char **args)
 
 void	free_arg(char *path, char **args)
 {
-	free(args);
+	int	i;
+
+	i = 0;
 	free(path);
+	while (args[i])
+	{
+		free(args[i]);
+		i++;
+	}
+	free(args);
 }
 
 void	exec_perror(char *str)
@@ -71,9 +80,13 @@ void	handle_external_command(char *command)
 	path = command_path(args[0]);
 	if (check_true_command(path, args) == 1)
 		return ;
+	signal(SIGINT, handle_sigint);
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
 		execute_command(path, args);
+	}
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);

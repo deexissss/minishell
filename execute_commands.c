@@ -38,6 +38,11 @@ char	*handle_command(char *command)
 	int		end;
 
 	expanded_command = handle_dollar(command);
+	if (expanded_command == NULL)
+	{
+		free(command);
+		return (NULL);
+	}
 	free(command);
 	command = expanded_command;
 	end = ft_strlen(command) - 1;

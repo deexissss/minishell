@@ -31,6 +31,7 @@
 # include <unistd.h>
 
 extern int	g_exit_status;
+extern char	**environ;;
 
 # define BLUE "\033[1;34m"
 # define RESET "\033[0m"
@@ -55,6 +56,7 @@ char		*execute_pwdmain(void);
 char		*get_env_value(const char *var);
 char		*cleanup_string(char *str);
 void		handle_sigint(int sig);
+void		handle_sigquit(int sig);
 char		**pipe_tokenizer(char *command, int *num_commands);
 void		execute_pipeline(char **commands, int num_commands);
 char		*handle_dollar(char *command);
@@ -62,8 +64,8 @@ void		ft_checker(char *command);
 int			handle_quote(char *inpt);
 bool		is_pipe_inside_quotes(const char *str);
 void		skip_whitespace(char *input, int *i);
-int			extract_varname(char *input, char *varname, int *i);
-void		extract_val(char *input, char *value, int *i);
+int			extract_varname(char *input, char **varname, int *i);
+void		extract_val(char *input, char **value, int *i);
 int			get_env_size(void);
 int			skip_spaces(char *input, int i);
 char		*int_to_str(int num, char *str);

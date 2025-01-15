@@ -91,7 +91,7 @@ void	handle_new_var(char *varname, char *value)
 	environ = new_environ;
 }
 
-void	extract_var(char *input, char *vname, char *val, int *index)
+void	extract_var(char *input, char **vname, char **val, int *index)
 {
 	skip_whitespace(input, index);
 	if (input[*index] == '\0')
@@ -110,15 +110,15 @@ void	extract_var(char *input, char *vname, char *val, int *index)
 
 void	execute_export(char *input)
 {
-	char	varname[256];
-	char	value[256];
+	char	*varname;
+	char	*value;
 	int		index;
 
 	index = 6;
 	g_exit_status = 0;
 	while (input[index] != '\0')
 	{
-		extract_var(input, varname, value, &index);
+		extract_var(input, &varname, &value, &index);
 		if (g_exit_status != 0)
 			return ;
 		remove_var(varname);
