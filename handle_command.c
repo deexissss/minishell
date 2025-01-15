@@ -33,11 +33,18 @@ int	correct_command(char **args)
 char	*command_path(char *command_name)
 {
 	char	*path;
+	char	*env_path;
 
-	if (ft_strncmp(command_name, "/bin/", 5) == 0)
-		path = ft_strdup(command_name);
+	env_path = getenv("PATH");
+	if (env_path && ft_strstr(env_path, "/bin", 5))
+	{
+		if (ft_strncmp(command_name, "/bin/", 5) == 0)
+			path = ft_strdup(command_name);
+		else
+			path = ft_strjoin("/bin/", command_name);
+	}
 	else
-		path = ft_strjoin("/bin/", command_name);
+		path = ft_strdup(command_name);
 	if (!path)
 		perror("malloc");
 	return (path);

@@ -86,9 +86,26 @@ char	*int_to_str(int num, char *str)
 
 void	exec_func(char *path, char **args)
 {
+	signal(SIGQUIT, SIG_DFL);
 	if (execve(path, args, NULL) == -1)
 	{
 		g_exit_status = 1;
 		exit(EXIT_FAILURE);
 	}
+}
+void	handle_sigquit(int sig)
+{
+    struct termios term;
+
+    (void)sig;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag &= ~ECHOCTL;
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+    if (rl_line_buffer && *rl_line_buffer)
+    {
+        write(STDOUT_FILENO, "\nQuit (core dumped)\n", 20);
+        rl_replace_line("", 0);
+        rl_redisplay();
+        exit(131);  // Exit with status 131 to indicate SIGQUIT
+    }
 }

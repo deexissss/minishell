@@ -19,33 +19,48 @@ void	skip_whitespace(char *input, int *i)
 		(*i)++;
 }
 
-int	extract_varname(char *input, char *varname, int *i)
+int	extract_varname(char *input, char **varname, int *i)
 {
-	unsigned long	j;
-
-	j = 0;
-	while (input[*i] && input[*i] != '=' && input[*i] != ' '
-		&& input[*i] != '\t' && j < sizeof(varname) - 1)
-		varname[j++] = input[(*i)++];
-	varname[j] = '\0';
-	if (input[*i] != '=')
-	{
-		printf("error: export missing '=' after variable name\n");
-		return (0);
-	}
-	(*i)++;
-	return (1);
+    unsigned long	j;
+    unsigned long	len;
+	
+	len = ft_strlen(input);
+    j = 0;
+    *varname = malloc(len + 1);
+    if (*varname == NULL)
+    {
+        perror("malloc");
+        return 0;
+    }
+    while (input[*i] && input[*i] != '=' && input[*i] != ' ' && input[*i] != '\t')
+        (*varname)[j++] = input[(*i)++];
+    (*varname)[j] = '\0';
+    if (input[*i] != '=')
+    {
+        perror("export: invalid identifier");
+        free(*varname);
+        return 0;
+    }
+    (*i)++;
+    return (1);
 }
 
-void	extract_val(char *input, char *value, int *i)
+void extract_val(char *input, char **value, int *i)
 {
-	unsigned long	j;
-
-	j = 0;
-	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-		&& j < sizeof(value) - 1)
-		value[j++] = input[(*i)++];
-	value[j] = '\0';
+    unsigned long	j;
+    unsigned long	len; 
+	
+    len = ft_strlen(input);
+    j = 0;
+    *value = malloc(len + 1);
+    if (*value == NULL)
+    {
+        perror("malloc");
+        return;
+    }
+    while (input[*i] && input[*i] != ' ' && input[*i] != '\t')
+        (*value)[j++] = input[(*i)++];
+    (*value)[j] = '\0';
 }
 
 int	get_env_size(void)
@@ -57,25 +72,30 @@ int	get_env_size(void)
 		env_size++;
 	return (env_size);
 }
+
 void verify_path_order(char *path)
 {
     char *token;
     char *directories[256];
     int i;
-	int j;
 
+    i = 0;
+    if (path == NULL)
+    {
+        perror("export");
+        return;
+    }
     token = ft_strtok(path, ":");
-	i = 0;
-	j = 0;
     while (token != NULL)
     {
-        directories[i++] = token;
+        directories[i] = malloc(ft_strlen(token) + 1);
+        if (directories[i] == NULL)
+        {
+            perror("malloc");
+            return ;
+        }
+        ft_strcpy(directories[i], token);
         token = ft_strtok(NULL, ":");
-    }
-    printf("Directories in PATH:\n");
-    while(j < i)
-    {
-        printf("%s\n", directories[j]);
-		j++;
+        i++;
     }
 }
