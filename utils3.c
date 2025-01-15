@@ -29,12 +29,13 @@ char	*replace_exit_status(char *result, int *j, int *i)
 {
 	char	g_exit_statusc[12];
 
-	sprintf(g_exit_statusc, "%d", g_exit_status);
+	int_to_str(g_exit_status, g_exit_statusc);
 	ft_strcpy(&result[*j], g_exit_statusc);
-	*j += strlen(g_exit_statusc);
+	*j += ft_strlen(g_exit_statusc);
 	*i += 2;
 	return (result);
 }
+
 
 char	*replace_env_variable(char *command, char *result, int *j, int *i)
 {
@@ -45,7 +46,7 @@ char	*replace_env_variable(char *command, char *result, int *j, int *i)
 
 	var_start = &command[*i + 1];
 	var_end = var_start;
-	while (*var_end && (isalnum((int)*var_end) || *var_end == '_'))
+	while (*var_end && (ft_isalnum((int)*var_end) || *var_end == '_'))
 		var_end++;
 	ft_strncpy(var_name, var_start, var_end - var_start);
 	var_name[var_end - var_start] = '\0';
@@ -54,7 +55,7 @@ char	*replace_env_variable(char *command, char *result, int *j, int *i)
 	{
 		ft_strcpy(&result[*j], var_value);
 		*j += ft_strlen(var_value);
-		//free(var_value);
+		free(var_value);
 	}
 	*i = var_end - command;
 	return (result);
@@ -96,7 +97,7 @@ char	*handle_dollar(char *command)
 		}
 		else if (command[i] == '$' && command[i + 1] == '?')
 			result = replace_exit_status(result, &j, &i);
-		else if (command[i] == '$' && (i == 0 || (i > 0 && command[i - 1] != '\\'))
+		else if (command[i] == '$' && (i == 0 || command[i - 1] != '\\')
 			&& !in_single_quote)
 			result = replace_env_variable(command, result, &j, &i);
 		else

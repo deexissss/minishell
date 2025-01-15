@@ -61,3 +61,37 @@ char	*cleanup_string(char *str)
 	clean_str = clean_string(str, i, j, clean_str);
 	return (clean_str);
 }
+
+
+char	*int_to_str(int num, char *str)
+{
+	int		len;
+	int		temp;
+
+
+	len = 1;
+	temp = num;
+	while (temp / 10 != 0)
+	{
+		len++;
+		temp /= 10;
+	}
+	str[len] = '\0';
+	while (len > 0)
+	{
+		len--;
+		str[len] = (num % 10) + '0';
+		num /= 10;
+	}
+	return (str);
+}
+
+void	exec_func(char *path, char **args)
+{
+	if (execve(path, args, NULL) == -1)
+	{
+		g_exit_status = 1;
+		//perror("minishell");
+		exit(EXIT_FAILURE);
+	}
+}
