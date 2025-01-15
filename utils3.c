@@ -15,8 +15,10 @@
 char	*allocate_result_buffer(char *command)
 {
 	char	*result;
+	size_t	buffer_size;
 
-	result = malloc((sizeof(char) * (ft_strlen(command) + 1) * 2));
+	buffer_size = (ft_strlen(command) + 1);
+	result = malloc(buffer_size);
 	if (!result)
 	{
 		perror("malloc");
@@ -54,7 +56,6 @@ char	*replace_env_variable(char *command, char *result, int *j, int *i)
 	{
 		ft_strcpy(&result[*j], var_value);
 		*j += ft_strlen(var_value);
-		free(var_value);
 	}
 	*i = var_end - command;
 	return (result);
