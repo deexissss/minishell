@@ -21,6 +21,8 @@ int	correct_command(char **args)
 		if (args)
 		{
 			g_exit_status = 1;
+			if (ft_strncmp(args[0], "ls", 2) == 0)
+				g_exit_status = 2; 
 			free(args);
 		}
 		return (0);
@@ -41,7 +43,47 @@ char	*command_path(char *command_name)
 	return (path);
 }
 
-void	execute_command(char *path, char **args)
+/*void	execute_command(char *path, char **args)
+{
+	if (execve(path, args, NULL) == -1)
+	{
+		g_exit_status = 1;
+		//perror("minishell");
+		exit(EXIT_FAILURE);
+	}
+}*/
+/*void	execute_command(char *path, char **args)
+{
+    struct stat buffer;
+    int exists;
+	int	i;
+
+	i = 0;
+    if (ft_strncmp(path, "ls", 2) == 0 || ft_strncmp(path, "/bin/ls", 7) == 0)
+    {
+        while (args[i] != NULL)
+        {
+            exists = stat(args[i], &buffer);
+            if (exists != 0)
+            {
+                g_exit_status = 2;
+                printf("minishell: %s: No such file or directory\n", args[i]);
+                return;
+            }
+			i++;
+        }
+    }
+	if (ft_strncmp(path, "ls", 2) == 0)
+		path = "/bin/ls";
+    if (execve(path, args, NULL) == -1)
+    {
+        g_exit_status = 1;
+        //perror("minishell");
+        exit(EXIT_FAILURE);
+    }
+}*/
+
+void	exec_func(char *path, char **args)
 {
 	if (execve(path, args, NULL) == -1)
 	{
@@ -50,6 +92,33 @@ void	execute_command(char *path, char **args)
 		exit(EXIT_FAILURE);
 	}
 }
+
+void	execute_command(char *path, char **args)
+{
+    struct stat buffer;
+    int exists;
+    int i;
+
+	i = 1;
+    if (ft_strncmp(path, "ls", 2) == 0 || ft_strncmp(path, "/bin/ls", 7) == 0)
+    {
+        while (args[i] != NULL)
+        {
+            exists = stat(args[i], &buffer);
+            if (exists != 0)
+            {
+                g_exit_status = 2;
+                write(STDERR_FILENO, "minishell: ", 11);
+                write(STDERR_FILENO, args[i], ft_strlen(args[i]));
+                write(STDERR_FILENO, ": No such file or directory\n", 28);
+                return ;
+            }
+			i++;
+        }
+    }
+	exec_func(path, args);
+}
+
 
 void	clear_terminal(char *command)
 {

@@ -66,7 +66,8 @@ int			extract_varname(char *input, char *varname, int *i);
 void		extract_val(char *input, char *value, int *i);
 int			get_env_size(void);
 int			skip_spaces(char *input, int i);
-
+char        *int_to_str(int num, char *str);
+void        exec_func(char *path, char **args);
 // handle_command
 
 int			correct_command(char **args);
