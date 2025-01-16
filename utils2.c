@@ -94,16 +94,34 @@ void	exec_func(char *path, char **args)
 	}
 }
 
-int	is_line_empty(const char *line)
+int is_line_empty(const char *line)
 {
-	while (*line)
-	{
-		if (!isspace((unsigned char)*line))
-			return (0);
-		line++;
-	}
-	return (1);
+    while (*line)
+    {
+        if (!isspace((unsigned char)*line))
+            return 0;
+        line++;
+    }
+    return 1;
 }
+
+void	handle_sigquit(int sig)
+{
+    struct termios term;
+
+    (void)sig;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag &= ~ECHOCTL;
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+    if (rl_line_buffer && !is_line_empty(rl_line_buffer))
+    {
+        write(STDOUT_FILENO, "\nQuit (core dumped)\n", 20);
+        rl_replace_line("", 0);
+        rl_redisplay();
+        exit(131);
+    }
+}
+
 void	handle_sigquit(int sig)
 {
 	struct termios term;

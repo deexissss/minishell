@@ -14,25 +14,25 @@
 
 int	correct_command(char **args)
 {
-	int	arg_count;
+    int		arg_count;
 
-	arg_count = 0;
-	if (args)
-	{
-		while (args[arg_count])
-			arg_count++;
-		if (arg_count == 1)
-			return (1);
-		g_exit_status = 0;
-		if (access(args[1], F_OK) == -1)
-		{
-			printf("error: file or directory not found\n");
-			g_exit_status = 2;
-			free(args);
-			return (0);
-		}
-	}
-	return (1);
+    arg_count = 0;
+    if (args)
+    {
+        while (args[arg_count])
+            arg_count++;
+        if (arg_count == 1)
+            return (1);
+        g_exit_status = 0;
+        if (access(args[1], F_OK) == -1)
+        {
+            printf("error: file or directory not found\n");
+            g_exit_status = 2;
+            free(args);
+            return (0);
+        }
+    }
+    return (1);
 }
 
 char	*command_path(char *command_name)
