@@ -31,7 +31,8 @@
 # include <unistd.h>
 
 extern int	g_exit_status;
-extern char	**environ;;
+extern char	**environ;
+;
 
 # define BLUE "\033[1;34m"
 # define RESET "\033[0m"

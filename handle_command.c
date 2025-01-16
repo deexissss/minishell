@@ -14,18 +14,23 @@
 
 int	correct_command(char **args)
 {
-	if (!args || !args[0])
+	int	arg_count;
+
+	arg_count = 0;
+	if (args)
 	{
-		printf("error: command not found\n");
-		g_exit_status = 127;
-		if (args)
+		while (args[arg_count])
+			arg_count++;
+		if (arg_count == 1)
+			return (1);
+		g_exit_status = 0;
+		if (access(args[1], F_OK) == -1)
 		{
-			g_exit_status = 1;
-			if (ft_strncmp(args[0], "ls", 2) == 0)
-				g_exit_status = 2;
+			printf("error: file or directory not found\n");
+			g_exit_status = 2;
 			free(args);
+			return (0);
 		}
-		return (0);
 	}
 	return (1);
 }

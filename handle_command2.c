@@ -47,7 +47,7 @@ int	check_true_command(char *path, char **args)
 		return (0);
 }
 
-void	free_arg(char *path, char **args)
+void	free_args(char *path, char **args)
 {
 	int	i;
 
@@ -95,5 +95,5 @@ void	handle_external_command(char *command)
 	}
 	else
 		exec_perror("fork");
-	free_arg(path, args);
+	free_args(path, args);
 }

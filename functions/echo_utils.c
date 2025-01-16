@@ -14,7 +14,7 @@
 
 int	skip_spaces(char *input, int i)
 {
-	while (input[i] == ' ' || input[i] == '\t')
+	while (input[i] && (input[i] == ' ' || input[i] == '\t'))
 		i++;
 	return (i);
 }
