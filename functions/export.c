@@ -24,6 +24,8 @@ void	add_var(char **new_environ, int env_size, char *vname, char *value)
 	if (!new_environ[env_size])
 	{
 		perror("malloc");
+		for (int k = 0; k < env_size; k++)
+            free(new_environ[k]);
 		free(new_environ);
 		return ;
 	}
@@ -120,11 +122,23 @@ void	execute_export(char *input)
 	{
 		extract_var(input, &varname, &value, &index);
 		if (g_exit_status != 0)
+		{
+			free(varname);
+			free(value);
 			return ;
+		}
 		remove_var(varname);
 		handle_new_var(varname, value);
+		if (g_exit_status != 0)
+        {
+            free(varname);
+            free(value);
+            return;
+        }
 		if (ft_strcmp(varname, "PATH") == 0)
 			verify_path_order(value);
+		free(varname);
+		free(value);
 		skip_whitespace(input, &index);
 	}
 }
