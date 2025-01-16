@@ -92,10 +92,14 @@ void verify_path_order(char *path)
         if (directories[i] == NULL)
         {
             perror("malloc");
+            while (--i >= 0)
+                free(directories[i]);
             return ;
         }
         ft_strcpy(directories[i], token);
         token = ft_strtok(NULL, ":");
         i++;
     }
+    while (--i >= 0)
+        free(directories[i]);
 }
