@@ -17,7 +17,7 @@ char	*allocate_result_buffer(char *command)
 	char	*result;
 	size_t	buffer_size;
 
-	buffer_size = (ft_strlen(command) + 1);
+	buffer_size = (ft_strlen(command) + 1) * 256;
 	result = malloc(buffer_size);
 	if (!result)
 	{
@@ -80,10 +80,10 @@ char	*initialize_variables(char *command, int *i, int *j,
 
 char	*handle_dollar(char *command)
 {
-	char	*result;
-	int		i;
-	int		j;
-	int		in_single_quote;
+	char *result;
+	int i;
+	int j;
+	int in_single_quote;
 
 	result = initialize_variables(command, &i, &j, &in_single_quote);
 	if (!result)

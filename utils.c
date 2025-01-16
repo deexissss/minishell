@@ -56,7 +56,7 @@ void	handle_sigint(int sig)
 	write(STDOUT_FILENO, "\n", 2);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	//rl_redisplay();
+	// rl_redisplay();
 }
 
 int	ft_strcmp(const char *str1, const char *str2)

@@ -64,8 +64,8 @@ char	*cleanup_string(char *str)
 
 char	*int_to_str(int num, char *str)
 {
-	int		len;
-	int		temp;
+	int	len;
+	int	temp;
 
 	len = 1;
 	temp = num;
@@ -93,22 +93,6 @@ void	exec_func(char *path, char **args)
 		exit(EXIT_FAILURE);
 	}
 }
-/*void	handle_sigquit(int sig)
-{
-    struct termios term;
-
-    (void)sig;
-    tcgetattr(STDIN_FILENO, &term);
-    term.c_lflag &= ~ECHOCTL;
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
-    if (rl_line_buffer && *rl_line_buffer && rl_line_buffer[0] != '\0')
-    {
-        write(STDOUT_FILENO, "\nQuit (core dumped)\n", 20);
-        rl_replace_line("", 0);
-        rl_redisplay();
-        exit(131);  // Exit with status 131 to indicate SIGQUIT
-    }
-}*/
 
 int is_line_empty(const char *line)
 {
@@ -136,4 +120,20 @@ void	handle_sigquit(int sig)
         rl_redisplay();
         exit(131);
     }
+}
+
+void	handle_sigquit(int sig)
+{
+	struct termios term;
+	(void)sig;
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	if (rl_line_buffer && !is_line_empty(rl_line_buffer))
+	{
+		write(STDOUT_FILENO, "\nQuit (core dumped)\n", 20);
+		rl_replace_line("", 0);
+		rl_redisplay();
+		exit(131);
+	}
 }
