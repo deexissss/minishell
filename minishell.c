@@ -82,6 +82,8 @@ void	process_input(char *input)
 		free(input);
 	else if (handle_quote(input) == 0)
 		execute_commands(input);
+	else
+		free(input);
 }
 int		g_exit_status = 0;
 

@@ -28,14 +28,14 @@ int	correct_command(char **args)
         {
             printf("error: file or directory not found\n");
             g_exit_status = 2;
-            free(args);
+            //free(args);
             return (0);
         }
     }
     return (1);
 }
 
-char	*command_path(char *command_name)
+/*char	*command_path(char *command_name)
 {
 	char	*path;
 	char	*env_path;
@@ -53,7 +53,54 @@ char	*command_path(char *command_name)
 	if (!path)
 		perror("malloc");
 	return (path);
+}*/
+
+/*char	*command_path(char *command_name)
+{
+    char	*path;
+    char	*env_path;
+
+    env_path = getenv("PATH");
+    if (env_path && ft_strstr(env_path, "/bin"))
+    {
+        if (ft_strncmp(command_name, "/bin/", 5) == 0)
+            path = ft_strdup(command_name);
+        else
+            path = ft_strjoin("/bin/", command_name);
+    }
+    else
+        path = NULL;
+    if (!path)
+	{
+		printf("error: command not found %s\n", command_name);
+		free(path);
+	}
+    return (path);
+}*/
+char	*command_path(char *command_name)
+{
+    char	*path;
+    char	*env_path;
+
+    if (ft_strncmp(command_name, "/bin/", 5) == 0)
+        path = ft_strdup(command_name);
+    else
+    {
+        env_path = getenv("PATH");
+        if (env_path && ft_strstr(env_path, "/bin"))
+            path = ft_strjoin("/bin/", command_name);
+        else
+            path = NULL;
+    }
+    if (!path)
+    {
+        printf("error: command not found %s\n", command_name);
+		g_exit_status = 127;
+        free(path);
+    }
+    return (path);
 }
+
 
 void	execute_command(char *path, char **args)
 {
@@ -77,6 +124,7 @@ void	execute_command(char *path, char **args)
 			}
 			i++;
 		}
+
 	}
 	exec_func(path, args);
 }

@@ -129,6 +129,16 @@ char	*new_strdup(const char *str, int start, int finish)
 	return (new_word);
 }
 
+void	free_split(char **split, size_t j)
+{
+    size_t	i;
+
+	i = 0;
+    while (i < j)
+        free(split[i++]);
+    free(split);
+}
+
 char	**ft_split(char const *s, char c)
 {
 	size_t	i;
@@ -149,6 +159,11 @@ char	**ft_split(char const *s, char c)
 		else if ((s[i] == c || i == ft_strlen(s)) && index >= 0)
 		{
 			split[j] = new_strdup(s, index, i);
+			if (!split[j])
+            {
+                free_split(split, j);
+                return (NULL);
+            }
 			j++;
 			index = -1;
 		}
