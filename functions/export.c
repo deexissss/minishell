@@ -13,7 +13,6 @@
 #include "../minishell.h"
 
 extern char	**environ;;
-static	char **g_our_environ = NULL;
 
 void	add_var(char **new_environ, int env_size, char *vname, char *value)
 {
@@ -46,7 +45,7 @@ void	add_var(char **new_environ, int env_size, char *vname, char *value)
 	new_environ[env_size][j] = '\0';
 }
 
-void	remove_var(char *varname)
+/*void	remove_var(char *varname)
 {
 	int	i;
 	int	j;
@@ -69,6 +68,32 @@ void	remove_var(char *varname)
 		}
 		i++;
 	}
+}*/
+void	remove_var(char *varname)
+{
+    int	i;
+    int	len;
+
+    i = 0;
+    len = ft_strlen(varname);
+    while (environ[i] != NULL)
+    {
+        if (ft_strncmp(environ[i], varname, len) == 0 && environ[i][len] == '=')
+        {
+            if (g_our_environ != NULL && environ[i] == g_our_environ[i])
+                free(environ[i]);
+            break;
+        }
+        i++;
+    }
+    if (environ[i] == NULL)
+        return;
+    while (environ[i + 1] != NULL)
+    {
+        environ[i] = environ[i + 1];
+        i++;
+    }
+    environ[i] = NULL;
 }
 
 void	handle_new_var(char *varname, char *value)
@@ -106,13 +131,6 @@ void	handle_new_var(char *varname, char *value)
         }
         free(g_our_environ);
     }
-	/*if (g_our_environ != NULL)
-	{
-		i = 0;
-		while (g_our_environ[i] != NULL)
-			free(g_our_environ[i++]);
-		free(g_our_environ);
-	}*/
 	g_our_environ = new_environ;
 	environ = new_environ;
 }

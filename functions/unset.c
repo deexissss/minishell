@@ -58,7 +58,7 @@ static void	extract_varname_u(char *input, char *varname, int *i)
 		j++;
 	}
 }*/
-static void	remove_var_from_env(char *varname)
+/*static void	remove_var_from_env(char *varname)
 {
     unsigned long	j;
     unsigned long	len;
@@ -72,8 +72,9 @@ static void	remove_var_from_env(char *varname)
         if (strncasecmp(env_var, varname, len) == 0 && env_var[len] == '=')
         {
             // Vérifie si la variable a été allouée dynamiquement
-            if (env_var != NULL && env_var != varname && env_var != environ[j])
+            if (env_var != varname)
             {
+                // Libère la mémoire allouée pour la variable d'environnement
                 free(env_var);
             }
             while (environ[j + 1] != NULL)
@@ -86,7 +87,34 @@ static void	remove_var_from_env(char *varname)
         }
         j++;
     }
+}*/
+
+static void remove_var_from_env(char *varname)
+{
+    unsigned long i = 0;
+    int varname_len = ft_strlen(varname);
+
+    while (environ[i] != NULL)
+    {
+        if (ft_strncmp(environ[i], varname, varname_len) == 0 && environ[i][varname_len] == '=')
+        {
+            // Only free if the memory was allocated by add_var
+            if (g_our_environ != NULL && environ[i] >= (char *)g_our_environ && environ[i] < (char *)(g_our_environ + environ_size))
+                free(environ[i]);
+            break;
+        }
+        i++;
+    }
+    if (environ[i] == NULL)
+        return;
+    while (environ[i + 1] != NULL)
+    {
+        environ[i] = environ[i + 1];
+        i++;
+    }
+    environ[i] = NULL;
 }
+
 
 void	execute_unset(char *input)
 {

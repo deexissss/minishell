@@ -56,6 +56,7 @@ char	*replace_env_variable(char *command, char *result, int *j, int *i)
 	{
 		ft_strcpy(&result[*j], var_value);
 		*j += ft_strlen(var_value);
+		free(var_value);
 	}
 	*i = var_end - command;
 	return (result);
