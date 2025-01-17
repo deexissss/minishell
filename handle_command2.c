@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 int	check_path(char *path, char **args)
 {
 	path = command_path(args[0]);
@@ -47,7 +48,7 @@ int	check_true_command(char *path, char **args)
 		return (0);
 }
 
-void	free_args(char *path, char **args)
+/*void	free_args(char *path, char **args)
 {
 	int	i;
 
@@ -59,7 +60,33 @@ void	free_args(char *path, char **args)
 		i++;
 	}
 	free(args);
+}*/
+void free_args(char *path, char **args)
+{
+    int i;
+
+	if (path == NULL && args == NULL)
+	{
+		//free(path);
+		return;
+	}
+    else if (path)
+    {
+        free(path);
+        path = NULL;
+    }
+    if (args)
+    {
+        for (i = 0; args[i]; i++)
+        {
+            free(args[i]);
+            args[i] = NULL;
+        }
+        free(args);
+        args = NULL;
+    }
 }
+
 
 void	exec_perror(char *str)
 {
@@ -67,7 +94,7 @@ void	exec_perror(char *str)
 	g_exit_status = 1;
 }
 
-void	handle_external_command(char *command)
+/*void	handle_external_command(char *command)
 {
 	char	**args;
 	char	*path;
@@ -76,7 +103,10 @@ void	handle_external_command(char *command)
 
 	args = ft_split(command, ' ');
 	if (!correct_command(args))
+	{
+		free_args(NULL, args);
 		return ;
+	}
 	path = command_path(args[0]);
 	if (check_true_command(path, args) == 1)
 		return ;
@@ -96,4 +126,95 @@ void	handle_external_command(char *command)
 	else
 		exec_perror("fork");
 	free_args(path, args);
+}*/
+
+
+/*void	handle_external_command(char *command)
+{
+    char	**args;
+    char	*path;
+    pid_t	pid;
+    int		status;
+
+    args = ft_split(command, ' ');
+    if (!correct_command(args))
+    {
+        free_args(NULL, args);
+        return ;
+    }
+    path = command_path(args[0]);
+    if (!path || check_true_command(path, args) == 1)
+    {
+        free(path);
+        free_args(NULL, args);
+        return ;
+    }
+    signal(SIGINT, handle_sigint);
+    pid = fork();
+    if (pid == 0)
+    {
+        signal(SIGINT, SIG_DFL);
+        execute_command(path, args);
+    }
+    else if (pid > 0)
+    {
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+            g_exit_status = 1;
+    }
+    else
+        exec_perror("fork");
+    free(path);
+    free_args(NULL, args);
+}*/
+
+void update_exit_status(int status)
+{
+    if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+        g_exit_status = 1;
+}
+
+void execute_command_with_fork(char *path, char **args)
+{
+    pid_t pid;
+    int status;
+
+    signal(SIGINT, handle_sigint);
+    pid = fork();
+    if (pid == 0)
+    {
+        signal(SIGINT, SIG_DFL);
+        execute_command(path, args);
+    }
+    else if (pid > 0)
+    {
+        waitpid(pid, &status, 0);
+        update_exit_status(status);
+    }
+    else
+        exec_perror("fork");
+}
+
+
+void handle_external_command(char *command)
+{
+    char **args;
+    char *path;
+
+    args = ft_split(command, ' ');
+    if (!correct_command(args))
+    {
+        free_args(NULL, args);
+        return;
+    }
+    path = command_path(args[0]);
+    if (!path || check_true_command(path, args) == 1)
+    {
+        free(path);
+        free_args(NULL, args);
+        return;
+    }
+    execute_command_with_fork(path, args);
+    free(path);
+    free_args(NULL, args);
 }

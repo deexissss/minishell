@@ -116,4 +116,5 @@ void	execute_commands(char *inpt)
 		free(command);
 		i = j + 2;
 	}
+	free(inpt);
 }

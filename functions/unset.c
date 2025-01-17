@@ -35,7 +35,7 @@ static void	extract_varname_u(char *input, char *varname, int *i)
 	varname[j] = '\0';
 }
 
-static void	remove_var_from_env(char *varname)
+/*static void	remove_var_from_env(char *varname)
 {
 	unsigned long	j;
 
@@ -45,6 +45,8 @@ static void	remove_var_from_env(char *varname)
 		if (ft_strncmp(environ[j], varname, ft_strlen(varname)) == 0
 			&& environ[j][ft_strlen(varname)] == '=')
 		{
+			if (environ[j] != NULL && environ[j] != varname)
+				free(environ[j]);
 			while (environ[j + 1] != NULL)
 			{
 				environ[j] = environ[j + 1];
@@ -55,6 +57,35 @@ static void	remove_var_from_env(char *varname)
 		}
 		j++;
 	}
+}*/
+static void	remove_var_from_env(char *varname)
+{
+    unsigned long	j;
+    unsigned long	len;
+    char            *env_var;
+
+    j = 0;
+    len = strlen(varname);
+    while (environ[j] != NULL)
+    {
+        env_var = environ[j];
+        if (strncasecmp(env_var, varname, len) == 0 && env_var[len] == '=')
+        {
+            // Vérifie si la variable a été allouée dynamiquement
+            if (env_var != NULL && env_var != varname && env_var != environ[j])
+            {
+                free(env_var);
+            }
+            while (environ[j + 1] != NULL)
+            {
+                environ[j] = environ[j + 1];
+                j++;
+            }
+            environ[j] = NULL;
+            return;
+        }
+        j++;
+    }
 }
 
 void	execute_unset(char *input)

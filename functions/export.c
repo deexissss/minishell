@@ -13,6 +13,8 @@
 #include "../minishell.h"
 
 extern char	**environ;;
+static	char **g_our_environ = NULL;
+
 void	add_var(char **new_environ, int env_size, char *vname, char *value)
 {
 	int	j;
@@ -90,6 +92,28 @@ void	handle_new_var(char *varname, char *value)
 	}
 	add_var(new_environ, env_size, varname, value);
 	new_environ[env_size + 1] = NULL;
+    if (g_our_environ != NULL)
+    {
+        i = 0;
+        while (g_our_environ[i] != NULL)
+        {
+            if (ft_strncmp(g_our_environ[i], varname, ft_strlen(varname)) == 0 && g_our_environ[i][ft_strlen(varname)] == '=')
+            {
+                free(g_our_environ[i]);
+                break;
+            }
+            i++;
+        }
+        free(g_our_environ);
+    }
+	/*if (g_our_environ != NULL)
+	{
+		i = 0;
+		while (g_our_environ[i] != NULL)
+			free(g_our_environ[i++]);
+		free(g_our_environ);
+	}*/
+	g_our_environ = new_environ;
 	environ = new_environ;
 }
 
