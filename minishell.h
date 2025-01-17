@@ -32,6 +32,8 @@
 
 extern int	g_exit_status;
 extern char	**environ;
+extern char **g_our_environ;
+extern int environ_size;
 ;
 
 # define BLUE "\033[1;34m"

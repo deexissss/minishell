@@ -40,8 +40,8 @@ int	check_true_command(char *path, char **args)
 	{
 		printf("error: command '%s' not found\n", args[0]);
 		g_exit_status = 127;
-		free(path);
-		free(args);
+		//free(path);
+		//free(args);
 		return (1);
 	}
 	else

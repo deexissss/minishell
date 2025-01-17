@@ -86,6 +86,8 @@ void	process_input(char *input)
 		free(input);
 }
 int		g_exit_status = 0;
+char **g_our_environ = NULL;
+int		environ_size = 0;
 
 int	main(void)
 {
@@ -99,15 +101,19 @@ int	main(void)
 	signal(SIGQUIT, handle_sigquit);
 	rl_bind_key('\t', handle_tab);
 	rl_bind_key(127, handle_backspace);
+	using_history();
 	while (1)
 	{
 		inpt = readline(BLUE "Minishell$ " RESET);
 		if (!inpt)
 			break ;
-		add_history(inpt);
+		if (*inpt)
+			add_history(inpt);
 		process_input(inpt);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 	close(saved_stdin);
 	close(saved_stdout);

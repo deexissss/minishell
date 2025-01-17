@@ -15,6 +15,7 @@
 int	correct_command(char **args)
 {
     int		arg_count;
+	int		i = 0;
 
     arg_count = 0;
     if (args)
@@ -24,13 +25,15 @@ int	correct_command(char **args)
         if (arg_count == 1)
             return (1);
         g_exit_status = 0;
-        if (access(args[1], F_OK) == -1)
+        if (access(args[1], F_OK) != -1)
         {
-            printf("error: file or directory not found\n");
+			while (ft_strstr(args[i++], "grep") == NULL)
+				return (1);
+		}
+            //printf("error: file or directory not found\n");
             g_exit_status = 2;
             //free(args);
-            return (0);
-        }
+            //return (0);
     }
     return (1);
 }
