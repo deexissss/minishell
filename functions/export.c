@@ -12,7 +12,8 @@
 
 #include "../minishell.h"
 
-extern char	**environ;;
+extern char	**environ;
+;
 
 void	add_var(char **new_environ, int env_size, char *vname, char *value)
 {
@@ -26,7 +27,7 @@ void	add_var(char **new_environ, int env_size, char *vname, char *value)
 	{
 		perror("malloc");
 		for (int k = 0; k < env_size; k++)
-            free(new_environ[k]);
+			free(new_environ[k]);
 		free(new_environ);
 		return ;
 	}
@@ -45,94 +46,62 @@ void	add_var(char **new_environ, int env_size, char *vname, char *value)
 	new_environ[env_size][j] = '\0';
 }
 
-/*void	remove_var(char *varname)
+void	remove_var(char *varname)
 {
 	int	i;
-	int	j;
 	int	len;
 
 	i = 0;
 	len = ft_strlen(varname);
-	while (environ[i] != NULL)
+	while (g_env.variables[i] != NULL)
 	{
-		if (ft_strncmp(environ[i], varname, len) == 0 && environ[i][len] == '=')
+		if (ft_strncmp(g_env.variables[i], varname, len) == 0
+			&& g_env.variables[i][len] == '=')
 		{
-			free(environ[i]);
-			j = i;
-			while (environ[j] != NULL)
-			{
-				environ[j] = environ[j + 1];
-				j++;
-			}
-			return ;
+			free(g_env.variables[i]);
+			break ;
 		}
 		i++;
 	}
-}*/
-void	remove_var(char *varname)
-{
-    int	i;
-    int	len;
-
-    i = 0;
-    len = ft_strlen(varname);
-    while (environ[i] != NULL)
-    {
-        if (ft_strncmp(environ[i], varname, len) == 0 && environ[i][len] == '=')
-        {
-            if (g_our_environ != NULL && environ[i] == g_our_environ[i])
-                free(environ[i]);
-            break;
-        }
-        i++;
-    }
-    if (environ[i] == NULL)
-        return;
-    while (environ[i + 1] != NULL)
-    {
-        environ[i] = environ[i + 1];
-        i++;
-    }
-    environ[i] = NULL;
+	if (g_env.variables[i] == NULL)
+		return ;
+	while (g_env.variables[i + 1] != NULL)
+	{
+		g_env.variables[i] = g_env.variables[i + 1];
+		i++;
+	}
+	g_env.variables[i] = NULL;
+	g_env.size--;
 }
 
 void	handle_new_var(char *varname, char *value)
 {
-	int		env_size;
-	char	**new_environ;
+	char	**new_variables;
 	int		i;
 
-	env_size = get_env_size();
-	new_environ = malloc(sizeof(char *) * (env_size + 2));
-	i = 0;
-	if (!new_environ)
+	new_variables = malloc(sizeof(char *) * (g_env.size + 2));
+	if (!new_variables)
 	{
 		perror("malloc");
 		return ;
 	}
-	while (i < env_size)
+	for (i = 0; i < g_env.size; i++)
 	{
-		new_environ[i] = environ[i];
-		i++;
+		new_variables[i] = g_env.variables[i];
 	}
-	add_var(new_environ, env_size, varname, value);
-	new_environ[env_size + 1] = NULL;
-    if (g_our_environ != NULL)
-    {
-        i = 0;
-        while (g_our_environ[i] != NULL)
-        {
-            if (ft_strncmp(g_our_environ[i], varname, ft_strlen(varname)) == 0 && g_our_environ[i][ft_strlen(varname)] == '=')
-            {
-                free(g_our_environ[i]);
-                break;
-            }
-            i++;
-        }
-        free(g_our_environ);
-    }
-	g_our_environ = new_environ;
-	environ = new_environ;
+	new_variables[g_env.size] = malloc(ft_strlen(varname) + ft_strlen(value)
+			+ 2);
+	if (!new_variables[g_env.size])
+	{
+		perror("malloc");
+		free(new_variables);
+		return ;
+	}
+	sprintf(new_variables[g_env.size], "%s=%s", varname, value);
+	new_variables[g_env.size + 1] = NULL;
+	free(g_env.variables);
+	g_env.variables = new_variables;
+	g_env.size++;
 }
 
 void	extract_var(char *input, char **vname, char **val, int *index)
@@ -154,9 +123,9 @@ void	extract_var(char *input, char **vname, char **val, int *index)
 
 void	execute_export(char *input)
 {
-	char	*varname;
-	char	*value;
-	int		index;
+	char *varname;
+	char *value;
+	int index;
 
 	index = 6;
 	g_exit_status = 0;
@@ -172,11 +141,11 @@ void	execute_export(char *input)
 		remove_var(varname);
 		handle_new_var(varname, value);
 		if (g_exit_status != 0)
-        {
-            free(varname);
-            free(value);
-            return;
-        }
+		{
+			free(varname);
+			free(value);
+			return ;
+		}
 		if (ft_strcmp(varname, "PATH") == 0)
 			verify_path_order(value);
 		free(varname);
