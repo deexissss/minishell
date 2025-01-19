@@ -35,19 +35,21 @@ int	handle_backspace(int count, int key)
 
 char	*get_env_value(const char *var)
 {
-	char	*value;
-	char	*result;
+	int	i;
+	int	var_len;
 
-	value = getenv(var);
-	if (value)
+	i = 0;
+	var_len = ft_strlen(var);
+	while (g_env.variables[i] != NULL)
 	{
-		result = ft_strdup(value);
-		if (!result)
-			perror("malloc");
-		return (result);
+		if (ft_strncmp(g_env.variables[i], var, var_len) == 0
+			&& g_env.variables[i][var_len] == '=')
+		{
+			return (ft_strdup(g_env.variables[i] + var_len + 1));
+		}
+		i++;
 	}
-	else
-		return (NULL);
+	return (NULL);
 }
 
 void	handle_sigint(int sig)

@@ -87,27 +87,28 @@ char	*int_to_str(int num, char *str)
 void	exec_func(char *path, char **args)
 {
 	signal(SIGQUIT, SIG_DFL);
-	if (execve(path, args, NULL) == -1)
+	if (execve(path, args, g_env.variables) == -1)
 	{
 		g_exit_status = 1;
 		exit(EXIT_FAILURE);
 	}
 }
 
-int is_line_empty(const char *line)
+int	is_line_empty(const char *line)
 {
-    while (*line)
-    {
-        if (!isspace((unsigned char)*line))
-            return 0;
-        line++;
-    }
-    return 1;
+	while (*line)
+	{
+		if (!isspace((unsigned char)*line))
+			return (0);
+		line++;
+	}
+	return (1);
 }
 
 void	handle_sigquit(int sig)
 {
-	struct termios term;
+	struct termios	term;
+
 	(void)sig;
 	tcgetattr(STDIN_FILENO, &term);
 	term.c_lflag &= ~ECHOCTL;

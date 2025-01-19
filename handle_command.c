@@ -14,96 +14,65 @@
 
 int	correct_command(char **args)
 {
-    int		arg_count;
-	int		i = 0;
+	int	arg_count;
+	int	i;
 
-    arg_count = 0;
-    if (args)
-    {
-        while (args[arg_count])
-            arg_count++;
-        if (arg_count == 1)
-            return (1);
-        g_exit_status = 0;
-        if (access(args[1], F_OK) != -1)
-        {
+	i = 0;
+	arg_count = 0;
+	if (args)
+	{
+		while (args[arg_count])
+			arg_count++;
+		if (arg_count == 1)
+			return (1);
+		g_exit_status = 0;
+		if (access(args[1], F_OK) != -1)
+		{
 			while (ft_strstr(args[i++], "grep") == NULL)
 				return (1);
 		}
-            //printf("error: file or directory not found\n");
-            g_exit_status = 2;
-            //free(args);
-            //return (0);
-    }
-    return (1);
+		g_exit_status = 2;
+	}
+	return (1);
 }
 
-/*char	*command_path(char *command_name)
+char	*command_path(char *command_name)
 {
 	char	*path;
 	char	*env_path;
 
-	env_path = getenv("PATH");
-	if (env_path && ft_strstr(env_path, "/bin"))
-	{
-		if (ft_strncmp(command_name, "/bin/", 5) == 0)
-			path = ft_strdup(command_name);
-		else
-			path = ft_strjoin("/bin/", command_name);
-	}
-	else
+	if (ft_strncmp(command_name, "/bin/", 5) == 0)
 		path = ft_strdup(command_name);
+	else
+	{
+		env_path = getenv("PATH");
+		if (env_path && ft_strstr(env_path, "/bin"))
+			path = ft_strjoin("/bin/", command_name);
+		else
+			path = NULL;
+	}
 	if (!path)
-		perror("malloc");
-	return (path);
-}*/
-
-/*char	*command_path(char *command_name)
-{
-    char	*path;
-    char	*env_path;
-
-    env_path = getenv("PATH");
-    if (env_path && ft_strstr(env_path, "/bin"))
-    {
-        if (ft_strncmp(command_name, "/bin/", 5) == 0)
-            path = ft_strdup(command_name);
-        else
-            path = ft_strjoin("/bin/", command_name);
-    }
-    else
-        path = NULL;
-    if (!path)
 	{
 		printf("error: command not found %s\n", command_name);
+		g_exit_status = 127;
 		free(path);
 	}
-    return (path);
-}*/
-char	*command_path(char *command_name)
-{
-    char	*path;
-    char	*env_path;
-
-    if (ft_strncmp(command_name, "/bin/", 5) == 0)
-        path = ft_strdup(command_name);
-    else
-    {
-        env_path = getenv("PATH");
-        if (env_path && ft_strstr(env_path, "/bin"))
-            path = ft_strjoin("/bin/", command_name);
-        else
-            path = NULL;
-    }
-    if (!path)
-    {
-        printf("error: command not found %s\n", command_name);
-		g_exit_status = 127;
-        free(path);
-    }
-    return (path);
+	return (path);
 }
 
+bool	is_path_set(void)
+{
+	int	i;
+
+	i = 0;
+	while (i < g_env.size)
+	{
+		if (ft_strncmp(g_env.variables[i], "PATH=", 5) == 0)
+			return (true);
+		i++;
+	}
+	return (false);
+}
 
 void	execute_command(char *path, char **args)
 {
@@ -111,6 +80,12 @@ void	execute_command(char *path, char **args)
 	int			exists;
 	int			i;
 
+	if (!is_path_set())
+	{
+		g_exit_status = 127;
+		write(STDERR_FILENO, "minishell: command not found\n", 29);
+		return ;
+	}
 	i = 1;
 	if (ft_strncmp(path, "ls", 2) == 0 || ft_strncmp(path, "/bin/ls", 7) == 0)
 	{
@@ -127,7 +102,6 @@ void	execute_command(char *path, char **args)
 			}
 			i++;
 		}
-
 	}
 	exec_func(path, args);
 }
