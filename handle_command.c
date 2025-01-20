@@ -45,11 +45,12 @@ char	*command_path(char *command_name)
 		path = ft_strdup(command_name);
 	else
 	{
-		env_path = getenv("PATH");
+		env_path = get_env_value("PATH");
 		if (env_path && ft_strstr(env_path, "/bin"))
 			path = ft_strjoin("/bin/", command_name);
 		else
 			path = NULL;
+		free(env_path);
 	}
 	if (!path)
 	{

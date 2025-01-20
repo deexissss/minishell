@@ -12,8 +12,7 @@
 
 #include "../minishell.h"
 
-extern char	**environ;
-;
+
 static void	check_var(char *input, int *i)
 {
 	while (input[*i] == ' ' || input[*i] == '\t')
