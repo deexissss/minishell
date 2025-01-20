@@ -91,6 +91,7 @@ t_env	g_env;
 void	init_struct(void)
 {
 	int	i;
+	extern char		**environ;
 
 	i = 0;
 	// Initialize g_env.variables from environ

@@ -31,7 +31,6 @@
 # include <unistd.h>
 
 extern int		g_exit_status;
-extern char		**environ;
 typedef struct s_env
 {
 	char		**variables;

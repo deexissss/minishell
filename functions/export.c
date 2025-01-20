@@ -74,6 +74,43 @@ void	remove_var(char *varname)
 	g_env.size--;
 }
 
+int custom_setenv(const char *name, const char *value, int overwrite)
+{
+    int i;
+    int name_len;
+    char *new_var;
+
+    name_len = ft_strlen(name);
+    for (i = 0; i < g_env.size; i++)
+    {
+        if (ft_strncmp(g_env.variables[i], name, name_len) == 0 && g_env.variables[i][name_len] == '=')
+        {
+            if (!overwrite)
+                return 0;
+            free(g_env.variables[i]);
+            new_var = malloc(name_len + ft_strlen(value) + 2);
+            if (!new_var)
+            {
+                perror("malloc");
+                return -1;
+            }
+            sprintf(new_var, "%s=%s", name, value);
+            g_env.variables[i] = new_var;
+            return 0;
+        }
+    }
+    new_var = malloc(name_len + ft_strlen(value) + 2);
+    if (!new_var)
+    {
+        perror("malloc");
+        return -1;
+    }
+    sprintf(new_var, "%s=%s", name, value);
+    g_env.variables[g_env.size] = new_var;
+    g_env.variables[++g_env.size] = NULL;
+    return 0;
+}
+
 void	handle_new_var(char *varname, char *value)
 {
 	char	**new_variables;
@@ -102,6 +139,13 @@ void	handle_new_var(char *varname, char *value)
 	free(g_env.variables);
 	g_env.variables = new_variables;
 	g_env.size++;
+	if (strcmp(varname, "PATH") == 0)
+    {
+        if (custom_setenv(varname, value, 1) != 0)
+        {
+            perror("setenv");
+        }
+    }
 }
 
 void	extract_var(char *input, char **vname, char **val, int *index)

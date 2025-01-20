@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-extern char	**environ;
-;
 void	skip_whitespace(char *input, int *i)
 {
 	while (input[*i] == ' ' || input[*i] == '\t')
