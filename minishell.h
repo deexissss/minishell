@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:54:11 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/15 09:30:03 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 10:11:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <termios.h>
 # include <unistd.h>
 
-//extern int		g_exit_status;
+// extern int		g_exit_status;
 typedef struct s_env
 {
 	char		**variables;
@@ -77,8 +77,12 @@ int				get_env_size(void);
 int				skip_spaces(char *input, int i);
 char			*int_to_str(int num, char *str);
 void			exec_func(char *path, char **args);
-// handle_command
+// init_shell
+void			init_shell(int *saved_stdin, int *saved_stdout);
+void			init_struct(void);
+void			free_struct(void);
 
+// handle_command
 int				correct_command(char **args);
 char			*command_path(char *command_name);
 void			execute_command(char *path, char **args);
@@ -89,6 +93,12 @@ void			handle_command_error(char **args);
 void			handle_access_error(char **args);
 void			handle_fork_error(void);
 void			handle_external_command(char *command);
+
+// handle_command3
+void			exec_perror(char *str);
+void			update_exit_status(int status);
+void			handle_ls_command(char **args);
+void			execute_command(char *path, char **args);
 
 // pipe_utils
 void			pid_check(pid_t pid);
@@ -118,5 +128,17 @@ char			*ft_strtok(char *str, const char *delimiters);
 int				ft_strcmp(const char *str1, const char *str2);
 int				handle_backspace(int count, int key);
 int				handle_tab(int count, int key);
+
+// export_setenv.c
+char			*create_new_var(const char *name, const char *value);
+int				update_existing_var(int index, const char *name,
+					const char *value, int overwrite);
+int				custom_setenv(const char *name, const char *value,
+					int overwrite);
+
+// export_handle_new_var.c
+char			**allocate_new_variables(int size);
+char			*create_variable_string(const char *varname, const char *value);
+void			handle_new_var(char *varname, char *value);
 
 #endif

@@ -75,39 +75,6 @@ bool	is_path_set(void)
 	return (false);
 }
 
-void	execute_command(char *path, char **args)
-{
-	struct stat	buffer;
-	int			exists;
-	int			i;
-
-	if (!is_path_set())
-	{
-		g_env.exit_status = 127;
-		write(STDERR_FILENO, "minishell: command not found\n", 29);
-		return ;
-	}
-	i = 1;
-	if (ft_strncmp(path, "ls", 2) == 0 || ft_strncmp(path, "/bin/ls", 7) == 0)
-	{
-		while (args[i] != NULL)
-		{
-			exists = stat(args[i], &buffer);
-			if (exists != 0)
-			{
-				g_env.exit_status = 2;
-				write(STDERR_FILENO, "minishell: ", 11);
-				write(STDERR_FILENO, args[i], ft_strlen(args[i]));
-				write(STDERR_FILENO, ": No such file or directory\n", 28);
-				return ;
-			}
-			i++;
-		}
-	}
-	g_env.exit_status = 0;
-	exec_func(path, args);
-}
-
 void	clear_terminal(char *command)
 {
 	int	i;
