@@ -34,13 +34,13 @@ void	validate_env_command(char *command)
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
 		printf("error: command does not exist\n");
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		return ;
 	}
 	else if (command[i] != '\0')
 	{
 		printf("error: env dont take any argument\n");
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		return ;
 	}
 }
@@ -49,9 +49,9 @@ void	execute_env(char *command)
 {
 	pid_t	pid;
 
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	validate_env_command(command);
-	if (g_exit_status != 0)
+	if (g_env.exit_status != 0)
 		return ;
 	pid = fork();
 	if (pid == -1)
@@ -76,20 +76,20 @@ void	execute_env(char *command)
 	pid_t pid;
 	int   i;
 
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	i = 0;
 	while (command[i] >= 'a' && command[i] <= 'z' && i < 3)
 		i++;
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
 		printf("error: command does not exist\ndid you mean env ?\n");
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		return ;
 	}
 	else if (command[i] != '\0')
 	{
 		printf("error: env dont take any argument\n");
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		return ;
 	}
 	pid = fork();

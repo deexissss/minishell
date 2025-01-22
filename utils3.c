@@ -29,11 +29,11 @@ char	*allocate_result_buffer(char *command)
 
 char	*replace_exit_status(char *result, int *j, int *i)
 {
-	char	g_exit_statusc[12];
+	char	exit_statusc[12];
 
-	int_to_str(g_exit_status, g_exit_statusc);
-	ft_strcpy(&result[*j], g_exit_statusc);
-	*j += ft_strlen(g_exit_statusc);
+	int_to_str(g_env.exit_status, exit_statusc);
+	ft_strcpy(&result[*j], exit_statusc);
+	*j += ft_strlen(exit_statusc);
 	*i += 2;
 	return (result);
 }

@@ -20,7 +20,7 @@ static void	check_var(char *input, int *i)
 	if (input[*i] == '\0')
 	{
 		printf("error: unset needs a variable name\n");
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 	}
 }
 
@@ -123,11 +123,11 @@ void	execute_unset(char *input)
 	char	varname[256];
 
 	i = 6;
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	while (input[i] != '\0')
 	{
 		check_var(input, &i);
-		if (g_exit_status != 0)
+		if (g_env.exit_status != 0)
 			return ;
 		extract_varname_u(input, varname, &i);
 		remove_var_from_env(varname);

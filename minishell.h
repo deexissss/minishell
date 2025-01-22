@@ -30,10 +30,11 @@
 # include <termios.h>
 # include <unistd.h>
 
-extern int		g_exit_status;
+//extern int		g_exit_status;
 typedef struct s_env
 {
 	char		**variables;
+	int			exit_status;
 	int			size;
 }				t_env;
 

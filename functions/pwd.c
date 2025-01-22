@@ -18,20 +18,20 @@
     pid_t pid;
     int     i;
 
-    g_exit_status = 0;
+    g_env.exit_status = 0;
     i = 0;
     while (command[i] >= 'a' && command[i] <= 'z' && i < 3)
         i++;
     if (command[i] >= 'a' && command[i] <= 'z')
     {
         printf("error: command does not exit\ndid you mean pwd ?\n");
-        g_exit_status = 127;
+        g_env.exit_status = 127;
         return;
     }
     else if (command[i] != '\0')
     {
         printf("error: pwd does not take any argument\n");
-        g_exit_status = 1;
+        g_env.exit_status = 1;
         return;
     }
     pid = fork();
@@ -75,12 +75,12 @@ void	validate_pwd_command(char *command)
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
 		printf("error: command does not exit\n");
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 	}
 	else if (command[i] != '\0')
 	{
 		printf("error: pwd does not take any argument\n");
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 	}
 }
 
@@ -101,9 +101,9 @@ void	execute_pwd(char *command)
 {
 	pid_t	pid;
 
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	validate_pwd_command(command);
-	if (g_exit_status != 0)
+	if (g_env.exit_status != 0)
 		return ;
 	pid = fork();
 	if (pid == -1)

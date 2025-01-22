@@ -37,7 +37,7 @@ int	check_multiple_pipe(char *inpt)
 	i = ft_strlen(inpt);
 	if (inpt[i - 1] == '|')
 	{
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		printf("error: pipe alone\n");
 		return (1);
 	}
@@ -47,7 +47,7 @@ int	check_multiple_pipe(char *inpt)
 		if (inpt[i] == '|' && inpt[i + 1] == '|'
 			&& !is_pipe_inside_quotes(inpt))
 		{
-			g_exit_status = 1;
+			g_env.exit_status = 1;
 			printf("error: too many pipe\n");
 			return (1);
 		}

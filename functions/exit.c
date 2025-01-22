@@ -75,7 +75,7 @@ void	execute_exit(char *input)
 	if (count > 2)
 	{
 		printf("error: too many arguments\n");
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		return ;
 	}
 	status = give_status(input, &i);
@@ -84,5 +84,5 @@ void	execute_exit(char *input)
 		printf("exit\n");
 		exit(status * sign);
 	}
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 }

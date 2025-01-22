@@ -154,12 +154,12 @@ void	extract_var(char *input, char **vname, char **val, int *index)
 	if (input[*index] == '\0')
 	{
 		printf("error: export missing operand\n");
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		return ;
 	}
 	if (!extract_varname(input, vname, index))
 	{
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		return ;
 	}
 	extract_val(input, val, index);
@@ -172,11 +172,11 @@ void	execute_export(char *input)
 	int index;
 
 	index = 6;
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	while (input[index] != '\0')
 	{
 		extract_var(input, &varname, &value, &index);
-		if (g_exit_status != 0)
+		if (g_env.exit_status != 0)
 		{
 			free(varname);
 			free(value);
@@ -184,7 +184,7 @@ void	execute_export(char *input)
 		}
 		remove_var(varname);
 		handle_new_var(varname, value);
-		if (g_exit_status != 0)
+		if (g_env.exit_status != 0)
 		{
 			free(varname);
 			free(value);

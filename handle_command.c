@@ -25,13 +25,13 @@ int	correct_command(char **args)
 			arg_count++;
 		if (arg_count == 1)
 			return (1);
-		g_exit_status = 0;
+		g_env.exit_status = 0;
 		if (access(args[1], F_OK) != -1)
 		{
 			while (ft_strstr(args[i++], "grep") == NULL)
 				return (1);
 		}
-		g_exit_status = 2;
+		g_env.exit_status = 2;
 	}
 	return (1);
 }
@@ -55,7 +55,7 @@ char	*command_path(char *command_name)
 	if (!path)
 	{
 		printf("error: command not found %s\n", command_name);
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		free(path);
 	}
 	return (path);
@@ -83,7 +83,7 @@ void	execute_command(char *path, char **args)
 
 	if (!is_path_set())
 	{
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		write(STDERR_FILENO, "minishell: command not found\n", 29);
 		return ;
 	}
@@ -95,7 +95,7 @@ void	execute_command(char *path, char **args)
 			exists = stat(args[i], &buffer);
 			if (exists != 0)
 			{
-				g_exit_status = 2;
+				g_env.exit_status = 2;
 				write(STDERR_FILENO, "minishell: ", 11);
 				write(STDERR_FILENO, args[i], ft_strlen(args[i]));
 				write(STDERR_FILENO, ": No such file or directory\n", 28);
@@ -104,7 +104,7 @@ void	execute_command(char *path, char **args)
 			i++;
 		}
 	}
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	exec_func(path, args);
 }
 

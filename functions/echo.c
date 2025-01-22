@@ -79,17 +79,17 @@ void	execute_echo(char *input)
 	bool	n_option;
 
 	i = 4;
-	g_exit_status = 0;
+	g_env.exit_status = 0;
 	if (ft_strncmp(input, "echo", 4) != 0)
 	{
 		printf("error: command need to start with 'echo'\n");
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		return ;
 	}
 	if (input[i] != ' ' && input[i] != '\t' && input[i] != '\0')
 	{
 		printf("error: need a space between echo and the arguments\n");
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		return ;
 	}
 	i = skip_spaces(input, i);

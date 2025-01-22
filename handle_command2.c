@@ -18,7 +18,7 @@ int	check_path(char *path, char **args)
 	path = command_path(args[0]);
 	if (!path)
 	{
-		g_exit_status = 1;
+		g_env.exit_status = 1;
 		free(args);
 		return (1);
 	}
@@ -39,7 +39,7 @@ int	check_true_command(char *path, char **args)
 	else if (access(path, X_OK) != 0)
 	{
 		printf("error: command '%s' not found\n", args[0]);
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		//free(path);
 		//free(args);
 		return (1);
@@ -91,7 +91,7 @@ void free_args(char *path, char **args)
 void	exec_perror(char *str)
 {
 	perror(str);
-	g_exit_status = 1;
+	g_env.exit_status = 1;
 }
 
 /*void	handle_external_command(char *command)
@@ -121,7 +121,7 @@ void	exec_perror(char *str)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-			g_exit_status = 1;
+			g_env.exit_status = 1;
 	}
 	else
 		exec_perror("fork");
@@ -160,7 +160,7 @@ void	exec_perror(char *str)
     {
         waitpid(pid, &status, 0);
         if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-            g_exit_status = 1;
+            g_env.exit_status = 1;
     }
     else
         exec_perror("fork");
@@ -171,7 +171,7 @@ void	exec_perror(char *str)
 void update_exit_status(int status)
 {
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-        g_exit_status = (WEXITSTATUS(status));
+        g_env.exit_status = (WEXITSTATUS(status));
 }
 
 void execute_command_with_fork(char *path, char **args)
@@ -185,7 +185,7 @@ void execute_command_with_fork(char *path, char **args)
     {
         signal(SIGINT, SIG_DFL);
         execute_command(path, args);
-        exit(g_exit_status);
+        exit(g_env.exit_status);
     }
     else if (pid > 0)
     {

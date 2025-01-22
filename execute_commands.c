@@ -56,8 +56,8 @@ int	check_quote(char quote)
 {
 	if (quote != 0)
 	{
-		printf("error: unmatched quote");
-		g_exit_status = 130;
+		printf("error: unmatched quote\n");
+		g_env.exit_status = 130;
 		return (1);
 	}
 	return (0);
@@ -82,7 +82,7 @@ static int	check_command(char *command)
 		else if ((command[k] == ';' || command[k] == '\\') && quote == 0)
 		{
 			printf("error: syntax error\n");
-			g_exit_status = 1;
+			g_env.exit_status = 1;
 			return (1);
 		}
 		k++;

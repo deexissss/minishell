@@ -42,7 +42,7 @@ int	simple_dollar(char *inpt)
 	if (count == i)
 	{
 		ft_printf("error: command not found\n");
-		g_exit_status = 127;
+		g_env.exit_status = 127;
 		return (1);
 	}
 	return (0);
@@ -68,7 +68,7 @@ int	handle_quote(char *inpt)
 	if (countsimple % 2 != 0 || countdouble % 2 != 0)
 	{
 		ft_printf("minishell: syntax error quotes not closed\n");
-		g_exit_status = 130;
+		g_env.exit_status = 130;
 		return (1);
 	}
 	return (0);
@@ -85,7 +85,7 @@ void	process_input(char *input)
 	else
 		free(input);
 }
-int		g_exit_status = 0;
+//int		g_env.exit_status = 0;
 t_env	g_env;
 
 void	init_struct(void)
@@ -96,6 +96,7 @@ void	init_struct(void)
 	i = 0;
 	// Initialize g_env.variables from environ
 	g_env.size = 0;
+	g_env.exit_status = 0;
 	while (environ[g_env.size] != NULL)
 		g_env.size++;
 	g_env.variables = malloc(sizeof(char *) * (g_env.size + 1));
