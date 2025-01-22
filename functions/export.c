@@ -6,11 +6,17 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 08:52:23 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 10:14:12 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/22 10:32:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	skip_whitespace(char *input, int *i)
+{
+	while (input[*i] == ' ' || input[*i] == '\t')
+		(*i)++;
+}
 
 void	remove_var(char *varname)
 {

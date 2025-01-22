@@ -12,14 +12,23 @@ char	**allocate_new_variables(int size)
 char	*create_variable_string(const char *varname, const char *value)
 {
 	char	*new_var;
+	int		varname_len;
+	int		value_len;
+	int		total_len;
 
-	new_var = malloc(ft_strlen(varname) + ft_strlen(value) + 2);
+	varname_len = ft_strlen(varname);
+	value_len = ft_strlen(value);
+	total_len = varname_len + value_len + 2;
+	new_var = malloc(total_len);
 	if (!new_var)
 	{
 		perror("malloc");
 		return (NULL);
 	}
-	sprintf(new_var, "%s=%s", varname, value);
+	ft_memcpy(new_var, varname, varname_len);
+	new_var[varname_len] = '=';
+	ft_memcpy(new_var + varname_len + 1, value, value_len);
+	new_var[total_len - 1] = '\0';
 	return (new_var);
 }
 
