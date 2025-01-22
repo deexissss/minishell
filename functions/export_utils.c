@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:18:59 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 10:23:08 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 10:32:57 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	skip_whitespace(char *input, int *i)
-{
-	while (input[*i] == ' ' || input[*i] == '\t')
-		(*i)++;
-}
 
 int	extract_varname(char *input, char **varname, int *i)
 {
@@ -72,6 +66,11 @@ int	get_env_size(void)
 		env_size++;
 	return (env_size);
 }
+void	free_directories(char *directories[], int count)
+{
+	while (--count >= 0)
+		free(directories[count]);
+}
 
 void	verify_path_order(char *path)
 {
@@ -92,14 +91,12 @@ void	verify_path_order(char *path)
 		if (directories[i] == NULL)
 		{
 			perror("malloc");
-			while (--i >= 0)
-				free(directories[i]);
+			free_directories(directories, i);
 			return ;
 		}
 		ft_strcpy(directories[i], token);
 		token = ft_strtok(NULL, ":");
 		i++;
 	}
-	while (--i >= 0)
-		free(directories[i]);
+	free_directories(directories, i);
 }

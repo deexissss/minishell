@@ -1,5 +1,14 @@
 #include "../minishell.h"
 
+void	copy_name_value(char *new_var, const char *name, const char *value,
+		int name_len)
+{
+	ft_memcpy(new_var, name, name_len);
+	new_var[name_len] = '=';
+	ft_memcpy(new_var + name_len + 1, value, strlen(value));
+	new_var[name_len + strlen(value) + 1] = '\0';
+}
+
 char	*create_new_var(const char *name, const char *value)
 {
 	char	*new_var;
@@ -14,7 +23,10 @@ char	*create_new_var(const char *name, const char *value)
 		perror("malloc");
 		return (NULL);
 	}
-	sprintf(new_var, "%s=%s", name, value);
+	ft_memcpy(new_var, name, name_len);
+	new_var[name_len] = '=';
+	ft_memcpy(new_var + name_len + 1, value, value_len);
+	new_var[name_len + value_len + 1] = '\0';
 	return (new_var);
 }
 
@@ -35,9 +47,9 @@ int	update_existing_var(int index, const char *name, const char *value,
 
 int	custom_setenv(const char *name, const char *value, int overwrite)
 {
-	int i;
-	int name_len;
-	char *new_var;
+	int		i;
+	int		name_len;
+	char	*new_var;
 
 	name_len = ft_strlen(name);
 	i = 0;
@@ -54,7 +66,7 @@ int	custom_setenv(const char *name, const char *value, int overwrite)
 		perror("malloc");
 		return (-1);
 	}
-	sprintf(new_var, "%s=%s", name, value);
+	copy_name_value(new_var, name, value, name_len);
 	g_env.variables[g_env.size] = new_var;
 	g_env.variables[++g_env.size] = NULL;
 	return (0);
