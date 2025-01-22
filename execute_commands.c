@@ -92,6 +92,7 @@ static int	check_command(char *command)
 	return (0);
 }
 
+
 void	execute_commands(char *inpt)
 {
 	int		i;

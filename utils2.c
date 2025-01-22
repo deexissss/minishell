@@ -89,7 +89,8 @@ void	exec_func(char *path, char **args)
 	signal(SIGQUIT, SIG_DFL);
 	if (execve(path, args, g_env.variables) == -1)
 	{
-		g_exit_status = 1;
+		if (g_exit_status == 0)
+			g_exit_status = 1;
 		exit(EXIT_FAILURE);
 	}
 }

@@ -171,7 +171,7 @@ void	exec_perror(char *str)
 void update_exit_status(int status)
 {
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-        g_exit_status = 1;
+        g_exit_status = (WEXITSTATUS(status));
 }
 
 void execute_command_with_fork(char *path, char **args)
@@ -185,6 +185,7 @@ void execute_command_with_fork(char *path, char **args)
     {
         signal(SIGINT, SIG_DFL);
         execute_command(path, args);
+        exit(g_exit_status);
     }
     else if (pid > 0)
     {

@@ -104,6 +104,7 @@ void	execute_command(char *path, char **args)
 			i++;
 		}
 	}
+	g_exit_status = 0;
 	exec_func(path, args);
 }
 

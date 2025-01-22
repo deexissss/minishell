@@ -84,4 +84,5 @@ void	execute_exit(char *input)
 		printf("exit\n");
 		exit(status * sign);
 	}
+	g_exit_status = 0;
 }
