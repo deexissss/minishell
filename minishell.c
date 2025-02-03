@@ -98,7 +98,7 @@ int	main(void)
 	init_shell(&env, &saved_stdin, &saved_stdout);
 	while (1)
 	{
-		inpt = readline(BLUE "Minishell$ " RESET);
+		inpt = readline("Minishell$ ");
 		if (!inpt)
 			break ;
 		if (*inpt)
