@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 08:52:23 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 10:32:42 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/22 15:29:55 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,87 +18,83 @@ void	skip_whitespace(char *input, int *i)
 		(*i)++;
 }
 
-void	remove_var(char *varname)
+void	remove_var(t_env *env, char *varname)
 {
 	int	i;
 	int	len;
 
 	i = 0;
 	len = ft_strlen(varname);
-	while (g_env.variables[i] != NULL)
+	while (env->variables[i] != NULL)
 	{
-		if (ft_strncmp(g_env.variables[i], varname, len) == 0
-			&& g_env.variables[i][len] == '=')
+		if (ft_strncmp(env->variables[i], varname, len) == 0
+			&& env->variables[i][len] == '=')
 		{
-			free(g_env.variables[i]);
+			free(env->variables[i]);
 			break ;
 		}
 		i++;
 	}
-	if (g_env.variables[i] == NULL)
+	if (env->variables[i] == NULL)
 		return ;
-	while (g_env.variables[i + 1] != NULL)
+	while (env->variables[i + 1] != NULL)
 	{
-		g_env.variables[i] = g_env.variables[i + 1];
+		env->variables[i] = env->variables[i + 1];
 		i++;
 	}
-	g_env.variables[i] = NULL;
-	g_env.size--;
+	env->variables[i] = NULL;
+	env->size--;
 }
 
-void	extract_var(char *input, char **vname, char **val, int *index)
+void	extract_var(t_env *env, char *input, char **vars[], int *index)
 {
 	skip_whitespace(input, index);
 	if (input[*index] == '\0')
 	{
 		printf("error: export missing operand\n");
-		g_env.exit_status = 1;
+		env->exit_status = 1;
 		return ;
 	}
-	if (!extract_varname(input, vname, index))
+	if (!extract_varname(input, vars[0], index))
 	{
-		g_env.exit_status = 1;
+		env->exit_status = 1;
+		free(*vars[0]);
 		return ;
 	}
-	extract_val(input, val, index);
+	extract_val(input, vars[1], index);
 }
 
-void	handle_var(char *input, int *index)
+void	handle_var(t_env *env, char *input, int *index)
 {
 	char	*varname;
 	char	*value;
+	char	**vars[2];
 
-	extract_var(input, &varname, &value, index);
-	if (g_env.exit_status != 0)
-	{
-		free(varname);
-		free(value);
+	vars[0] = &varname;
+	vars[1] = &value;
+	extract_var(env, input, vars, index);
+	if (env->exit_status != 0)
 		return ;
-	}
-	remove_var(varname);
-	handle_new_var(varname, value);
-	if (g_env.exit_status != 0)
-	{
-		free(varname);
-		free(value);
+	remove_var(env, varname);
+	handle_new_var(env, varname, value);
+	if (env->exit_status != 0)
 		return ;
-	}
 	if (ft_strcmp(varname, "PATH") == 0)
 		verify_path_order(value);
 	free(varname);
 	free(value);
 }
 
-void	execute_export(char *input)
+void	execute_export(t_env *env, char *input)
 {
 	int	index;
 
 	index = 6;
-	g_env.exit_status = 0;
+	env->exit_status = 0;
 	while (input[index] != '\0')
 	{
-		handle_var(input, &index);
-		if (g_env.exit_status != 0)
+		handle_var(env, input, &index);
+		if (env->exit_status != 0)
 			return ;
 		skip_whitespace(input, &index);
 	}

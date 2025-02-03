@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg.l    +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 09:12:55 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 14:49:55 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:57 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,19 @@ int	handle_backspace(int count, int key)
 	return (0);
 }
 
-char	*get_env_value(const char *var)
+char	*get_env_value(t_env *env, const char *var)
 {
 	int	i;
 	int	var_len;
 
 	i = 0;
 	var_len = ft_strlen(var);
-	while (g_env.variables[i] != NULL)
+	while (env->variables[i] != NULL)
 	{
-		if (ft_strncmp(g_env.variables[i], var, var_len) == 0
-			&& g_env.variables[i][var_len] == '=')
+		if (ft_strncmp(env->variables[i], var, var_len) == 0
+			&& env->variables[i][var_len] == '=')
 		{
-			return (ft_strdup(g_env.variables[i] + var_len + 1));
+			return (ft_strdup(env->variables[i] + var_len + 1));
 		}
 		i++;
 	}
@@ -58,7 +58,6 @@ void	handle_sigint(int sig)
 	write(STDOUT_FILENO, "\n", 2);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	// rl_redisplay();
 }
 
 int	ft_strcmp(const char *str1, const char *str2)

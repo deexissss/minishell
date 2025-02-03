@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:27 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/15 09:31:33 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:47 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,48 +27,49 @@ char	*allocate_result_buffer(char *command)
 	return (result);
 }
 
-char	*replace_exit_status(char *result, int *j, int *i)
+char	*replace_exit_status(t_env *env, char *result, int *j, int *i)
 {
 	char	exit_statusc[12];
 
-	int_to_str(g_env.exit_status, exit_statusc);
+	int_to_str(env->exit_status, exit_statusc);
 	ft_strcpy(&result[*j], exit_statusc);
 	*j += ft_strlen(exit_statusc);
 	*i += 2;
 	return (result);
 }
 
-char	*replace_env_variable(char *command, char *result, int *j, int *i)
+char	*replace_env_variable(t_env *env, char *command, char *result,
+		int indexes[2])
 {
 	char	*var_start;
 	char	*var_end;
 	char	var_name[256];
 	char	*var_value;
 
-	var_start = &command[*i + 1];
+	var_start = &command[indexes[1] + 1];
 	var_end = var_start;
 	while (*var_end && (ft_isalnum((int)*var_end) || *var_end == '_'))
 		var_end++;
 	ft_strncpy(var_name, var_start, var_end - var_start);
 	var_name[var_end - var_start] = '\0';
-	var_value = get_env_value(var_name);
+	var_value = get_env_value(env, var_name);
 	if (var_value)
 	{
-		ft_strcpy(&result[*j], var_value);
-		*j += ft_strlen(var_value);
+		ft_strcpy(&result[indexes[0]], var_value);
+		indexes[0] += ft_strlen(var_value);
 		free(var_value);
 	}
-	*i = var_end - command;
+	indexes[1] = var_end - command;
 	return (result);
 }
 
-char	*initialize_variables(char *command, int *i, int *j,
+char	*initialize_variables(char *command, int indexes[2],
 		int *in_single_quote)
 {
 	char	*result;
 
-	*i = 0;
-	*j = 0;
+	indexes[0] = 0;
+	indexes[1] = 0;
 	*in_single_quote = 0;
 	result = allocate_result_buffer(command);
 	if (!result)
@@ -79,31 +80,30 @@ char	*initialize_variables(char *command, int *i, int *j,
 	return (result);
 }
 
-char	*handle_dollar(char *command)
+char	*handle_dollar(t_env *env, char *command)
 {
-	char *result;
-	int i;
-	int j;
-	int in_single_quote;
+	char	*result;
+	int		indexes[2];
+	int		in_single_quote;
 
-	result = initialize_variables(command, &i, &j, &in_single_quote);
+	result = initialize_variables(command, indexes, &in_single_quote);
 	if (!result)
 		return (NULL);
-	while (command[i] != '\0')
+	while (command[indexes[1]] != '\0')
 	{
-		if (command[i] == '\'')
+		if (command[indexes[1]] == '\'')
 		{
 			in_single_quote = !in_single_quote;
-			result[j++] = command[i++];
+			result[indexes[0]++] = command[indexes[1]++];
 		}
-		else if (command[i] == '$' && command[i + 1] == '?')
-			result = replace_exit_status(result, &j, &i);
-		else if (command[i] == '$' && (i == 0 || command[i - 1] != '\\')
-			&& !in_single_quote)
-			result = replace_env_variable(command, result, &j, &i);
+		else if (command[indexes[1]] == '$' && command[indexes[1] + 1] == '?')
+			result = replace_exit_status(env, result, &indexes[0], &indexes[1]);
+		else if (command[indexes[1]] == '$' && (indexes[1] == 0
+				|| command[indexes[1] - 1] != '\\') && !in_single_quote)
+			result = replace_env_variable(env, command, result, indexes);
 		else
-			result[j++] = command[i++];
+			result[indexes[0]++] = command[indexes[1]++];
 	}
-	result[j] = '\0';
+	result[indexes[0]] = '\0';
 	return (result);
 }

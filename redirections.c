@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:10:50 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 15:12:17 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:22:53 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	handle_token(char *token, char **cmd, char **args)
 		handle_command_or_args(token, cmd, args);
 }
 
-void	execute_command_with_redirection(char *cmd, char *args)
+void	execute_command_with_redirection(t_env *env, char *cmd, char *args)
 {
 	char	*full_command;
 	size_t	full_command_length;
@@ -81,7 +81,7 @@ void	execute_command_with_redirection(char *cmd, char *args)
 			ft_strlcat(full_command, " ", full_command_length);
 			ft_strlcat(full_command, args, full_command_length);
 		}
-		ft_checker(full_command);
+		ft_checker(env, full_command);
 		free(full_command);
 		free(cmd);
 		if (args)
@@ -89,7 +89,7 @@ void	execute_command_with_redirection(char *cmd, char *args)
 	}
 }
 
-void	execute_parsed_command(char *cmd, char *args)
+void	execute_parsed_command(t_env *env, char *cmd, char *args)
 {
 	int		num_commands;
 	int		i;
@@ -103,14 +103,14 @@ void	execute_parsed_command(char *cmd, char *args)
 			commands = pipe_tokenizer(cmd, &num_commands);
 			if (commands)
 			{
-				execute_pipeline(commands, num_commands);
+				execute_pipeline(env, commands, num_commands);
 				while (i < num_commands)
 					free(commands[i++]);
 				free(commands);
 			}
 		}
 		else
-			execute_command_with_redirection(cmd, args);
+			execute_command_with_redirection(env, cmd, args);
 	}
 	else
 	{
@@ -118,7 +118,7 @@ void	execute_parsed_command(char *cmd, char *args)
 	}
 }
 
-void	execute_redirection(char *command)
+void	execute_redirection(t_env *env, char *command)
 {
 	char	*token;
 	char	*cmd;
@@ -132,5 +132,5 @@ void	execute_redirection(char *command)
 		handle_token(token, &cmd, &args);
 		token = ft_strtok(NULL, " ");
 	}
-	execute_parsed_command(cmd, args);
+	execute_parsed_command(env, cmd, args);
 }
