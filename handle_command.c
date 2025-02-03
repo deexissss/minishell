@@ -115,5 +115,8 @@ void	ft_checker(t_env *env, char *command)
 	else if (ft_memcmp(command, "export", 6) == 0)
 		execute_export(env, command);
 	else
+	{
+		env->exit_status = 0;
 		handle_external_command(env, command);
+	}
 }
