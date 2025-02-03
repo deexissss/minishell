@@ -39,6 +39,45 @@ char	*extract_path(char *inpt, int *index)
 	return (path);
 }
 
+void	update_pwd(t_env *env)
+{
+	int		i;
+	char	path[4096];
+
+	i = 0;
+	if (getcwd(path, sizeof(path)) != NULL)
+	{
+		while (i < env->size)
+		{
+			if (ft_strncmp(env->variables[i], "PWD=", 4) == 0)
+			{
+				free(env->variables[i]);
+				env->variables[i] = ft_strjoin("PWD=", path);
+				return ;
+			}
+			i++;
+		}
+		env->variables[env->size] = ft_strjoin("PWD=", path);
+		env->size++;
+	}
+	else
+	{
+		perror("getcwd");
+		env->exit_status = 1;
+	}
+}
+
+int	check_path2(t_env *env, char *path)
+{
+	if (!path || path[0] == '\0')
+	{
+		free(path);
+		handle_cd_error(env, 2);
+		return (1);
+	}
+	return (0);
+}
+
 void	execute_cd(t_env *env, char *inpt)
 {
 	int		i;
@@ -54,16 +93,14 @@ void	execute_cd(t_env *env, char *inpt)
 		return ;
 	}
 	path = extract_path(inpt, &i);
-	if (!path || path[0] == '\0')
-	{
-		free(path);
-		handle_cd_error(env, 2);
+	if (check_path2(env, path) == 1)
 		return ;
-	}
 	if (chdir(path) != 0)
 	{
 		perror("cd");
 		env->exit_status = 1;
 	}
+	else
+		update_pwd(env);
 	free(path);
 }
