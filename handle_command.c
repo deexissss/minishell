@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   handle_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/15 09:29:01 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:50 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	correct_command(char **args)
+int	correct_command(t_env *env, char **args)
 {
 	int	arg_count;
 	int	i;
@@ -25,18 +25,18 @@ int	correct_command(char **args)
 			arg_count++;
 		if (arg_count == 1)
 			return (1);
-		g_env.exit_status = 0;
+		env->exit_status = 0;
 		if (access(args[1], F_OK) != -1)
 		{
 			while (ft_strstr(args[i++], "grep") == NULL)
 				return (1);
 		}
-		g_env.exit_status = 2;
+		env->exit_status = 2;
 	}
 	return (1);
 }
 
-char	*command_path(char *command_name)
+char	*command_path(t_env *env, char *command_name)
 {
 	char	*path;
 	char	*env_path;
@@ -45,7 +45,7 @@ char	*command_path(char *command_name)
 		path = ft_strdup(command_name);
 	else
 	{
-		env_path = get_env_value("PATH");
+		env_path = get_env_value(env, "PATH");
 		if (env_path && ft_strstr(env_path, "/bin"))
 			path = ft_strjoin("/bin/", command_name);
 		else
@@ -55,20 +55,20 @@ char	*command_path(char *command_name)
 	if (!path)
 	{
 		printf("error: command not found %s\n", command_name);
-		g_env.exit_status = 127;
+		env->exit_status = 127;
 		free(path);
 	}
 	return (path);
 }
 
-bool	is_path_set(void)
+bool	is_path_set(t_env *env)
 {
 	int	i;
 
 	i = 0;
-	while (i < g_env.size)
+	while (i < env->size)
 	{
-		if (ft_strncmp(g_env.variables[i], "PATH=", 5) == 0)
+		if (ft_strncmp(env->variables[i], "PATH=", 5) == 0)
 			return (true);
 		i++;
 	}
@@ -96,24 +96,24 @@ void	clear_terminal(char *command)
 	return ;
 }
 
-void	ft_checker(char *command)
+void	ft_checker(t_env *env, char *command)
 {
 	if (ft_memcmp(command, "cd", 2) == 0)
-		execute_cd(command);
+		execute_cd(env, command);
 	else if (ft_memcmp(command, "clear", 5) == 0)
 		clear_terminal(command);
 	else if (ft_memcmp(command, "env", 3) == 0)
-		execute_env(command);
+		execute_env(env, command);
 	else if (ft_memcmp(command, "exit", 4) == 0)
-		execute_exit(command);
+		execute_exit(env, command);
 	else if (ft_memcmp(command, "echo", 4) == 0)
-		cleanup_string(command);
+		cleanup_string(env, command);
 	else if (ft_memcmp(command, "pwd", 3) == 0)
-		execute_pwd(command);
+		execute_pwd(env, command);
 	else if (ft_memcmp(command, "unset", 5) == 0)
-		execute_unset(command);
+		execute_unset(env, command);
 	else if (ft_memcmp(command, "export", 6) == 0)
-		execute_export(command);
+		execute_export(env, command);
 	else
-		handle_external_command(command);
+		handle_external_command(env, command);
 }

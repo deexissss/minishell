@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mdaman <mdaman@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/22 13:16:15 by mdaman            #+#    #+#             */
+/*   Updated: 2025/01/22 13:16:17 by mdaman           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	free_environ(char **new_environ, int env_size)
@@ -15,8 +27,8 @@ void	free_environ(char **new_environ, int env_size)
 
 void	add_var(char **new_environ, int env_size, char *vname, char *value)
 {
-	int j;
-	int i;
+	int	j;
+	int	i;
 
 	i = 0;
 	j = 0;

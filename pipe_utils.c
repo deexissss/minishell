@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdaman <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:01:52 by mdaman            #+#    #+#             */
-/*   Updated: 2025/01/14 11:01:58 by mdaman           ###   ########.fr       */
+/*   Updated: 2025/01/22 14:40:51 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ void	pid_check(pid_t pid)
 		exit_perror("fork");
 }
 
-int	check_multiple_pipe(char *inpt)
+int	check_multiple_pipe(t_env *env, char *inpt)
 {
 	int	i;
 
 	i = ft_strlen(inpt);
 	if (inpt[i - 1] == '|')
 	{
-		g_env.exit_status = 1;
+		env->exit_status = 1;
 		printf("error: pipe alone\n");
 		return (1);
 	}
@@ -47,7 +47,7 @@ int	check_multiple_pipe(char *inpt)
 		if (inpt[i] == '|' && inpt[i + 1] == '|'
 			&& !is_pipe_inside_quotes(inpt))
 		{
-			g_env.exit_status = 1;
+			env->exit_status = 1;
 			printf("error: too many pipe\n");
 			return (1);
 		}

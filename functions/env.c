@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 08:45:19 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 10:15:30 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/22 15:10:48 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_environment_variables(void)
+void	print_environment_variables(t_env *env)
 {
 	int	i;
 
 	i = 0;
-	while (g_env.variables[i] != NULL)
+	while (env->variables[i] != NULL)
 	{
-		printf("%s\n", g_env.variables[i]);
+		printf("%s\n", env->variables[i]);
 		i++;
 	}
 }
 
-void	validate_env_command(char *command)
+void	validate_env_command(t_env *env, char *command)
 {
 	int	i;
 
@@ -34,24 +34,24 @@ void	validate_env_command(char *command)
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
 		printf("error: command does not exist\n");
-		g_env.exit_status = 127;
+		env->exit_status = 127;
 		return ;
 	}
 	else if (command[i] != '\0')
 	{
 		printf("error: env dont take any argument\n");
-		g_env.exit_status = 1;
+		env->exit_status = 1;
 		return ;
 	}
 }
 
-void	execute_env(char *command)
+void	execute_env(t_env *env, char *command)
 {
 	pid_t	pid;
 
-	g_env.exit_status = 0;
-	validate_env_command(command);
-	if (g_env.exit_status != 0)
+	env->exit_status = 0;
+	validate_env_command(env, command);
+	if (env->exit_status != 0)
 		return ;
 	pid = fork();
 	if (pid == -1)
@@ -61,7 +61,7 @@ void	execute_env(char *command)
 	}
 	else if (pid == 0)
 	{
-		print_environment_variables();
+		print_environment_variables(env);
 		exit(0);
 	}
 	else

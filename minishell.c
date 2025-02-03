@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:53:38 by tjehaes           #+#    #+#             */
-/*   Updated: 2024/11/12 15:10:51 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/22 16:54:00 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	check_empty_functions(char *inpt)
 	return (0);
 }
 
-int	simple_dollar(char *inpt)
+int	simple_dollar(t_env *env, char *inpt)
 {
 	size_t	count;
 	size_t	i;
@@ -42,13 +42,13 @@ int	simple_dollar(char *inpt)
 	if (count == i)
 	{
 		ft_printf("error: command not found\n");
-		g_env.exit_status = 127;
+		env->exit_status = 127;
 		return (1);
 	}
 	return (0);
 }
 
-int	handle_quote(char *inpt)
+int	handle_quote(t_env *env, char *inpt)
 {
 	int	i;
 	int	countsimple;
@@ -68,33 +68,34 @@ int	handle_quote(char *inpt)
 	if (countsimple % 2 != 0 || countdouble % 2 != 0)
 	{
 		ft_printf("minishell: syntax error quotes not closed\n");
-		g_env.exit_status = 130;
+		env->exit_status = 130;
 		return (1);
 	}
 	return (0);
 }
 
-void	process_input(char *input)
+void	process_input(t_env *env, char *input)
 {
-	// add_history(input);
-	if (check_empty_functions(input) == 0 || simple_dollar(input) == 1
-		|| check_multiple_pipe(input) == 1)
+	if (check_empty_functions(input) == 0 || simple_dollar(env, input) == 1
+		|| check_multiple_pipe(env, input) == 1
+		|| check_quote_empty(input) == 1
+		|| check_check(input) == 1)
 		free(input);
-	else if (handle_quote(input) == 0)
-		execute_commands(input);
+	else if (handle_quote(env, input) == 0)
+		execute_commands(env, input);
 	else
 		free(input);
 }
-// int		g_env.exit_status = 0;
-t_env	g_env;
+// t_env	g_env;
 
 int	main(void)
 {
+	t_env	env;
 	char	*inpt;
 	int		saved_stdin;
 	int		saved_stdout;
 
-	init_shell(&saved_stdin, &saved_stdout);
+	init_shell(&env, &saved_stdin, &saved_stdout);
 	while (1)
 	{
 		inpt = readline(BLUE "Minishell$ " RESET);
@@ -102,7 +103,7 @@ int	main(void)
 			break ;
 		if (*inpt)
 			add_history(inpt);
-		process_input(inpt);
+		process_input(&env, inpt);
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 		rl_replace_line("", 0);
@@ -110,6 +111,6 @@ int	main(void)
 	}
 	close(saved_stdin);
 	close(saved_stdout);
-	free_struct();
+	free_struct(&env);
 	return (0);
 }

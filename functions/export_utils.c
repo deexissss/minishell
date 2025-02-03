@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:18:59 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 11:15:18 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:54 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ int	extract_varname(char *input, char **varname, int *i)
 	(*varname)[j] = '\0';
 	if (input[*i] != '=')
 	{
-		perror("export: invalid identifier");
-		free(*varname);
+		printf("export: invalid identifier\n");
 		return (0);
 	}
 	(*i)++;
@@ -57,7 +56,7 @@ void	extract_val(char *input, char **value, int *i)
 	(*value)[j] = '\0';
 }
 
-int	get_env_size(void)
+/*int	get_env_size(void)
 {
 	int	env_size;
 
@@ -65,7 +64,8 @@ int	get_env_size(void)
 	while (g_env.variables[env_size] != NULL)
 		env_size++;
 	return (env_size);
-}
+}*/
+
 void	free_directories(char *directories[], int count)
 {
 	while (--count >= 0)

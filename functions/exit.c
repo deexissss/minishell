@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 08:48:43 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 11:03:33 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:11:58 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	count_arg(char *inpt)
 	return (count);
 }
 
-void	execute_exit(char *input)
+void	execute_exit(t_env *env, char *input)
 {
 	int	i;
 	int	sign;
@@ -75,7 +75,7 @@ void	execute_exit(char *input)
 	if (count > 2)
 	{
 		printf("error: too many arguments\n");
-		g_env.exit_status = 1;
+		env->exit_status = 1;
 		return ;
 	}
 	status = give_status(input, &i);
@@ -84,5 +84,5 @@ void	execute_exit(char *input)
 		printf("exit\n");
 		exit(status * sign);
 	}
-	g_env.exit_status = 0;
+	env->exit_status = 0;
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:07:10 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 09:50:26 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:55 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	validate_pwd_command(char *command)
+void	validate_pwd_command(t_env *env, char *command)
 {
 	int	i;
 
@@ -22,12 +22,12 @@ void	validate_pwd_command(char *command)
 	if (command[i] >= 'a' && command[i] <= 'z')
 	{
 		printf("error: command does not exit\n");
-		g_env.exit_status = 127;
+		env->exit_status = 127;
 	}
 	else if (command[i] != '\0')
 	{
 		printf("error: pwd does not take any argument\n");
-		g_env.exit_status = 1;
+		env->exit_status = 1;
 	}
 }
 
@@ -44,13 +44,13 @@ void	print_current_directory(void)
 	}
 }
 
-void	execute_pwd(char *command)
+void	execute_pwd(t_env *env, char *command)
 {
 	pid_t	pid;
 
-	g_env.exit_status = 0;
-	validate_pwd_command(command);
-	if (g_env.exit_status != 0)
+	env->exit_status = 0;
+	validate_pwd_command(env, command);
+	if (env->exit_status != 0)
 		return ;
 	pid = fork();
 	if (pid == -1)
@@ -66,4 +66,3 @@ void	execute_pwd(char *command)
 	else
 		waitpid(pid, NULL, 0);
 }
-

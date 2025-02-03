@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:50:39 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/15 09:30:59 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:46 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*clean_string(char *str, int i, int j, char *clean_str)
 	return (clean_str);
 }
 
-char	*cleanup_string(char *str)
+char	*cleanup_string(t_env *env, char *str)
 {
 	char	*clean_str;
 	int		i;
@@ -54,7 +54,7 @@ char	*cleanup_string(char *str)
 		return (NULL);
 	if (ft_memcmp(str, "echo", 4) == 0)
 	{
-		execute_echo(str);
+		execute_echo(env, str);
 		free(clean_str);
 		return (NULL);
 	}
@@ -84,13 +84,13 @@ char	*int_to_str(int num, char *str)
 	return (str);
 }
 
-void	exec_func(char *path, char **args)
+void	exec_func(t_env *env, char *path, char **args)
 {
 	signal(SIGQUIT, SIG_DFL);
-	if (execve(path, args, g_env.variables) == -1)
+	if (execve(path, args, env->variables) == -1)
 	{
-		if (g_env.exit_status == 0)
-			g_env.exit_status = 1;
+		if (env->exit_status == 0)
+			env->exit_status = 1;
 		exit(EXIT_FAILURE);
 	}
 }
@@ -104,21 +104,4 @@ int	is_line_empty(const char *line)
 		line++;
 	}
 	return (1);
-}
-
-void	handle_sigquit(int sig)
-{
-	struct termios	term;
-
-	(void)sig;
-	tcgetattr(STDIN_FILENO, &term);
-	term.c_lflag &= ~ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	if (rl_line_buffer && !is_line_empty(rl_line_buffer))
-	{
-		write(STDOUT_FILENO, "\nQuit (core dumped)\n", 20);
-		rl_replace_line("", 0);
-		rl_redisplay();
-		exit(131);
-	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:09:45 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/13 15:10:30 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:58 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ bool	is_pipe_inside_quotes(const char *str)
 	return (true);
 }
 
-void	execute_pipe_command(char *command)
+void	execute_pipe_command(t_env *env, char *command)
 {
 	if ((ftstrchr(command, '>') || ftstrchr(command, '<'))
 		&& !is_redirection_inside_quotes(command))
-		execute_redirection(command);
+		execute_redirection(env, command);
 	else
-		ft_checker(command);
+		ft_checker(env, command);
 	exit(EXIT_SUCCESS);
 }
 
@@ -49,7 +49,7 @@ void	handle_parent_process(pid_t pid, int pipefd[2], int *fd_in)
 	*fd_in = pipefd[0];
 }
 
-void	execute_pipeline(char **commands, int num_commands)
+void	execute_pipeline(t_env *env, char **commands, int num_commands)
 {
 	int		pipefd[2];
 	pid_t	pid;
@@ -70,7 +70,7 @@ void	execute_pipeline(char **commands, int num_commands)
 				dup2(pipefd[1], 1);
 			close(pipefd[0]);
 			close(pipefd[1]);
-			execute_pipe_command(commands[i]);
+			execute_pipe_command(env, commands[i]);
 		}
 		else
 			handle_parent_process(pid, pipefd, &fd_in);
