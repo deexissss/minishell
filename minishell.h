@@ -37,6 +37,15 @@ typedef struct s_env
 	int		size;
 }			t_env;
 
+typedef struct s_pipe_info
+{
+	int		fd_in;
+	int		pipefd[2];
+	int		is_last_command;
+	pid_t	pid;
+	int		status;
+}			t_pipe_info;
+
 // extern t_env	g_env;
 
 # define BLUE "\033[1;34m"
@@ -143,5 +152,6 @@ int			custom_setenv(t_env *env, const char *name, const char *value,
 char		**allocate_new_variables(int size);
 char		*create_variable_string(const char *varname, const char *value);
 void		handle_new_var(t_env *env, char *varname, char *value);
+void		print_exported_variables(t_env *env);
 
 #endif

@@ -34,9 +34,12 @@ static bool	check_n_option(char *input, int *i)
 	return (n_flag);
 }
 
-static void	print_quote_word(char *input, int *i, char quote)
+static void	print_quote_word(char *input, int *i, char quote, bool *first_word)
 {
 	(*i)++;
+	if (!(*first_word))
+		write(1, " ", 1);
+	*first_word = false;
 	while (input[*i] && input[*i] != quote)
 		ft_printchar(input[(*i)++]);
 	if (input[*i] == quote)
@@ -45,7 +48,7 @@ static void	print_quote_word(char *input, int *i, char quote)
 
 static void	print_word(char *input, int *i, bool *first_word)
 {
-	if (!(*first_word))
+	if (!(*first_word) && input[*i - 1] == ' ')
 		write(1, " ", 1);
 	*first_word = false;
 	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
@@ -64,7 +67,7 @@ static void	print_words(char *input, int i)
 		if (input[i] == '"' || input[i] == '\'')
 		{
 			quote = input[i];
-			print_quote_word(input, &i, quote);
+			print_quote_word(input, &i, quote, &first_word);
 		}
 		else if (input[i] != ' ' && input[i] != '\t')
 			print_word(input, &i, &first_word);

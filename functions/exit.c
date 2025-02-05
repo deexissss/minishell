@@ -32,14 +32,11 @@ int	give_status(char *input, int *i)
 	{
 		if (input[*i] >= '0' && input[*i] <= '9')
 			status = status * 10 + (input[(*i)++] - '0');
-		/*else if (input[*i] >= 'a' && input[*i] <= 'z')
-			status = status * 10 + (input[(*i)++] - 'a');
-		else if (input[*i] >= 'A' && input[*i] <= 'Z')
-			status = status * 10 + (input[(*i)++] - 'A');*/
-		else if ((input[*i] >= 'a' && input[*i] <= 'z') || (input[*i] >= 'A' && input[*i] <= 'Z'))
+		else if ((input[*i] >= 'a' && input[*i] <= 'z') || (input[*i] >= 'A'
+				&& input[*i] <= 'Z'))
 		{
-			printf("error: only numeric char\n");
-			return(-1);
+			printf("error: numeric argumenbt required\n");
+			return (-1);
 		}
 	}
 	return (status);
@@ -56,7 +53,6 @@ int	count_arg(char *inpt)
 	{
 		if (inpt[i] != ' ' && inpt[i] != '\t')
 		{
-			
 			count++;
 			while (inpt[i] && inpt[i] != ' ' && inpt[i] != '\t')
 				i++;

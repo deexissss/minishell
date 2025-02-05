@@ -91,6 +91,11 @@ void	execute_export(t_env *env, char *input)
 
 	index = 6;
 	env->exit_status = 0;
+	if (input[index] == '\0')
+	{
+		print_exported_variables(env);
+		return ;
+	}
 	while (input[index] != '\0')
 	{
 		handle_var(env, input, &index);
