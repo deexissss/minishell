@@ -6,10 +6,14 @@ R_FLAG		=	-lreadline
 LIBFT_FILE	=	libft/libft.a
 LIBFT		=	$(LIBFT_FILE)
 
-C_FILE		=	$(wildcard *.c) \
-				$(wildcard functions/*.c) \
+SRC			=	functions/cd.c functions/echo.c functions/echo_utils.c functions/env.c \
+				functions/exit.c functions/export.c functions/export_handle_new_var.c \
+				functions/export_setenv.c functions/export_utils.c functions/export_utils2.c \
+				functions/pwd.c functions/unset.c execute_commands.c handle_command.c \
+				redirections_heredoc.c handle_command2.c handle_command3.c init_shell.c \
+				minishell.c pipe.c pipe_utils.c process_command.c redirection_handlers.c \
+				redirections.c tokenizer.c utils.c utils2.c utils3.c utils4.c
 
-SRC			=	$(C_FILE)
 OBJ			=	$(SRC:.c=.o)
 
 BLUE := \033[0;34m

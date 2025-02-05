@@ -49,3 +49,15 @@ void	add_var(char **new_environ, int env_size, char *vname, char *value)
 		new_environ[env_size][j++] = value[i++];
 	new_environ[env_size][j] = '\0';
 }
+
+void	print_exported_variables(t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (env->variables[i] != NULL)
+	{
+		printf("declare -x %s\n", env->variables[i]);
+		i++;
+	}
+}
