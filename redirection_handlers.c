@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	handle_input_redirection(char *filename)
+void	handle_input_redirection(char *filename, t_env *env)
 {
 	int	fd;
 
@@ -20,12 +20,14 @@ void	handle_input_redirection(char *filename)
 	if (fd == -1)
 	{
 		perror("open");
+		env->exit_status = 1;
 		return ;
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		close(fd);
+		env->exit_status = 1;
 		return ;
 	}
 	close(fd);

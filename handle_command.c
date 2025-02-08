@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 15:50:50 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/02/06 09:53:52 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ void	clear_terminal(char *command)
 
 void	ft_checker(t_env *env, char *command)
 {
+	if (env->exit_status != 0)
+		return ;
 	if (ft_memcmp(command, "cd", 2) == 0)
 		execute_cd(env, command);
 	else if (ft_memcmp(command, "clear", 5) == 0)
@@ -115,8 +117,5 @@ void	ft_checker(t_env *env, char *command)
 	else if (ft_memcmp(command, "export", 6) == 0)
 		execute_export(env, command);
 	else
-	{
-		env->exit_status = 0;
 		handle_external_command(env, command);
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 13:25:20 by mdaman            #+#    #+#             */
-/*   Updated: 2025/01/22 15:50:49 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/02/07 14:47:59 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,62 @@
 void	handle_sigint_heredoc(int sig)
 {
 	(void)sig;
+	g_sigint_received = 1;
 	write(STDOUT_FILENO, "\n", 1);
-	exit(1);
+	rl_replace_line("", 0);
+	rl_redisplay();
+	exit(130);
 }
 
-void	read_and_write_heredoc(const char *delimiter, int pipefd[2])
+void	handle_heredoc_input(const char *delimiter, int pipefd[2], t_env *env)
 {
 	char	*line;
+
+	while (1)
+	{
+		if (g_sigint_received)
+		{
+			env->exit_status = 130;
+			break ;
+		}
+		line = readline("> ");
+		if (line == NULL)
+		{
+			printf("bash: error here-document delimited by ");
+			printf("end-of-file (wanted `%s')\n", delimiter);
+			break ;
+		}
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write(pipefd[1], line, ft_strlen(line));
+		write(pipefd[1], "\n", 1);
+		free(line);
+	}
+}
+
+void	read_and_write_heredoc(const char *delimiter, int pipefd[2], t_env *env)
+{
+	signal(SIGINT, handle_sigint_heredoc);
+	handle_heredoc_input(delimiter, pipefd, env);
+	close(pipefd[1]);
+	exit(env->exit_status);
+}
+/*void	read_and_write_heredoc(const char *delimiter, int pipefd[2], t_env *env)
+{
+	char	*line;
+	int		status;
 
 	signal(SIGINT, handle_sigint_heredoc);
 	while (1)
 	{
+		if (g_sigint_received)
+		{
+			env->exit_status = 130;
+			break ;
+		}
 		line = readline("> ");
 		if (line == NULL)
 		{
@@ -44,24 +89,22 @@ void	read_and_write_heredoc(const char *delimiter, int pipefd[2])
 		free(line);
 	}
 	close(pipefd[1]);
-	exit(0);
-}
+	exit(env->exit_status);
+}*/
 
-void	child_process_heredoc(const char *delimiter, int pipefd[2])
+void	parent_process_heredoc(int pipefd[2], pid_t pid, t_env *env)
 {
-	close(pipefd[0]);
-	read_and_write_heredoc(delimiter, pipefd);
-}
+	int	status;
 
-void	parent_process_heredoc(int pipefd[2], pid_t pid)
-{
 	close(pipefd[1]);
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		env->exit_status = WEXITSTATUS(status);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
 }
 
-void	handle_heredoc_redirection(const char *delimiter)
+void	handle_heredoc_redirection(const char *delimiter, t_env *env)
 {
 	int		pipefd[2];
 	pid_t	pid;
@@ -80,9 +123,9 @@ void	handle_heredoc_redirection(const char *delimiter)
 		return ;
 	}
 	if (pid == 0)
-		child_process_heredoc(delimiter, pipefd);
+		child_process_heredoc(delimiter, pipefd, env);
 	else
-		parent_process_heredoc(pipefd, pid);
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
+		parent_process_heredoc(pipefd, pid, env);
+	signal(SIGINT, handle_sigint_heredoc);
+	signal(SIGQUIT, SIG_DFL);
 }

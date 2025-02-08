@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mdaman <mdaman@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 13:21:08 by mdaman            #+#    #+#             */
-/*   Updated: 2025/01/22 13:21:35 by mdaman           ###   ########.fr       */
+/*   Updated: 2025/02/07 14:28:40 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,20 @@ int	check_check(char *line)
 	else if (indexes[0] >= 1 && indexes[1] == 2 && line[0] == '\''
 		&& line[ft_strlen(line) - 1] == '\'')
 		return (print_error(line));
+	return (0);
+}
+
+int	check_empty_functions(char *inpt)
+{
+	int	i;
+
+	i = 0;
+	while (inpt[i] != '\0')
+	{
+		if (inpt[i] == ' ' || inpt[i] == '\t' || inpt[i] == '\0')
+			i++;
+		else
+			return (1);
+	}
 	return (0);
 }
