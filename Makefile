@@ -12,7 +12,7 @@ SRC			=	functions/cd.c functions/echo.c functions/echo_utils.c functions/env.c \
 				functions/pwd.c functions/unset.c execute_commands.c handle_command.c \
 				redirections_heredoc.c handle_command2.c handle_command3.c init_shell.c \
 				minishell.c pipe.c pipe_utils.c process_command.c redirection_handlers.c \
-				redirections.c tokenizer.c utils.c utils2.c utils3.c utils4.c
+				redirections.c tokenizer.c utils.c utils2.c utils3.c utils4.c heredoc_utils.c \
 
 OBJ			=	$(SRC:.c=.o)
 
