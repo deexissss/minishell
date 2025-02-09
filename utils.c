@@ -16,9 +16,14 @@ void	handle_sigint(int sig)
 {
 	(void)sig;
 	g_sigint_received = 1;
-	write(STDOUT_FILENO, "\n", 2);
-	rl_on_new_line();
+	write(STDOUT_FILENO, "\n", 1);
+	if (rl_line_buffer && *rl_line_buffer)
+	{
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 	rl_replace_line("", 0);
+	rl_on_new_line();
 	rl_redisplay();
 }
 
