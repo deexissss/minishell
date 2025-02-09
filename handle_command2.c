@@ -75,7 +75,7 @@ void	execute_command_with_fork(t_env *env, char *path, char **args)
 	pid_t	pid;
 	int		status;
 
-	signal(SIGINT, handle_sigint);
+	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -86,7 +86,11 @@ void	execute_command_with_fork(t_env *env, char *path, char **args)
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
+		/*if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			env->exit_status = 130;
+		else*/
 		update_exit_status(env, status);
+		signal(SIGINT, handle_sigint);
 	}
 	else
 		exec_perror(env, "fork");

@@ -55,7 +55,7 @@ void	init_shell(t_env *env, int *saved_stdin, int *saved_stdout)
 	*saved_stdin = dup(STDIN_FILENO);
 	*saved_stdout = dup(STDOUT_FILENO);
 	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
+	signal(SIGQUIT, SIG_IGN);
 	rl_bind_key('\t', handle_tab);
 	rl_bind_key(127, handle_backspace);
 	using_history();
