@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:09:45 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/01/22 15:50:58 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/02/12 08:34:17 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,16 +111,25 @@ bool	is_pipe_inside_quotes(const char *str)
 }*/
 void	handle_child_process(t_pipe_info *pipe_info, t_env *env, char *command)
 {
-	dup2(pipe_info->fd_in, 0);
+	if (pipe_info->fd_in != 0)
+	{
+		dup2(pipe_info->fd_in, 0);
+		close(pipe_info->fd_in);
+	}
 	if (!pipe_info->is_last_command)
+	{
 		dup2(pipe_info->pipefd[1], 1);
+		close(pipe_info->pipefd[1]);
+	}
 	close(pipe_info->pipefd[0]);
-	close(pipe_info->pipefd[1]);
-	if ((ftstrchr(command, '>') || ftstrchr(command, '<'))
-		&& !is_redirection_inside_quotes(command))
-		execute_redirection(env, command);
-	else
-		ft_checker(env, command);
+	if (check_builtin(env, command) == 0)
+	{
+		if ((ftstrchr(command, '>') || ftstrchr(command, '<'))
+			&& !is_redirection_inside_quotes(command))
+			execute_redirection(env, command);
+		else
+			ft_checker(env, command);
+	}
 	exit(env->exit_status);
 }
 

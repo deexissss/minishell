@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 13:24:49 by mdaman            #+#    #+#             */
-/*   Updated: 2025/02/07 13:53:25 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 16:54:01 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	init_shell(t_env *env, int *saved_stdin, int *saved_stdout)
 	*saved_stdin = dup(STDIN_FILENO);
 	*saved_stdout = dup(STDOUT_FILENO);
 	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, handle_sigquit);
 	rl_bind_key('\t', handle_tab);
 	rl_bind_key(127, handle_backspace);
 	using_history();

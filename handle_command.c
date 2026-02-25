@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/02/06 09:53:52 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/02/12 08:36:25 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	correct_command(t_env *env, char **args)
 	int	arg_count;
 	int	i;
 
-	i = 0;
 	arg_count = 0;
 	if (args)
 	{
@@ -26,12 +25,18 @@ int	correct_command(t_env *env, char **args)
 		if (arg_count == 1)
 			return (1);
 		env->exit_status = 0;
-		if (access(args[1], F_OK) != -1)
+		if (arg_count > 1)
 		{
-			while (ft_strstr(args[i++], "grep") == NULL)
-				return (1);
+			i = 0;
+			while (args[i])
+			{
+				if (ft_strstr(args[i], "grep") != NULL)
+					return (1);
+				i++;
+			}
+			if (access(args[1], F_OK) == -1)
+				env->exit_status = 2;
 		}
-		env->exit_status = 2;
 	}
 	return (1);
 }
@@ -98,8 +103,6 @@ void	clear_terminal(char *command)
 
 void	ft_checker(t_env *env, char *command)
 {
-	if (env->exit_status != 0)
-		return ;
 	if (ft_memcmp(command, "cd", 2) == 0)
 		execute_cd(env, command);
 	else if (ft_memcmp(command, "clear", 5) == 0)

@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:54:11 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/02/07 14:46:04 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/02/12 08:44:14 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ typedef struct s_pipe_info
 	int		status;
 }			t_pipe_info;
 
-extern sig_atomic_t	g_sigint_received;
+extern volatile sig_atomic_t	g_signal_value;
+
+void		handle_sigint(int sig);
 
 # define BLUE "\033[1;34m"
 # define RESET "\033[0m"
@@ -69,7 +71,7 @@ void		execute_export(t_env *env, char *inpt);
 void		verify_path_order(char *path);
 char		*get_env_value(t_env *env, const char *var);
 char		*cleanup_string(t_env *env, char *str);
-void		handle_sigint(int sig);
+//void		handle_sigint(int sig);
 void		handle_sigquit(int sig);
 char		**pipe_tokenizer(char *command, int *num_commands);
 void		execute_pipeline(t_env *env, char **commands, int num_commands);
@@ -80,7 +82,7 @@ bool		is_pipe_inside_quotes(const char *str);
 void		skip_whitespace(char *input, int *i);
 int			extract_varname(char *input, char **varname, int *i);
 void		extract_val(char *input, char **value, int *i);
-int			check_empty_functions(char *inpt);
+void		handle_signals_and_status(t_env *env);
 
 // int				get_env_size(void);
 int			skip_spaces(char *input, int i);
@@ -114,6 +116,10 @@ void		pid_check(pid_t pid);
 void		pipe_check(int *pipefd);
 void		exit_perror(const char *msg);
 int			check_multiple_pipe(t_env *env, char *inpt);
+void		pipe_env(t_env *env);
+void		pipe_export(t_env *env);
+void		pipe_pwd(void);
+int			check_builtin(t_env *env, char *command);
 // process_commmand
 void		process_command(t_env *env, char *command);
 
@@ -122,17 +128,13 @@ void		execute_commands(t_env *env, char *inpt);
 
 // redirections.c
 void		handle_output_redirection(char *filename, bool append);
-void		handle_heredoc_redirection(const char *delimiter, t_env *env);
-void		handle_input_redirection(char *filename, t_env *env);
+void		handle_heredoc_redirection(const char *delimiter);
+void		handle_input_redirection(char *filename);
 void		execute_command_with_redirection(t_env *env, char *cmd, char *args);
 void		handle_command_or_args(char *token, char **cmd, char **args);
-void		handle_token(t_env *env, char *token, char **cmd, char **args);
+void		handle_token(char *token, char **cmd, char **args);
 void		execute_redirection(t_env *env, char *command);
 bool		is_redirection_inside_quotes(const char *str);
-void		child_process_heredoc(const char *delimiter,
-				int pipefd[2], t_env *env);
-void		read_and_write_heredoc(const char *delimiter,
-				int pipefd[2], t_env *env);
 
 // tokenizer.c
 char		*ft_strtok(char *str, const char *delimiters);

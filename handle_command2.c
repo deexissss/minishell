@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:47:52 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/02/07 13:58:02 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:44 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	execute_command_with_fork(t_env *env, char *path, char **args)
 	pid_t	pid;
 	int		status;
 
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, handle_sigint);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -86,11 +86,7 @@ void	execute_command_with_fork(t_env *env, char *path, char **args)
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
-		/*if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-			env->exit_status = 130;
-		else*/
 		update_exit_status(env, status);
-		signal(SIGINT, handle_sigint);
 	}
 	else
 		exec_perror(env, "fork");

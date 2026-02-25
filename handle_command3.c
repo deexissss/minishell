@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 13:25:20 by mdaman            #+#    #+#             */
-/*   Updated: 2025/02/06 09:55:27 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/02/12 08:33:05 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	update_exit_status(t_env *env, int status)
 {
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 		env->exit_status = (WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+		env->exit_status = WTERMSIG(status) + 128;
 }
 
 int	is_path_set_check(t_env *env)

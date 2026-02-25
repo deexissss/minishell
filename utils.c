@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg      +#+  +:+       +#+        */
+/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/07 14:22:38 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/02/07 14:23:14 by tjehaes          ###   ########.fr       */
+/*   Created: 2024/11/07 09:12:55 by tjehaes           #+#    #+#             */
+/*   Updated: 2025/02/12 08:42:13 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	g_sigint_received = 1;
-	write(STDOUT_FILENO, "\n", 1);
-	if (rl_line_buffer && *rl_line_buffer)
-	{
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
 
 int	handle_tab(int count, int key)
 {
@@ -65,6 +50,16 @@ char	*get_env_value(t_env *env, const char *var)
 		i++;
 	}
 	return (NULL);
+}
+
+void	handle_sigint(int sig)
+{
+	(void)sig;
+	g_signal_value = 1;
+	write(STDOUT_FILENO, "\n", 2);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 int	ft_strcmp(const char *str1, const char *str2)

@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 08:48:43 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/02/07 15:00:59 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:11:58 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	give_status(char *input, int *i)
 		else if ((input[*i] >= 'a' && input[*i] <= 'z') || (input[*i] >= 'A'
 				&& input[*i] <= 'Z'))
 		{
-			printf("error: numeric argument required\n");
+			printf("error: numeric argumenbt required\n");
 			return (-1);
 		}
 	}

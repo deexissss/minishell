@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
+/*   By: mdaman <mdaman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 13:21:08 by mdaman            #+#    #+#             */
-/*   Updated: 2025/02/07 14:28:40 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 13:21:35 by mdaman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,11 @@ int	check_check(char *line)
 	return (0);
 }
 
-int	check_empty_functions(char *inpt)
+void	handle_signals_and_status(t_env *env)
 {
-	int	i;
-
-	i = 0;
-	while (inpt[i] != '\0')
+	if (g_signal_value == 1)
 	{
-		if (inpt[i] == ' ' || inpt[i] == '\t' || inpt[i] == '\0')
-			i++;
-		else
-			return (1);
+		env->exit_status = 130;
+		g_signal_value = 0;
 	}
-	return (0);
 }

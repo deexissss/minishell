@@ -6,7 +6,7 @@
 /*   By: tjehaes <tjehaes@student.42luxembourg >    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 15:10:50 by tjehaes           #+#    #+#             */
-/*   Updated: 2025/02/07 13:37:41 by tjehaes          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:22:53 by tjehaes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	is_redirection_inside_quotes(const char *str)
 	return (true);
 }
 
-void	handle_token(t_env *env, char *token, char **cmd, char **args)
+void	handle_token(char *token, char **cmd, char **args)
 {
 	bool	append;
 	bool	is_heredoc;
@@ -53,9 +53,9 @@ void	handle_token(t_env *env, char *token, char **cmd, char **args)
 		if (token != NULL)
 		{
 			if (is_heredoc)
-				handle_heredoc_redirection(token, env);
+				handle_heredoc_redirection(token);
 			else
-				handle_input_redirection(token, env);
+				handle_input_redirection(token);
 		}
 	}
 	else
@@ -129,7 +129,7 @@ void	execute_redirection(t_env *env, char *command)
 	token = ft_strtok(command, " ");
 	while (token != NULL)
 	{
-		handle_token(env, token, &cmd, &args);
+		handle_token(token, &cmd, &args);
 		token = ft_strtok(NULL, " ");
 	}
 	execute_parsed_command(env, cmd, args);
